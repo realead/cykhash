@@ -24,7 +24,12 @@ kwargs = {
       'url':'https://github.com/realead/cykhash',
       'packages':find_packages(),
       'license': 'MIT',
-      'ext_modules':  extensions
+      'ext_modules':  extensions,
+
+       #ensure pxd-files:
+      'package_data' : { 'cykhash': ['*.pxd','*.pxi']},
+      'include_package_data' : True,
+      'zip_safe' : False  #needed because setuptools are used
 }
 
 

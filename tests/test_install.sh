@@ -16,7 +16,7 @@ fi;
 #prepare:
 pip install cython
 
-if [ "$2" = "from-git" ]; then
+if [ "$2" = "from-github" ]; then
     pip install https://github.com/realead/cykhash/zipball/master
 else
     (cd .. && python setup.py install)

@@ -57,6 +57,26 @@ In Cython:
             res.append(db.contains(i))
         return res
 
+
+## Testing:
+
+For testing of the local version run (or `p2` for python2):
+
+    sh test_install.sh p3
+
+in the `tests` subfolder.
+
+For testing of the version from github run:
+
+    sh test_install.sh p3 from-github
+
+For keeping the the virtual enviroment after the tests:
+
+    sh test_install.sh p3 local keep
+
+
+
+
 ## Versions:
 
   * 0.1.0: Int64Set

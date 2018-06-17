@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages, Extension
 from Cython.Build import cythonize
-import warnings
+
 
 
 #for the time being only with cython:
@@ -9,8 +9,8 @@ USE_CYTHON = True
 
 
 extensions = Extension(
-            name='cykhash.cykhash',
-            sources = ["cykhash/cykhash.pyx"],
+            name='cykhash.khashsets',
+            sources = ["cykhash/khashsets.pyx"],
     )
 
 if USE_CYTHON:

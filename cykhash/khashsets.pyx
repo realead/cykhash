@@ -39,5 +39,24 @@ cdef class Int64Set:
         self.table.keys[k] = key
 
 
+### Utils:
 
+def Int64Set_from(it):
+    res=Int64Set()
+    for i in it:
+        res.add(i)
+    return res
+    
+
+
+from libc.stdint cimport  uint8_t
+
+def isin(int64_t[:] query, Int64Set db, uint8_t[:] result):
+    cdef size_t i
+    cdef size_t n=len(query)
+    for i in range(n):
+        if db.contains(query[i]):
+            result[i]=1
+        else:   
+            result[i]=0
 

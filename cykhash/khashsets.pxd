@@ -33,6 +33,6 @@ cdef extern from *:
 cdef class Int64Set:
     cdef kh_int64set_t *table
 
-    cdef contains(self, int64_t key)
+    cdef bint contains(self, int64_t key)
     cpdef add(self, int64_t key)
 

@@ -7,5 +7,5 @@ def isin(query, db):
         s.add(d)
     res=[]
     for i in query:
-        res.append(s.contains(i))
+        res.append(False if s.contains(i)==0 else True)
     return res

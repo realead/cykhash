@@ -24,7 +24,7 @@ cdef class Int64Set:
                                        sizeof(size_t) +  # vals
                                        sizeof(uint32_t)) # flags
 
-    cdef contains(self, int64_t key):
+    cdef bint contains(self, int64_t key):
         cdef khint_t k
         k = kh_get_int64set(self.table, key)
         return k != self.table.n_buckets

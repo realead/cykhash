@@ -34,10 +34,10 @@ cdef extern from *:
 cdef class Int64Set:
     cdef kh_int64set_t *table
 
-    cdef bint contains(self, int64_t key)
+    cdef bint contains(self, int64_t key) except *
     cdef Int64SetIterator get_iter(self)
-    cpdef add(self, int64_t key)
-    cpdef discard(self, int64_t key)
+    cpdef void add(self, int64_t key) except *
+    cpdef void discard(self, int64_t key) except *
     
 
 

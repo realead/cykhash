@@ -45,6 +45,44 @@ cdef class Int64Set:
         if k != self.table.n_buckets:
             kh_del_int64set(self.table, k)
 
+
+    cdef Int64SetIterator get_iter(self):
+        return Int64SetIterator(self)
+
+    def __iter__(self):
+        return self.get_iter()
+
+
+### Iterator:
+cdef class Int64SetIterator:
+
+    cdef void __move(self) except *:
+        while self.it<self.size and not kh_exist_int64set(self.parent.table, self.it):
+              self.it+=1       
+
+    cdef bint has_next(self) except *:
+        return self.it != self.parent.table.n_buckets
+        
+    cdef int64_t next(self) except *:
+        cdef int64_t result = self.parent.table.keys[self.it]
+        self.it+=1#ensure at least one move!
+        self.__move()
+        return result
+
+
+    def __cinit__(self, Int64Set parent):
+        self.parent = parent
+        self.size = parent.table.n_buckets
+        #search the start:
+        self.it = 0
+        self.__move()
+
+    def __next__(self):
+        if self.has_next():
+            return self.next()
+        else:
+            raise StopIteration
+
 ### Utils:
 
 def Int64Set_from(it):

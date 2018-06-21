@@ -27,12 +27,26 @@ cdef extern from *:
     khint_t kh_put_int64set(kh_int64set_t*, int64_t, int*) nogil
     void kh_del_int64set(kh_int64set_t*, khint_t) nogil
 
-    #specializing "kh_exist"-macro - not needed (yet?)
-    #bint kh_exist_int64set "kh_exist" (kh_int64set_t*, khiter_t) nogil
+    #specializing "kh_exist"-macro 
+    bint kh_exist_int64set "kh_exist" (kh_int64set_t*, khint_t) nogil
+
 
 cdef class Int64Set:
     cdef kh_int64set_t *table
 
     cdef bint contains(self, int64_t key)
+    cdef Int64SetIterator get_iter(self)
     cpdef add(self, int64_t key)
     cpdef discard(self, int64_t key)
+    
+
+
+cdef class Int64SetIterator:
+    cdef khint_t   it
+    cdef khint_t   size
+    cdef Int64Set  parent
+
+    cdef bint has_next(self) except *
+    cdef int64_t next(self) except *
+    cdef void __move(self) except *
+

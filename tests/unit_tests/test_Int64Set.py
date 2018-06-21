@@ -7,6 +7,7 @@ class Int64Tester(unittest.TestCase):
 
    def test_created_empty(self):
       s=Int64Set()
+      self.assertEqual(len(s), 0)
 
    def test_add_once(self):
       s=Int64Set()

@@ -35,4 +35,4 @@ cdef class Int64Set:
 
     cdef bint contains(self, int64_t key)
     cpdef add(self, int64_t key)
-
+    cpdef discard(self, int64_t key)

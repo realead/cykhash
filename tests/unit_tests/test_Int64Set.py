@@ -69,4 +69,24 @@ class Int64Tester(unittest.TestCase):
         s.add(i)
      for i in range(N):
        self.assertEqual(i in s, i%2==0)
+
+
+   def test_delete_even(self):
+     N=1000
+     s=Int64Set()
+     for i in range(N):
+       s.add(i)
+ 
+     #delete even:
+     for i in range(N):
+       if i%2==0:
+          n=len(s)
+          s.discard(i)
+          self.assertEqual(len(s), n-1)
+          s.discard(i)
+          self.assertEqual(len(s), n-1)
+
+     #check odd is still inside:
+     for i in range(N):
+        self.assertEqual(i in s, i%2==1)
       

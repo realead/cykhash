@@ -38,6 +38,12 @@ cdef class Int64Set:
         k = kh_put_int64set(self.table, key, &ret)
         self.table.keys[k] = key
 
+    
+    cpdef discard(self, int64_t key):
+        cdef khint_t k
+        k = kh_get_int64set(self.table, key)
+        if k != self.table.n_buckets:
+            kh_del_int64set(self.table, k)
 
 ### Utils:
 

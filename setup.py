@@ -18,7 +18,7 @@ if USE_CYTHON:
 
 kwargs = {
       'name':'cykhash',
-      'version':'0.1.0',
+      'version':'0.2.0',
       'description':'Cython wrapper for khash-table',
       'author':'Egor Dranischnikow',
       'url':'https://github.com/realead/cykhash',

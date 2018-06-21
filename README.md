@@ -74,6 +74,15 @@ For keeping the the virtual enviroment after the tests:
 
     sh test_install.sh p3 local keep
 
+To testing the current version without installing/building:
+
+    sh run_test_from_source.sh
+
+or to run it after the rebuild (without installing):
+   
+    sh run_test_from_source.sh rebuild
+
+
 
 
 

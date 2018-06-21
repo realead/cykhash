@@ -55,8 +55,6 @@ def isin(int64_t[:] query, Int64Set db, uint8_t[:] result):
     cdef size_t i
     cdef size_t n=len(query)
     for i in range(n):
-        if db.contains(query[i]):
-            result[i]=1
-        else:   
-            result[i]=0
+        result[i]=db.contains(query[i])
+
 

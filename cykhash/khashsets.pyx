@@ -1,4 +1,4 @@
-
+from cpython cimport array
 
 cdef class Int64Set:
 

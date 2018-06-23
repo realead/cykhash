@@ -17,7 +17,7 @@ class IsInTester(unittest.TestCase):
 
     def test_isin(self):
         s=Int64Set_from([2,4,6])
-        a=array.array('q', range(0,7))
+        a=array.array('l', range(0,7))
         result=array.array('B', [False]*7)
         isin(a,s,result)
         expected=array.array('B', [False, False, True, False, True, False, True])

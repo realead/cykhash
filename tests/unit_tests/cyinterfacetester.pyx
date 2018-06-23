@@ -1,7 +1,10 @@
 
+
+############# int64 - test
+
 from cykhash.khashsets cimport Int64Set, Int64SetIterator
 
-def isin(query, db):
+def isin_int64(query, db):
     s=Int64Set()
     for d in db:
         s.add(d)
@@ -11,8 +14,29 @@ def isin(query, db):
     return res
 
 
-def as_py_set(Int64Set db):
+def as_py_set_int64(Int64Set db):
     cdef Int64SetIterator it = db.get_iter()
+    res=set()
+    while it.has_next():
+        res.add(it.next())
+    return res
+
+############# int32 - test
+
+from cykhash.khashsets cimport Int32Set, Int32SetIterator
+
+def isin_int32(query, db):
+    s=Int32Set()
+    for d in db:
+        s.add(d)
+    res=[]
+    for i in query:
+        res.append(False if s.contains(i)==0 else True)
+    return res
+
+
+def as_py_set_int32(Int32Set db):
+    cdef Int32SetIterator it = db.get_iter()
     res=set()
     while it.has_next():
         res.add(it.next())

@@ -16,9 +16,16 @@ cython wrapper for khash
 
 ## Dependencies:
 
+Essential:
+
   * Cython>=0.28 because verbatim C-code feature is used
   * build tool chain (for example gcc on Linux)
-  * `virtualenv`+`sh` for testing
+
+Additional dependencies for testing:
+
+  * `sh`
+  * `virtualenv`
+  * `uttemplate`>=0.2.0 (https://github.com/realead/uttemplate)
 
 ## Instalation:
 

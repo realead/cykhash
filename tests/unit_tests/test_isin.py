@@ -1,6 +1,6 @@
 import unittest
 
-from cykhash import isin, Int64Set_from
+from cykhash import isin_int64, Int64Set_from
 
 
 class Int64Set_from_Tester(unittest.TestCase):
@@ -19,7 +19,7 @@ class IsInTester(unittest.TestCase):
         s=Int64Set_from([2,4,6])
         a=array.array('l', range(0,7))
         result=array.array('B', [False]*7)
-        isin(a,s,result)
+        isin_int64(a,s,result)
         expected=array.array('B', [False, False, True, False, True, False, True])
         self.assertTrue(expected==result)
  

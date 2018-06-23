@@ -1,4 +1,4 @@
-from libc.stdint cimport  uint32_t,  int64_t
+from libc.stdint cimport  uint32_t,  int64_t,  int32_t
 
 
 
@@ -10,3 +10,4 @@ cdef extern from *:
 
 # different implementation
 include "int64set_header.pxi"
+include "int32set_header.pxi"

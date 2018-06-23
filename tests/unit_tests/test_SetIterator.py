@@ -1,13 +1,13 @@
 import unittest
+import uttemplate
 
-from cykhash import Int64Set
+from cykhash import Int64Set, Int32Set
 
-
-
+@uttemplate.from_templates([Int64Set, Int32Set])
 class Int64IteratorTester(unittest.TestCase): 
 
-   def test_iterate(self):
-      cy_set = Int64Set()
+   def template_iterate(self, set_type):
+      cy_set = set_type()
       py_set = set()
       for i in range(10):
          cy_set.add(i)

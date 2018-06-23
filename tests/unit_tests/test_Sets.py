@@ -1,5 +1,5 @@
 import unittest
-import uttemplate as uttemplate
+import uttemplate
 
 from cykhash import Int64Set, Int32Set
 

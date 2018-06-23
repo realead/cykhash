@@ -15,6 +15,7 @@ fi;
 
 #prepare:
 pip install cython
+pip install https://github.com/realead/uttemplate/zipball/master
 
 if [ "$2" = "from-github" ]; then
     pip install https://github.com/realead/cykhash/zipball/master

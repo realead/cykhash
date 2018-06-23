@@ -1,34 +1,35 @@
 import unittest
+import uttemplate as uttemplate
 
-from cykhash import Int64Set
+from cykhash import Int64Set, Int32Set
 
+@uttemplate.from_templates([Int64Set, Int32Set])
+class SetTester(unittest.TestCase): 
 
-class Int64Tester(unittest.TestCase): 
-
-   def test_created_empty(self):
-      s=Int64Set()
+   def template_created_empty(self, set_type):
+      s=set_type()
       self.assertEqual(len(s), 0)
 
-   def test_add_once(self):
-      s=Int64Set()
+   def template_add_once(self, set_type):
+      s=set_type()
       s.add(1)
       self.assertEqual(len(s), 1)
 
-   def test_add_twice(self):
-      s=Int64Set()
+   def template_add_twice(self, set_type):
+      s=set_type()
       s.add(1)
       s.add(1)
       self.assertEqual(len(s), 1)
 
-   def test_add_two(self):
-      s=Int64Set()
+   def template_add_two(self, set_type):
+      s=set_type()
       s.add(1)
       s.add(2)
       self.assertEqual(len(s), 2)
 
-   def test_add_many_twice(self):
+   def template_add_many_twice(self, set_type):
      N=1000
-     s=Int64Set()
+     s=set_type()
      for i in range(N):
        s.add(i)
        self.assertEqual(len(s), i+1)
@@ -38,33 +39,33 @@ class Int64Tester(unittest.TestCase):
        self.assertEqual(len(s), N)
 
 
-   def test_contains_none(self):
+   def template_contains_none(self, set_type):
      N=1000
-     s=Int64Set()
+     s=set_type()
      for i in range(N):
        self.assertFalse(i in s)
 
 
-   def test_contains_all(self):
+   def template_contains_all(self, set_type):
      N=1000
-     s=Int64Set()
+     s=set_type()
      for i in range(N):
        s.add(i)
      for i in range(N):
        self.assertTrue(i in s)
 
-   def test_contains_odd(self):
+   def template_contains_odd(self, set_type):
      N=1000
-     s=Int64Set()
+     s=set_type()
      for i in range(N):
        if i%2==1:
         s.add(i)
      for i in range(N):
        self.assertEqual(i in s, i%2==1)
 
-   def test_contains_even(self):
+   def template_contains_even(self, set_type):
      N=1000
-     s=Int64Set()
+     s=set_type()
      for i in range(N):
        if i%2==0:
         s.add(i)
@@ -72,9 +73,9 @@ class Int64Tester(unittest.TestCase):
        self.assertEqual(i in s, i%2==0)
 
 
-   def test_delete_even(self):
+   def template_delete_even(self, set_type):
      N=1000
-     s=Int64Set()
+     s=set_type()
      for i in range(N):
        s.add(i)
  

@@ -16,7 +16,8 @@ cython wrapper for khash
 
 ## Dependencies:
 
-  * Cython + build tool chain (for example gcc on Linux)
+  * Cython>=0.28 because verbatim C-code feature is used
+  * build tool chain (for example gcc on Linux)
   * `virtualenv`+`sh` for testing
 
 ## Instalation:

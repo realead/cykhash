@@ -41,3 +41,25 @@ def as_py_set_int32(Int32Set db):
     while it.has_next():
         res.add(it.next())
     return res
+
+
+############# float64 - test
+
+from cykhash.khashsets cimport Float64Set, Float64SetIterator
+
+def isin_float64(query, db):
+    s=Float64Set()
+    for d in db:
+        s.add(d)
+    res=[]
+    for i in query:
+        res.append(False if s.contains(i)==0 else True)
+    return res
+
+
+def as_py_set_float64(Float64Set db):
+    cdef Float64SetIterator it = db.get_iter()
+    res=set()
+    while it.has_next():
+        res.add(it.next())
+    return res

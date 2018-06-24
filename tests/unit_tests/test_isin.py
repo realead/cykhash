@@ -3,14 +3,15 @@ import uttemplate
 
 from cykhash import isin_int64, Int64Set_from
 from cykhash import isin_int32, Int32Set_from
+from cykhash import isin_float64, Float64Set_from
 
-ISIN={32: isin_int32, 64: isin_int64}
-FROM_SET={32: Int32Set_from, 64: Int64Set_from}
-BUFFER_SIZE = {32: 'i', 64: 'l'}
+ISIN={'int32': isin_int32, 'int64': isin_int64, 'float64' : isin_float64}
+FROM_SET={'int32': Int32Set_from, 'int64': Int64Set_from, 'float64' : Float64Set_from}
+BUFFER_SIZE = {'int32': 'i', 'int64': 'l', 'float64' : 'd'}
 
 
 
-@uttemplate.from_templates([64, 32])
+@uttemplate.from_templates(['int64', 'int32', 'float64'])
 class Int64Set_from_Tester(unittest.TestCase):
     def template_create(self, value_type):
         lst=[6,7,8]
@@ -21,7 +22,7 @@ class Int64Set_from_Tester(unittest.TestCase):
 
 
 import array
-@uttemplate.from_templates([64, 32])
+@uttemplate.from_templates(['int64', 'int32', 'float64'])
 class IsInTester(unittest.TestCase): 
     def template_isin(self, value_type):
         s=FROM_SET[value_type]([2,4,6])

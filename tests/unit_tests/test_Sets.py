@@ -1,9 +1,9 @@
 import unittest
 import uttemplate
 
-from cykhash import Int64Set, Int32Set
+from cykhash import Int64Set, Int32Set, Float64Set
 
-@uttemplate.from_templates([Int64Set, Int32Set])
+@uttemplate.from_templates([Int64Set, Int32Set, Float64Set])
 class SetTester(unittest.TestCase): 
 
    def template_created_empty(self, set_type):

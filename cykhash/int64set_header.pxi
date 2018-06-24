@@ -1,7 +1,8 @@
 #
-# This is a blueprint for other implementations
 #
-#Set of int64: 
+# Don't edit it, unless this is I_n_t_6_4_S_e_t header
+#
+# run sh all_from_XXX.sh to create it from bluepring - I_n_t_6_4_S_e_t
 
 include "init_int64set.pxi"
 cdef extern from *:

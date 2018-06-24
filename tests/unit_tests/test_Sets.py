@@ -102,3 +102,33 @@ class FloatTester(unittest.TestCase):
         self.assertTrue(NAN in s)
 
 
+#+0.0/-0.0 will break when there are more than 2**32 elements in the map
+# bacause then hash-function will put them in different buckets 
+
+    def template_signed_zero1(self, set_type):
+        MINUS_ZERO=float("-0.0")
+        PLUS_ZERO =float("0.0")
+        self.assertFalse(str(MINUS_ZERO)==str(PLUS_ZERO))
+        s=set_type()
+        for i in range(1,2000):
+         s.add(i)
+        self.assertFalse(MINUS_ZERO in s)
+        self.assertFalse(PLUS_ZERO in s)
+        s.add(MINUS_ZERO)
+        self.assertTrue(MINUS_ZERO in s)
+        self.assertTrue(PLUS_ZERO in s)
+
+
+    def template_signed_zero2(self, set_type):
+        MINUS_ZERO=float("-0.0")
+        PLUS_ZERO =float("0.0")
+        s=set_type()
+        for i in range(1,2000):
+         s.add(i)
+        self.assertFalse(MINUS_ZERO in s)
+        self.assertFalse(PLUS_ZERO in s)
+        s.add(PLUS_ZERO)
+        self.assertTrue(MINUS_ZERO in s)
+        self.assertTrue(PLUS_ZERO in s)
+
+

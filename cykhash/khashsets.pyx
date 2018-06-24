@@ -5,3 +5,4 @@ from cpython cimport array
 include "int64set_impl.pxi"
 include "int32set_impl.pxi"
 include "float64set_impl.pxi"
+include "float32set_impl.pxi"

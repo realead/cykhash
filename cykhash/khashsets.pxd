@@ -15,3 +15,4 @@ cdef extern from *:
 include "int64set_header.pxi"
 include "int32set_header.pxi"
 include "float64set_header.pxi"
+include "float32set_header.pxi"

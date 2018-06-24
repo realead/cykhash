@@ -24,11 +24,6 @@ cdef class Float64Set:
     def __contains__(self, float64_t key):
         return self.contains(key)
 
-    def sizeof(self, deep=False):
-        """ return the size of my table in bytes """
-        return self.table.n_buckets * (sizeof(float64_t) + # keys
-                                       sizeof(size_t) +  # vals
-                                       sizeof(uint32_t)) # flags
 
     cdef bint contains(self, float64_t key) except *:
         cdef khint_t k

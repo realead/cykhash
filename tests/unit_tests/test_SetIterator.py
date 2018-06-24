@@ -1,9 +1,9 @@
 import unittest
 import uttemplate
 
-from cykhash import Int64Set, Int32Set, Float64Set
+from cykhash import Int64Set, Int32Set, Float64Set, Float32Set
 
-@uttemplate.from_templates([Int64Set, Int32Set, Float64Set])
+@uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set])
 class Int64IteratorTester(unittest.TestCase): 
 
    def template_iterate(self, set_type):

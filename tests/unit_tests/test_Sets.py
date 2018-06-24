@@ -91,4 +91,14 @@ class SetTester(unittest.TestCase):
      #check odd is still inside:
      for i in range(N):
         self.assertEqual(i in s, i%2==1)
-      
+
+@uttemplate.from_templates([Float64Set, Float32Set])
+class FloatTester(unittest.TestCase): 
+    def template_nan_right(self, set_type):
+        NAN=float("nan")
+        s=set_type()
+        self.assertFalse(NAN in s)
+        s.add(NAN)
+        self.assertTrue(NAN in s)
+
+

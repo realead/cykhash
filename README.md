@@ -43,10 +43,45 @@ You can also install using the `setup.py` file from the root directory of the pr
 
 However, there is no easy way to deinstall it afterwards (only manually) if `setup.py` was used directly.
 
+## Performance
+
+#### Memory consumption:
+
+ToDo
+
+#### isin
+
+ToDo
 
 ## Usage:
 
-#### A: Int64Set
+### Sets
+
+Following classes are defined: 
+         
+  * `Int64Set` for 64 bit integers
+  * `Int32Set` for 32 bit integers
+  * `Float64Set`for 64 bit floats (NB: `nan` are not yet handled in a proper way)
+  * `Float32Set`for 32 bit floats (NB: `nan` are not yet handled in a proper way)
+
+with Python interface:
+
+  * `__len__`: number of elements in the set
+  * `__contains__`: whether an element is contained in the set
+  * `add`: adds an element to set
+  * `discard`: remove an element or do nothing if element is not in the set
+  * `__iter__`: returns an iterator through all elements in set
+
+with Cython interface:
+
+  * `contains`: checks whether an element is contained in the set
+  * `add` : adds an element to the set
+  * `discard` : remove an element or do nothing if element is not in the set
+  * `get_iter`: returns an iterator with the following Cython interface:
+       * `has_next`:returns true if there are more elements in the iterator
+       * `next` :returns next element and moves the iterator
+
+### Examples: 
 
 In pure python:
  
@@ -97,4 +132,5 @@ or to run it after the rebuild (without installing):
 ## Versions:
 
   * 0.1.0: Int64Set
+  * 0.2.0: Int32Set, Float64Set, Float32Set
 

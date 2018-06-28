@@ -14,6 +14,8 @@ cython wrapper for khash
   
   * For python2 and python3.
 
+This project was inspired by the following stackoverflow question: https://stackoverflow.com/questions/50779617/pandas-pd-series-isin-performance-with-set-versus-array
+
 ## Dependencies:
 
 Essential:

@@ -25,9 +25,8 @@ fi;
 
 pip freeze
 
-#sh run_unit_tests.sh
+sh run_unit_tests.sh
 
-sh run_perf_tests.sh
 
 
 #clean or keep the environment

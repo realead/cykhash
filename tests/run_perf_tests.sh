@@ -17,5 +17,5 @@ done
 
 
 echo "\n\n-----Testing pandas isin\n\n"
-python perf_tests/isin_test_pandas.py
+python perf_tests/isin_test.py
 

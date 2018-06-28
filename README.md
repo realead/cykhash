@@ -45,13 +45,31 @@ However, there is no easy way to deinstall it afterwards (only manually) if `set
 
 ## Performance
 
+Run `sh run_perf_tests.sh` in tests-folder to reproduce. numpy and pandas must be installed in addtion to be able to run the performance tests
+
 #### Memory consumption:
 
-ToDo
+Peak memory usage for N int64-integers (inclusive python-interpreter):
+
+                      10^3       10^4      10^5       10^6      10^7
+    python2-set        6MB        6MB      13MB       62MB      502MB
+    python3-set        8MB        9MB      17MB       79MB      588MB
+    cykhash (p3)      10MB       10MB      10MB       26MB      147MB
+
+i.e. there is about 4 time less memory needed.
 
 #### isin
 
-ToDo
+Compared to pandas' `isin`, which has a linear running time in number of elements in the lookup. cykhash's `isin` has a `O(1)` in the number of elements in the look-up:
+
+    n	pandas(#look-up=10^n)	cykhash(#look-up=10^n)
+    2 	 0.0009466878400417045 	 0.0008094332498149015
+    3 	 0.0011027359400759451 	 0.001505808719957713
+    4 	 0.001315673690114636 	 0.0005093092197785154
+    5 	 0.007601776499941479 	 0.00031931002013152465
+    6 	 0.11544147745007649 	 0.000292295379913412
+    7 	 0.7747500354002114 	 0.00047073251014808195
+
 
 ## Usage:
 

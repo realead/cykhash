@@ -118,6 +118,20 @@ In Cython:
             res.append(db.contains(i))
         return res
 
+### Floating-point sets
+
+There is a problem with floating-point sets, i.e. `Float64Set` and `Float32Set`: The standard definition of "equal" and hash-function based on the bit representation don't define a meaningful or desired behavior for the hash set:
+
+   * `NAN != NAN` and thus it is not equivalence relation
+   * `-0.0 == 0.0` but `hash(-0.0)!=hash(0.0)`, but `x==y => hash(x)==hash(y)` is neccessary for set to work properly.
+
+This problem is resolved through following special case handling:
+
+   * `hash(-0.0):=hash(0.0)`
+   * `hash(x):=hash(NAN)` for any not a number `x`.
+   * `x is equal y <=> x==y || (x!=x && y!=y)`
+
+A consequence of the above rule, that the equivalence classes of `{0.0, -0.0}` and `e{x | x is not a number}` have more than one element. In the set these classes are represented by the first seen element from the class.
 
 ## Testing:
 

@@ -1,5 +1,6 @@
 import unittest
 import uttemplate
+import struct
 
 from cykhash import Int64Set, Int32Set, Float64Set, Float32Set
 
@@ -92,6 +93,21 @@ class SetTester(unittest.TestCase):
      for i in range(N):
         self.assertEqual(i in s, i%2==1)
 
+
+class Float64NANTester(unittest.TestCase): 
+    def test_nan_right(self):
+        NAN1=struct.unpack("d", struct.pack("L", 9221120237041090560))[0]
+        NAN2=struct.unpack("d", struct.pack("L", 9221120237041090561))[0]
+        NAN3=struct.unpack("d", struct.pack("L", 9221120237041090562))[0]
+        s=Float64Set()
+        s.add(NAN1)
+        s.add(NAN2)
+        s.add(NAN3)
+        self.assertEqual(len(s), 1)
+
+
+
+
 @uttemplate.from_templates([Float64Set, Float32Set])
 class FloatTester(unittest.TestCase): 
     def template_nan_right(self, set_type):
@@ -100,8 +116,7 @@ class FloatTester(unittest.TestCase):
         self.assertFalse(NAN in s)
         s.add(NAN)
         self.assertTrue(NAN in s)
-
-
+ 
 #+0.0/-0.0 will break when there are more than 2**32 elements in the map
 # bacause then hash-function will put them in different buckets 
 

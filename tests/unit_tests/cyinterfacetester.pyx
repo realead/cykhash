@@ -8,6 +8,7 @@ def isin_int64(query, db):
     s=Int64Set()
     for d in db:
         s.add(d)
+    assert s.size() == len(s) #to check size() exists
     res=[]
     for i in query:
         res.append(False if s.contains(i)==0 else True)
@@ -29,6 +30,7 @@ def isin_int32(query, db):
     s=Int32Set()
     for d in db:
         s.add(d)
+    assert s.size() == len(s) #to check size() exists
     res=[]
     for i in query:
         res.append(False if s.contains(i)==0 else True)
@@ -51,6 +53,7 @@ def isin_float64(query, db):
     s=Float64Set()
     for d in db:
         s.add(d)
+    assert s.size() == len(s) #to check size() exists
     res=[]
     for i in query:
         res.append(False if s.contains(i)==0 else True)
@@ -74,6 +77,7 @@ def isin_float32(query, db):
     s=Float32Set()
     for d in db:
         s.add(d)
+    assert s.size() == len(s) #to check size() exists
     res=[]
     for i in query:
         res.append(False if s.contains(i)==0 else True)

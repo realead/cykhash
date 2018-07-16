@@ -30,6 +30,7 @@ cdef class Float64Set:
 
     cdef bint contains(self, float64_t key) except *
     cdef Float64SetIterator get_iter(self)
+    cdef khint_t size(self) 
     cpdef void add(self, float64_t key) except *
     cpdef void discard(self, float64_t key) except *
     

@@ -14,7 +14,11 @@ cdef class Int64Set:
             kh_resize_int64set(self.table, size_hint)
 
     def __len__(self):
+        return self.size()
+  
+    cdef khint_t size(self):
         return self.table.size
+        
 
     def __dealloc__(self):
         if self.table is not NULL:

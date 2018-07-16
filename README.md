@@ -47,7 +47,7 @@ However, there is no easy way to deinstall it afterwards (only manually) if `set
 
 ## Performance
 
-Run `sh run_perf_tests.sh` in tests-folder to reproduce. numpy and pandas must be installed in addtion to be able to run the performance tests
+Run `sh run_perf_tests.sh` in tests-folder to reproduce. numpy and pandas will be installed in addtion to be able to run the performance tests. The easiest way is to call first `sh test_instalation.sh p3 local keep` and than activate it via `. ../p3/bin/activate` and only then call the performance 
 
 #### Memory consumption:
 
@@ -59,6 +59,43 @@ Peak memory usage for N int64-integers (inclusive python-interpreter):
     cykhash (p3)      10MB       10MB      10MB       26MB      147MB
 
 i.e. there is about 4 time less memory needed.
+
+
+# pd.unique()
+
+The implementation of pandas' `unique` uses a hash-table instead of hash-set, which results in a 25% larger memory footprint. Using cykhash's set similar to this example
+
+
+    cimport numpy as np
+    import numpy as np
+
+    from cykhash.khashsets cimport Int64Set, Int64SetIterator
+
+    def unique_int64(np.int64_t[::1] data):
+        cdef np.ndarray[dtype=np.int64_t] res
+        cdef Int64Set s=Int64Set(len(data))
+        cdef Int64SetIterator it
+        cdef Py_ssize_t i
+        cdef int cnt=0
+        for i in range(len(data)):
+            s.add(data[i])
+        res=np.empty(s.table.size, dtype=np.int64)
+        it = s.get_iter()
+        for i in range(s.table.size):
+            res[cnt]=it.next()
+            cnt+=1
+        return res
+
+we can achieve better results, here an example of memory footprint:
+
+
+    N      pd.unique()   cykhash's unique
+    1e8      529 MB          364 MB
+    2e8      790 MB          616 MB
+    4e8     1950 MB         1200 MB
+    6e8     3690 MB         2050 MB
+    8e8     3000 MB         2300 MB
+
 
 #### isin
 

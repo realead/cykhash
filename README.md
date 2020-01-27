@@ -12,7 +12,7 @@ cython wrapper for khash
 
   * Is inspired by usage of khash in pandas.
   
-  * For python2 and python3.
+  * For python3 (versions 0.1 and 0.2 supported also python2)
 
 This project was inspired by the following stackoverflow question: https://stackoverflow.com/questions/50779617/pandas-pd-series-isin-performance-with-set-versus-array
 

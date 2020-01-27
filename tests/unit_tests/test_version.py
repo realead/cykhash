@@ -9,7 +9,7 @@ class VersionTester(unittest.TestCase):
       self.assertEqual(cykhash.__version__[0], 0)
 
    def test_minor(self):
-      self.assertEqual(cykhash.__version__[1], 2)
+      self.assertEqual(cykhash.__version__[1], 3)
 
    def test_last(self):
       self.assertEqual(cykhash.__version__[2], 0)

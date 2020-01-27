@@ -1,4 +1,6 @@
-import pyximport; pyximport.install()
+import pyximport; 
+pyximport.install(setup_args = {"script_args" : ["--force"]},
+                  language_level=3)
 
 import unittest
 import cyinterfacetester as cyt

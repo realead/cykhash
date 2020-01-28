@@ -2,9 +2,9 @@ import unittest
 import uttemplate
 import struct
 
-from cykhash import Int64Set, Int32Set, Float64Set, Float32Set
+from cykhash import Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet
 
-@uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set])
+@uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet])
 class SetTester(unittest.TestCase): 
 
    def template_created_empty(self, set_type):
@@ -94,6 +94,7 @@ class SetTester(unittest.TestCase):
         self.assertEqual(i in s, i%2==1)
 
 
+@uttemplate.from_templates([Float64Set, PyObjectSet])
 class Float64NANTester(unittest.TestCase): 
     def test_nan_right(self):
         NAN1=struct.unpack("d", struct.pack("L", 9221120237041090560))[0]
@@ -108,7 +109,7 @@ class Float64NANTester(unittest.TestCase):
 
 
 
-@uttemplate.from_templates([Float64Set, Float32Set])
+@uttemplate.from_templates([Float64Set, Float32Set, PyObjectSet])
 class FloatTester(unittest.TestCase): 
     def template_nan_right(self, set_type):
         NAN=float("nan")

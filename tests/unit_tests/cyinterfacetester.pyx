@@ -92,3 +92,26 @@ def as_py_set_float32(Float32Set db):
     return res
 
 
+############# PyObject - test
+
+from cykhash.khashsets cimport PyObjectSet, PyObjectSetIterator
+
+def isin_pyobject(query, db):
+    s=PyObjectSet()
+    for d in db:
+        s.add(d)
+    assert s.size() == len(s) #to check size() exists
+    res=[]
+    for i in query:
+        res.append(False if s.contains(i)==0 else True)
+    return res
+
+
+def as_py_set_pyobject(PyObjectSet db):
+    cdef PyObjectSetIterator it = db.get_iter()
+    res=set()
+    while it.has_next():
+        res.add(it.next())
+    return res
+
+

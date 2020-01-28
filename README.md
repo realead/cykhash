@@ -118,8 +118,9 @@ Following classes are defined:
          
   * `Int64Set` for 64 bit integers
   * `Int32Set` for 32 bit integers
-  * `Float64Set`for 64 bit floats (NB: `nan` are not yet handled in a proper way)
-  * `Float32Set`for 32 bit floats (NB: `nan` are not yet handled in a proper way)
+  * `Float64Set`for 64 bit floats 
+  * `Float32Set`for 32 bit floats 
+  * `PyObjectSet`for arbitrary Python-objects
 
 with Python interface:
 
@@ -172,6 +173,8 @@ This problem is resolved through following special case handling:
 
 A consequence of the above rule, that the equivalence classes of `{0.0, -0.0}` and `e{x | x is not a number}` have more than one element. In the set these classes are represented by the first seen element from the class.
 
+The above holds also for `PyObjectSet` (this behavior is different from `set` which shows a different behavior for nans)
+
 ## Testing:
 
 For testing of the local version run (or `p2` for python2):
@@ -204,4 +207,5 @@ or to run it after the rebuild (without installing):
 
   * 0.1.0: Int64Set
   * 0.2.0: Int32Set, Float64Set, Float32Set
+  * 0.3.0: PyObjectSet
 

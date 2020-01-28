@@ -28,11 +28,17 @@ cdef extern from *:
 	    return result;
     }
 
+    inline khint32_t pyobject_hash(PyObject* key){
+        khint64_t hash = PyObject_Hash(key);
+        return (khint32_t) ((hash)>>33^(hash)^(hash)<<11);
+    }
+
     // For PyObject_Hash holds:
     //    hash(0.0) == 0 == hash(-0.0)
     //    hash(X) == 0 if X is a NaN-value
     // so it is OK to use it directly
-    #define kh_pyobject_hash_func(key) (khint32_t)(PyObject_Hash(key))
+    
+    #define kh_pyobject_hash_func(key) (pyobject_hash(key))
     #define kh_pyobject_hash_equal(a, b) (pyobject_cmp(a, b))
 
 

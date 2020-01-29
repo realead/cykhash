@@ -111,15 +111,38 @@ Compared to pandas' `isin`, which has a linear running time in number of element
 
 #### PyObjectSet:
 
-There where no advantages (others that nans are handled correctly, more about it later) to use khash-version for normal Python-objects.
+There are no advantages (others that nans are handled correctly, more about it later) to use khash-version for normal Python-objects.
 
-Even more, Python-set outperformed khash-version slightly. One caveau: `PyObject_Hash` doesn't yield a good hash-function (for example for integer `k` it is `k` and using it leads to quite bad results (running `python tests/perf_tests/pyobjectset_vs_set.py`):
+One caveau: `PyObject_Hash` doesn't yield a good hash-function (for example for integer `k` it is `k` and using it leads to quite bad results (running `python tests/perf_tests/pyobjectset_vs_set.py`):
 
 ![1](imgs/set_vs_pyobjectset.png)
 
-as one can see, it is about 50 times slower then Python-set, and seems to have worse than linear behavior. Improving hash-function leads to better results (but still somewhat not quite linear?) - only 2 times slower than Python-set for inserting elements:
+as one can see, it is about 50 times slower then Python-set, and seems to have worse than linear behavior.
+
+The problem is the "discard"  part, as the insertions alone aren't problematic:
+
+
+![1](imgs/set_vs_pyobjectset_only_insert.png)
+
+Fixing it, leads to somewhat better discard behavior:
+
 
 ![2](imgs/set_vs_pyobjectset_fixed_hash.png)
+
+It is only 2 times slower than Python-set for inserting elements (but still somewhat not quite linear?. However it has also a negative impact on `insert`:
+
+![1](imgs/set_vs_pyobjectset_only_insert_fixed_hash.png)
+
+
+As conclusion:
+
+   * `contains` are almost equally fast for `set`/`PyObjectSet`.
+   * `insert` is slightly slower for `PyObjectSet`, preallocation should be used whenever possible.
+   * `discard` is quite slow for `PyObjectSet`.
+
+
+
+
 
 ## Usage:
 

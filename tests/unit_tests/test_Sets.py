@@ -93,6 +93,18 @@ class SetTester(unittest.TestCase):
      for i in range(N):
         self.assertEqual(i in s, i%2==1)
 
+   def template_negative_hint(self, set_type):
+      with self.assertRaises(OverflowError) as context:
+            set_type(-1)
+      self.assertEqual("can't convert negative value to uint32_t", context.exception.args[0])
+
+   def template_zero_hint_ok(self, set_type):
+      s = set_type(0)
+      s.add(4)
+      s.add(5)
+      self.assertTrue(4 in s)
+      self.assertTrue(5 in s)
+
 
 @uttemplate.from_templates([Float64Set, PyObjectSet])
 class Float64NANTester(unittest.TestCase): 

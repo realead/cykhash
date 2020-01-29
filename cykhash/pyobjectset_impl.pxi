@@ -105,7 +105,14 @@ def PyObjectSet_from(it):
         res.add(i)
     return res
     
-
+def PyObjectSet_from_buffer(object[:] buf, double size_hint = 1.25):
+    cdef Py_ssize_t n = len(buf)
+    cdef Py_ssize_t start_size = <Py_ssize_t>(len(buf)*size_hint)+1
+    res=PyObjectSet(start_size)
+    cdef Py_ssize_t i
+    for i in range(n):
+        res.add(buf[i])
+    return res
 
 from libc.stdint cimport  uint8_t
 

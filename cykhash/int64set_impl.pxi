@@ -2,7 +2,7 @@
 #
 # Don't edit it, unless this is I_n_t_6_4_S_e_t implementation
 #
-# run sh all_from_XXX.sh to create it from bluepring - I_n_t_6_4_S_e_t
+# run sh all_from_XXX.sh to create it from blueprint - I_n_t_6_4_S_e_t
 #
 #
 
@@ -94,6 +94,15 @@ def Int64Set_from(it):
     res=Int64Set()
     for i in it:
         res.add(i)
+    return res
+
+def Int64Set_from_buffer(int64_t[:] buf, double size_hint = 1.25):
+    cdef Py_ssize_t n = len(buf)
+    cdef Py_ssize_t start_size = <Py_ssize_t>(len(buf)*size_hint)+1
+    res=Int64Set(start_size)
+    cdef Py_ssize_t i
+    for i in range(n):
+        res.add(buf[i])
     return res
     
 

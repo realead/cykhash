@@ -141,7 +141,11 @@ As conclusion:
    * `discard` is quite slow for `PyObjectSet`.
 
 
+Insertion of Python-integers is 50% slower than the insertion of 64bit integers (see `tests/perf_tests/object_vs_int64_via_buffer.py`):
 
+![1](imgs/buffer_objects_int64.png)
+
+Using `PyObjectSet_from_buffer` is about 2.5 times faster than from iterator and 3 times faster than using `add`.
 
 
 ## Usage:

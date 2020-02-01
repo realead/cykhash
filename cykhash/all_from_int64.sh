@@ -1,28 +1,39 @@
 
-### int32set:
+SOURCE_DIR="sets/int64/"
+SET_DIR="sets/"
+
+
+### int32sets
 echo "Creating int32set from int64set..."
-cp int64set_header.pxi  int32set_header.pxi
-sed -i -- 's/64/32/g'   int32set_header.pxi
-cp int64set_impl.pxi    int32set_impl.pxi
-sed -i -- 's/64/32/g'   int32set_impl.pxi
+TARGET_DIR=$SET_DIR/int32/
+# mkdir -p $TARGET_DIR
+cp $SOURCE_DIR/int64set_header.pxi  $TARGET_DIR/int32set_header.pxi
+sed -i -- 's/64/32/g'   $TARGET_DIR/int32set_header.pxi
+cp $SOURCE_DIR/int64set_impl.pxi    $TARGET_DIR/int32set_impl.pxi
+sed -i -- 's/64/32/g'   $TARGET_DIR/int32set_impl.pxi
 
 
 ### float64set:
 echo "Creating float64set from int64set..."
-cp int64set_header.pxi          float64set_header.pxi
-sed -i -- 's/int64/float64/g'   float64set_header.pxi
-sed -i -- 's/Int64/Float64/g'   float64set_header.pxi
-cp int64set_impl.pxi            float64set_impl.pxi
-sed -i -- 's/int64/float64/g'   float64set_impl.pxi
-sed -i -- 's/Int64/Float64/g'   float64set_impl.pxi
+TARGET_DIR=$SET_DIR/float64/
+# mkdir -p $TARGET_DIR
+cp $SOURCE_DIR/int64set_header.pxi          $TARGET_DIR/float64set_header.pxi
+sed -i -- 's/int64/float64/g'   $TARGET_DIR/float64set_header.pxi
+sed -i -- 's/Int64/Float64/g'   $TARGET_DIR/float64set_header.pxi
+cp $SOURCE_DIR/int64set_impl.pxi            $TARGET_DIR/float64set_impl.pxi
+sed -i -- 's/int64/float64/g'   $TARGET_DIR/float64set_impl.pxi
+sed -i -- 's/Int64/Float64/g'   $TARGET_DIR/float64set_impl.pxi
 
 
 ### float32set:
 echo "Creating float32set from float64set..."
-cp float64set_header.pxi          float32set_header.pxi
-sed -i -- 's/64/32/g'             float32set_header.pxi
-cp float64set_impl.pxi            float32set_impl.pxi
-sed -i -- 's/64/32/g'             float32set_impl.pxi
+SOURCE_DIR_FLOAT64=$SET_DIR/float64/
+TARGET_DIR=$SET_DIR/float32/
+# mkdir -p $TARGET_DIR
+cp $SOURCE_DIR_FLOAT64/float64set_header.pxi          $TARGET_DIR/float32set_header.pxi
+sed -i -- 's/64/32/g'             $TARGET_DIR/float32set_header.pxi
+cp $SOURCE_DIR_FLOAT64/float64set_impl.pxi            $TARGET_DIR/float32set_impl.pxi
+sed -i -- 's/64/32/g'             $TARGET_DIR/float32set_impl.pxi
 
 ### pyobjectset:
 #

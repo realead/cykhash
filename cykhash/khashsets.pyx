@@ -2,8 +2,8 @@ from cpython cimport array
 
 
 # different implementations:
-include "int64set_impl.pxi"
-include "int32set_impl.pxi"
-include "float64set_impl.pxi"
-include "float32set_impl.pxi"
-include "pyobjectset_impl.pxi"
+include "sets/int64/int64set_impl.pxi"
+include "sets/int32/int32set_impl.pxi"
+include "sets/float64/float64set_impl.pxi"
+include "sets/float32/float32set_impl.pxi"
+include "sets/pyobject/pyobjectset_impl.pxi"

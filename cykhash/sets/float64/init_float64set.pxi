@@ -4,19 +4,11 @@ cdef extern from *:
     """
     //khash has nothing predefined for float/double
     //      in the first stet we add needed functionality
-    #include <string.h>
     #include <math.h>
 
     typedef double float64_t;
     typedef float64_t khfloat64_t;
-    //don't pun and alias!
-    //i.e. not static khint64_t f64_to_i64(khfloat64_t val){return *((khint64_t *)&val);} 
-    //but:
-    static khint64_t f64_to_i64(khfloat64_t val){
-          khint64_t res; 
-          memcpy(&res, &val, sizeof(khfloat64_t)); 
-          return res;
-    } 
+
     //right for all but not -0.0 and NAN
     #define kh_float64_hash_func(key) (khint32_t)((f64_to_i64(key))>>33^(f64_to_i64(key))^(f64_to_i64(key))<<11)
 

@@ -8,14 +8,7 @@ cdef extern from *:
 
     typedef float float32_t;
     typedef float32_t khfloat32_t;
-    //don't pun and alias!
-    //i.e. not static khint32_t f32_to_i32(khfloat32_t val){return *((khint32_t *)&val);} 
-    //but:
-    static khint32_t f32_to_i32(khfloat32_t val){
-          khint32_t res; 
-          memcpy(&res, &val, sizeof(khfloat32_t)); 
-          return res;
-    } 
+
 
     //right for all but not -0.0 and NAN
     #define kh_float32_hash_func(key) (khint32_t)(f32_to_i32(key))

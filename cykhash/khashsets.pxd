@@ -12,6 +12,9 @@ cdef extern from *:
     ctypedef uint32_t khint_t
 
 
+#utilities for int<->float
+include "float_utils.pxi"
+
 # different implementation
 include "sets/int64/int64set_header.pxi"
 include "sets/int32/int32set_header.pxi"

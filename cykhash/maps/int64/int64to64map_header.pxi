@@ -13,7 +13,7 @@ cdef extern from *:
         int64_t *keys
         int64_t *vals  
 
-    kh_int64set_t* kh_init_int64to64map() nogil
+    kh_int64to64map_t* kh_init_int64to64map() nogil
     void kh_destroy_int64to64map(kh_int64to64map_t*) nogil
     void kh_clear_int64to64map(kh_int64to64map_t*) nogil
     khint_t kh_get_int64to64map(kh_int64to64map_t*, int64_t) nogil
@@ -27,6 +27,7 @@ cdef extern from *:
 
 cdef class Int64to64Map:
     cdef kh_int64to64map_t *table
+    cdef bint for_int64
 
     cdef bint contains(self, int64_t key) except *
     cdef Int64to64MapIterator get_iter(self)
@@ -39,11 +40,11 @@ cdef class Int64to64Map:
     
 
 cdef struct int64to64_key_val_pair:
-    cdef int64_t key
-    cdef int64_t val
+    int64_t key
+    int64_t val
 
 
-cdef class Int64SetIterator:
+cdef class Int64to64MapIterator:
     cdef khint_t   it
     cdef khint_t   size
     cdef Int64to64Map  parent

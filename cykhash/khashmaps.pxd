@@ -12,8 +12,12 @@ cdef extern from *:
     ctypedef uint32_t khint_t
 
 
+
+#utilities for int<->float
+include "float_utils.pxi"
+
 # different implementation
-include "maps/int64/int64map8bytes_header.pxi"
+include "maps/int64/int64to64map_header.pxi"
 #include "sets/int32/int32set_header.pxi"
 #include "sets/float64/float64set_header.pxi"
 #include "sets/float32/float32set_header.pxi"

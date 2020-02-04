@@ -48,3 +48,19 @@ sed -i -- 's/64/32/g'             $TARGET_DIR/float32set_impl.pxi
 #sed -i -- 's/int64/pyobject/g'   pyobjectset_impl.pxi
 #sed -i -- 's/Int64/PyObject/g'   pyobjectset_impl.pxi
 
+
+###  MAPS
+
+SOURCE_DIR="maps/int64/"
+MAP_DIR="maps/"
+
+
+### int32map
+echo "Creating int32map from int64map..."
+TARGET_DIR=$MAP_DIR/int32/
+# mkdir -p $TARGET_DIR
+cp $SOURCE_DIR/int64to64map_header.pxi  $TARGET_DIR/int32to32map_header.pxi
+sed -i -- 's/64/32/g'   $TARGET_DIR/int32to32map_header.pxi
+cp $SOURCE_DIR/int64to64map_impl.pxi    $TARGET_DIR/int32to32map_impl.pxi
+sed -i -- 's/64/32/g'   $TARGET_DIR/int32to32map_impl.pxi
+

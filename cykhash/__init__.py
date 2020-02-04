@@ -8,3 +8,4 @@ from .khashsets import PyObjectSet, PyObjectSetIterator, isin_pyobject,  PyObjec
 
 
 from .khashmaps import Int64to64Map, Int64to64MapIterator, Int64to64Map_from_int64_buffer, Int64to64Map_from_float64_buffer 
+from .khashmaps import Int32to32Map, Int32to32MapIterator, Int32to32Map_from_int32_buffer, Int32to32Map_from_float32_buffer 

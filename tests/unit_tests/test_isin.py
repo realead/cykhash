@@ -9,7 +9,7 @@ from cykhash import isin_pyobject,  PyObjectSet_from, PyObjectSet_from_buffer
 
 ISIN={'int32': isin_int32, 'int64': isin_int64, 'float64' : isin_float64, 'float32' : isin_float32}
 FROM_SET={'int32': Int32Set_from, 'int64': Int64Set_from, 'float64' : Float64Set_from, 'float32' : Float32Set_from, 'pyobject' : PyObjectSet_from}
-BUFFER_SIZE = {'int32': 'i', 'int64': 'l', 'float64' : 'd', 'float32' : 'f'}
+BUFFER_SIZE = {'int32': 'i', 'int64': 'q', 'float64' : 'd', 'float32' : 'f'}
 FROM_BUFFER_SET={'int32': Int32Set_from_buffer, 'int64': Int64Set_from_buffer, 'float64' : Float64Set_from_buffer, 'float32' : Float32Set_from_buffer, 'pyobject' : PyObjectSet_from_buffer}
 
 

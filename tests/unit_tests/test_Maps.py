@@ -2,9 +2,9 @@ import unittest
 import uttemplate
 import struct
 
-from cykhash import Int64to64Map, Int32to32Map, Float64to64Map
+from cykhash import Int64to64Map, Int32to32Map, Float64to64Map, Float32to32Map
 
-@uttemplate.from_templates([Int64to64Map, Int32to32Map, Float64to64Map])
+@uttemplate.from_templates([Int64to64Map, Int32to32Map, Float64to64Map, Float32to32Map])
 class CommonMapTester(unittest.TestCase): 
 
    def template_created_empty(self, map_type):
@@ -152,28 +152,28 @@ class Map64Tester(unittest.TestCase):
       s.put_float64(4, 0.5)
       self.assertTrue(s.get_float64(4), 0.5)
 
-
+@uttemplate.from_templates([Int32to32Map, Float32to32Map])
 class Int32MapTester(unittest.TestCase): 
-   def test_put_get_int(self):
-      s=Int32to32Map()
+   def template_put_get_int(self, map_type):
+      s = map_type()
       s.put_int32(1, 43)
       self.assertEqual(len(s), 1)
       self.assertEqual(s.get_int32(1), 43)
 
-   def test_int_to_float_to_int(self):
-      s = Int32to32Map()
+   def template_int_to_float_to_int(self, map_type):
+      s = map_type()
       s.put_int32(4, 7)
       s.put_float32(5, s.get_float32(4))
       self.assertTrue(s.get_int32(4), 7)
 
-   def test_same_key_float_int(self):
-      s = Int32to32Map()
+   def template_same_key_float_int(self, map_type):
+      s = map_type()
       s.put_int32(4, 7)
       s.put_float32(4, 0.5)
       self.assertTrue(s.get_float32(4), 0.5)
 
 
-@uttemplate.from_templates([Float64to64Map])
+@uttemplate.from_templates([Float64to64Map, Float32to32Map])
 class FloatTester(unittest.TestCase): 
     def template_nan_right(self, set_type):
         NAN=float("nan")

@@ -13,7 +13,5 @@ cdef extern from *:
 include "maps/int64/int64to64map_impl.pxi"
 include "maps/int32/int32to32map_impl.pxi"
 include "maps/float64/float64to64map_impl.pxi"
-#include "sets/int32/int32set_impl.pxi"
-#include "sets/float64/float64set_impl.pxi"
-#include "sets/float32/float32set_impl.pxi"
+include "maps/float32/float32to32map_impl.pxi"
 #include "sets/pyobject/pyobjectset_impl.pxi"

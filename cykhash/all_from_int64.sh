@@ -66,3 +66,16 @@ sed -i -- 's/64/32/g'   $TARGET_DIR/int32to32map_impl.pxi
 
 
 
+SOURCE_DIR="maps/float64/"
+
+### float32map
+echo "Creating float32map from float64map..."
+TARGET_DIR=$MAP_DIR/float32/
+# mkdir -p $TARGET_DIR
+cp $SOURCE_DIR/float64to64map_header.pxi  $TARGET_DIR/float32to32map_header.pxi
+sed -i -- 's/64/32/g'   $TARGET_DIR/float32to32map_header.pxi
+cp $SOURCE_DIR/float64to64map_impl.pxi    $TARGET_DIR/float32to32map_impl.pxi
+sed -i -- 's/64/32/g'   $TARGET_DIR/float32to32map_impl.pxi
+
+
+

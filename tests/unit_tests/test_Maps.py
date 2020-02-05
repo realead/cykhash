@@ -2,9 +2,9 @@ import unittest
 import uttemplate
 import struct
 
-from cykhash import Int64to64Map, Int32to32Map
+from cykhash import Int64to64Map, Int32to32Map, Float64to64Map
 
-@uttemplate.from_templates([Int64to64Map, Int32to32Map])
+@uttemplate.from_templates([Int64to64Map, Int32to32Map, Float64to64Map])
 class CommonMapTester(unittest.TestCase): 
 
    def template_created_empty(self, map_type):
@@ -105,7 +105,7 @@ class CommonMapTester(unittest.TestCase):
    def template_no_such_key(self, map_type):
       with self.assertRaises(KeyError) as context:
             map_type(100)[55]
-      self.assertEqual("No such key: 55", context.exception.args[0])
+      self.assertTrue(context.exception.args[0].startswith("No such key: 55"))
 
    def template_zero_hint_ok(self, map_type):
       s = map_type(0)
@@ -132,21 +132,22 @@ class CommonMapTester(unittest.TestCase):
 
 ###### special testers
 
-class Int64MapTester(unittest.TestCase): 
-   def test_put_get_int(self):
-      s=Int64to64Map()
+@uttemplate.from_templates([Int64to64Map, Float64to64Map])
+class Map64Tester(unittest.TestCase): 
+   def template_put_get_int(self, map_type):
+      s = map_type()
       s.put_int64(1, 43)
       self.assertEqual(len(s), 1)
       self.assertEqual(s.get_int64(1), 43)
 
-   def test_int_to_float_to_int(self):
-      s = Int64to64Map()
+   def template_int_to_float_to_int(self, map_type):
+      s = map_type()
       s.put_int64(4, 7)
       s.put_float64(5, s.get_float64(4))
       self.assertTrue(s.get_int64(4), 7)
 
-   def test_same_key_float_int(self):
-      s = Int64to64Map()
+   def template_same_key_float_int(self, map_type):
+      s = map_type()
       s.put_int64(4, 7)
       s.put_float64(4, 0.5)
       self.assertTrue(s.get_float64(4), 0.5)
@@ -172,5 +173,40 @@ class Int32MapTester(unittest.TestCase):
       self.assertTrue(s.get_float32(4), 0.5)
 
 
+@uttemplate.from_templates([Float64to64Map])
+class FloatTester(unittest.TestCase): 
+    def template_nan_right(self, set_type):
+        NAN=float("nan")
+        s=set_type()
+        self.assertFalse(NAN in s)
+        s[NAN] = 1
+        self.assertTrue(NAN in s)
+ 
+#+0.0/-0.0 will break when there are more than 2**32 elements in the map
+# bacause then hash-function will put them in different buckets 
+
+    def template_signed_zero1(self, set_type):
+        MINUS_ZERO=float("-0.0")
+        PLUS_ZERO =float("0.0")
+        self.assertFalse(str(MINUS_ZERO)==str(PLUS_ZERO))
+        s=set_type()
+        for i in range(1,2000):
+         s[i] = i
+        self.assertFalse(MINUS_ZERO in s)
+        self.assertFalse(PLUS_ZERO in s)
+        s[MINUS_ZERO]=10
+        self.assertTrue(MINUS_ZERO in s)
+        self.assertTrue(PLUS_ZERO in s)
 
 
+    def template_signed_zero2(self, set_type):
+        MINUS_ZERO=float("-0.0")
+        PLUS_ZERO =float("0.0")
+        s=set_type()
+        for i in range(1,2000):
+         s[i] = i
+        self.assertFalse(MINUS_ZERO in s)
+        self.assertFalse(PLUS_ZERO in s)
+        s[PLUS_ZERO] = 12
+        self.assertTrue(MINUS_ZERO in s)
+        self.assertTrue(PLUS_ZERO in s)

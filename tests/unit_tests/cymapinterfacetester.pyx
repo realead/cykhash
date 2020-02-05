@@ -68,3 +68,38 @@ def as_py_list_int32(Int32to32Map db):
         p = it.next()
         res+= [p.key, p.val]
     return res
+
+
+############# float64 - test
+
+from cykhash.khashmaps cimport Float64to64Map, Float64to64MapIterator, float64to64_key_val_pair
+
+def use_int64_float64(keys, values, query):
+    s=Float64to64Map()
+    for x,y in zip(keys, values):
+        s.put_int64(x,y)
+    assert s.size() == len(s) #to check size() exists
+    res=[]
+    for i in query:
+        res.append(s.get_int64(i))
+    return res
+
+def use_float64_float64(keys, values, query):
+    s=Float64to64Map()
+    for x,y in zip(keys, values):
+        s.put_float64(x,y)
+    assert s.size() == len(s) #to check size() exists
+    res=[]
+    for i in query:
+        res.append(s.get_float64(i))
+    return res
+
+
+def as_py_list_int64_float64(Float64to64Map db):
+    cdef Float64to64MapIterator it = db.get_iter()
+    cdef float64to64_key_val_pair p
+    res=[]
+    while it.has_next():
+        p = it.next()
+        res+= [int(p.key), p.val]
+    return res

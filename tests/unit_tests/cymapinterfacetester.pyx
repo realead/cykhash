@@ -139,5 +139,29 @@ def as_py_list_int32_float32(Float32to32Map db):
     return res
 
 
+############# float32 - test
+
+from cykhash.khashmaps cimport PyObjectMap, PyObjectMapIterator, pyobject_key_val_pair
+
+def use_pyobject(keys, values, query):
+    s=PyObjectMap()
+    for x,y in zip(keys, values):
+        s.put_object(x,y)
+    assert s.size() == len(s) #to check size() exists
+    res=[]
+    for i in query:
+        res.append(s.get_object(i))
+    return res
+
+def as_py_list_pyobject(PyObjectMap db):
+    cdef PyObjectMapIterator it = db.get_iter()
+    cdef pyobject_key_val_pair p
+    res=[]
+    while it.has_next():
+        p = it.next()
+        res+= [int(<object>(p.key)), <object>(p.val)]
+    return res
+
+
 
 

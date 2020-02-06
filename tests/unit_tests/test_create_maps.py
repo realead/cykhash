@@ -6,6 +6,7 @@ from cykhash import Int64to64Map_from_int64_buffer, Int64to64Map_from_float64_bu
 from cykhash import Int32to32Map_from_int32_buffer, Int32to32Map_from_float32_buffer
 from cykhash import Float64to64Map_from_int64_buffer, Float64to64Map_from_float64_buffer
 from cykhash import Float32to32Map_from_int32_buffer, Float32to32Map_from_float32_buffer
+from cykhash import PyObjectMap_from_object_buffer
 
 FUNCTION = {'int64_int64':   Int64to64Map_from_int64_buffer,
             'int64_float64': Int64to64Map_from_float64_buffer,
@@ -64,6 +65,48 @@ class Map_from_buffer_Tester(unittest.TestCase):
         keys=array.array(KEY_FORMAT[fun_type], [1,2,3,42])
         vals=array.array(VAL_FORMAT[fun_type], [4,5,6])
         m=FUNCTION[fun_type](keys, vals, 2.0)
+        self.assertEqual(len(m), len(vals))
+        for x,y in zip(keys, vals):
+            self.assertTrue(x in m)
+            self.assertEqual(m[x], y)
+
+
+class BufferTesterPyObject(unittest.TestCase): 
+    def test_pyobject_create_from(self):
+        try:
+            import numpy as np
+        except:
+            return # well what should I do?
+        keys=np.array([1,2,3], dtype=np.object)
+        vals=np.array([4,5,6], dtype=np.object)
+        m=PyObjectMap_from_object_buffer(keys, vals, 2.0)
+        self.assertEqual(len(m), len(keys))
+        for x,y in zip(keys, vals):
+            self.assertTrue(x in m)
+            self.assertEqual(m[x], y)
+
+    def test_create_diff_vals_longer(self):
+        try:
+            import numpy as np
+        except:
+            return # well what should I do?
+        keys=np.array([1,2,3], dtype=np.object)
+        vals=np.array([4,5,6,7], dtype=np.object)
+        m=PyObjectMap_from_object_buffer(keys, vals, 2.0)
+        self.assertEqual(len(m), len(keys))
+        for x,y in zip(keys, vals):
+            self.assertTrue(x in m)
+            self.assertEqual(m[x], y)
+
+
+    def test_create_diff_keys_longer(self):
+        try:
+            import numpy as np
+        except:
+            return # well what should I do?
+        keys=np.array([1,2,3, 42], dtype=np.object)
+        vals=np.array([4,5,6], dtype=np.object)
+        m=PyObjectMap_from_object_buffer(keys, vals, 2.0)
         self.assertEqual(len(m), len(vals))
         for x,y in zip(keys, vals):
             self.assertTrue(x in m)

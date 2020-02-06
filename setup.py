@@ -10,7 +10,7 @@ USE_CYTHON = True
 
 extensions = Extension(
             name='cykhash.khashsets',
-            sources = ["cykhash/khashsets.pyx"],
+            sources = ["src/cykhash/khashsets.pyx"],
     )
 
 if USE_CYTHON:
@@ -19,10 +19,11 @@ if USE_CYTHON:
 kwargs = {
       'name':'cykhash',
       'version':'0.3.0',
-      'description':'Cython wrapper for khash-table',
+      'description':'Cython wrapper for khash-table/khash-set',
       'author':'Egor Dranischnikow',
       'url':'https://github.com/realead/cykhash',
-      'packages':find_packages(),
+      'packages':find_packages(where='src'),
+      'package_dir':{"": "src"},
       'license': 'MIT',
       'ext_modules':  extensions,
 

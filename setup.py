@@ -8,10 +8,15 @@ USE_CYTHON = True
 
 
 
-extensions = Extension(
-            name='cykhash.khashsets',
-            sources = ["src/cykhash/khashsets.pyx"],
-    )
+extensions = [Extension(
+                         name='cykhash.khashsets',
+                         sources = ["src/cykhash/khashsets.pyx"],
+                        ),
+              Extension(
+                         name='cykhash.khashmaps',
+                         sources = ["src/cykhash/khashmaps.pyx"],
+                        ),
+             ]
 
 if USE_CYTHON:
     extensions = cythonize(extensions, language_level=3)
@@ -28,7 +33,7 @@ kwargs = {
       'ext_modules':  extensions,
 
        #ensure pxd-files:
-      'package_data' : { 'cykhash': ['*.pxd','*.pxi']},
+      'package_data' : { 'cykhash': ['*.pxd','*.pxi','*/*/*.pxi']},
       'include_package_data' : True,
       'zip_safe' : False  #needed because setuptools are used
 }

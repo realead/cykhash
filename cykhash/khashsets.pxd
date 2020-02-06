@@ -14,6 +14,7 @@ cdef extern from *:
 
 #utilities for int<->float
 include "float_utils.pxi"
+include "pyobject_utils.pxi"
 
 # different implementation
 include "sets/int64/int64set_header.pxi"

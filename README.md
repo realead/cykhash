@@ -28,6 +28,7 @@ Additional dependencies for testing:
   * `sh`
   * `virtualenv`
   * `uttemplate`>=0.2.0 (https://github.com/realead/uttemplate)
+  * `numpy`, `pandas`, `perfplot` for performance tests
 
 ## Instalation:
 
@@ -61,7 +62,7 @@ Peak memory usage for N int64-integers (inclusive python-interpreter):
 i.e. there is about 4 time less memory needed.
 
 
-# pd.unique()
+#### pd.unique()
 
 The implementation of pandas' `unique` uses a hash-table instead of hash-set, which results in a 25% larger memory footprint. Using cykhash's set similar to this example
 
@@ -147,6 +148,26 @@ Insertion of Python-integers is 50% slower than the insertion of 64bit integers 
 
 Using `PyObjectSet_from_buffer` is about 2.5 times faster than from iterator and 3 times faster than using `add`.
 
+For best performance use `Int64Set` or, even better, `Int32Set`, which is about factor 2 faster than the 64bit-version.
+
+ 
+#### PyObjectMap:
+
+There are similar observation as for `PyObjectMap`, see `map_object_vs_int64_via_buffer.py` and `pyobjectmap_vs_dict.py` in 'tests/perf_tests`-folder.
+
+The results are slightly worse (all above discard):
+
+![1](imgs/map_vs_pyobjectmap_fixed_hash.png)
+
+and
+
+![1](imgs/map_vs_pyobjectmap_only_insert_fixed_hash.png)
+
+Also here the performance of the 64bit/32bit variant much better:
+
+
+![1](imgs/buffer_objects_int64_map.png)
+
 
 ## Usage:
 
@@ -184,6 +205,43 @@ The following functions are available:
    * `XXXXSet_from(it)` - creates a `XXXXSet` from an iterable, with `XXXX` being either `Int64`, `Int32`, `Float64`, `Float32` or `PyObject`.
    * `XXXXSet_from_buffer(buf, size_hint=1.25)` creates a `XXXXSet` from an object which implements buffer interface, with `XXXX` being either `Int64`, `Int32`, `Float64`, `Float32` or `PyObject`. Starting size of hash-set is `int(size_hint*len(buf))`.
   * `isin_xxxx(query, db, result)` evaluates `isin` for `query` being a buffer of the right type, `db` - a corresponding `XXXXSet`, and result a buffer for with 8bit-itemsize, `xxxx` being either `int64`, `int32`, `float64`, `float32` or `pyobject`.
+
+
+### Maps
+
+Following classes are defined: 
+         
+  * `Int64to64Map` for mapping  64 bit integers to 64bit integer/floats
+  * `Int32to32Map` for mapping 32 bit integers to 32bit integer/floats
+  * `Float64to64Map`for mapping 64 bit floats to 64bit integer/floats
+  * `Float32to32Map`for mapping 32 bit floats to 32bit integer/floats
+  * `PyObjectMap`for arbitrary Python-objects as key/values
+
+with Python interface:
+
+  * `__len__`: number of elements in the map
+  * `__contains__`: whether an element is contained in the map
+  * `put_XXint/get_XXint`: setting/retrieving elements with XX=32 or 64 bits integer 
+  * `put_XXfloat/get_XXfloat`: setting/retrieving elements with XX=32 or 64 bits float 
+  * `__setitem__/__getitem___`: parameter `for_intXX` in the constructor deceides whether elements are intepreted as int or float (XX =  32 or 64 bits)
+  * `discard`: remove an element or do nothing if element is not in the map
+  * `__iter__`: returns an iterator through all elements in map
+
+with Cython interface:
+
+  * `contains`: checks whether an element is contained in the map
+  * `put_XXint/get_XXint,put_XXfloat/get_XXfloat` : setting/getting elements in the map
+  * `discard` : remove an element or do nothing if element is not in the map
+  * `get_iter`: returns an iterator with the following Cython interface:
+       * `has_next`:returns true if there are more elements in the iterator
+       * `next` :returns next element and moves the iterator
+
+### Utility functions:
+
+The following functions are available:
+
+   * `TypeXXtoXXMap_from_typeXX_buffer(keys, vals, size_hint)` - creates a `TypeXXtoXXMyp` from buffers with  `Type` either `Float` or `Int`, `XX` either 32 or 64 and `type` either `float` or `int`. Starting size of hash-map is `int(size_hint*min(len(keys), len(vals)))`.
+   * `PyObjectMap_from_object_buffer` for keys, values as objects.
 
 ### Examples: 
 

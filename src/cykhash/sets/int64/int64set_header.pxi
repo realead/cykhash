@@ -45,3 +45,5 @@ cdef class Int64SetIterator:
     cdef int64_t next(self) except *
     cdef void __move(self) except *
 
+cpdef Int64Set_from_buffer(int64_t[:] buf, double size_hint=*)
+

@@ -96,7 +96,7 @@ def Int64Set_from(it):
         res.add(i)
     return res
 
-def Int64Set_from_buffer(int64_t[:] buf, double size_hint = 1.25):
+cpdef Int64Set_from_buffer(int64_t[:] buf, double size_hint = 1.25):
     cdef Py_ssize_t n = len(buf)
     cdef Py_ssize_t start_size = <Py_ssize_t>(len(buf)*size_hint)+1
     res=Int64Set(start_size)
@@ -109,7 +109,7 @@ def Int64Set_from_buffer(int64_t[:] buf, double size_hint = 1.25):
 
 from libc.stdint cimport  uint8_t
 
-def isin_int64(int64_t[:] query, Int64Set db, uint8_t[:] result):
+cpdef isin_int64(int64_t[:] query, Int64Set db, uint8_t[:] result):
     cdef size_t i
     cdef size_t n=len(query)
     for i in range(n):

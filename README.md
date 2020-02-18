@@ -281,27 +281,25 @@ The above holds also for `PyObjectSet` (this behavior is different from `set` wh
 
 ## Testing:
 
-For testing of the local version run (or `p2` for python2):
+For testing of the local version in an virtual environment run:
 
-    sh test_install.sh p3
+    sh test_install.sh 
 
 in the `tests` subfolder.
 
 For testing of the version from github run:
 
-    sh test_install.sh p3 from-github
+    sh test_install.sh from-github
 
 For keeping the the virtual enviroment after the tests:
 
-    sh test_install.sh p3 local keep
+    sh test_install.sh local keep
 
-To testing the current version without installing/building:
+To install and running tests in currently active environment:
 
-    sh run_test_from_source.sh
+    sh test_in_active_env.sh
 
-or to run it after the rebuild (without installing):
-   
-    sh run_test_from_source.sh rebuild
+
 
 
 

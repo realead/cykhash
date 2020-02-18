@@ -5,14 +5,14 @@ cdef extern from *:
     //preprocessor creates needed struct-type and all function definitions
 
     //set with keys of type int64 -> resulting typename: kh_int64set_t;
-    KHASH_SET_INIT_INT64(int64set)
+    KHASH_INIT(int64set, int64_t, char, 0, kh_int64_hash_func, kh_int64_hash_equal)
 
     //Generated code:
     /*
         typedef struct kh_int64set_s { 
             khint_t n_buckets, size, n_occupied, upper_bound; 
             khint32_t *flags; 
-            khint64_t *keys; 
+            int64_t *keys; 
             char *vals; 
         } kh_int64set_t; 
 

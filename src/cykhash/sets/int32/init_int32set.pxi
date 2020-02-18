@@ -5,14 +5,14 @@ cdef extern from *:
     //preprocessor creates needed struct-type and all function definitions
 
     //set with keys of type int32 -> resulting typename: kh_int32set_t;
-    KHASH_SET_INIT_INT(int32set)
+    KHASH_INIT(int32set, int32_t, char, 0, kh_int_hash_func, kh_int_hash_equal)
 
     //Generated code:
     /*
         typedef struct kh_int32set_s { 
             khint_t n_buckets, size, n_occupied, upper_bound; 
             khint32_t *flags; 
-            khint32_t *keys; 
+            int32_t *keys; 
             char *vals; 
         } kh_int32set_t; 
 

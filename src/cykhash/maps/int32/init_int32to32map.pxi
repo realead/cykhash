@@ -6,8 +6,7 @@ cdef extern from *:
 
     // map with keys of type int32 -> und result int32
     // resulting typename: kh_int32to32map_t;
-    KHASH_MAP_INIT_INT64(int32to32map, int32_t)	
-
+    KHASH_INIT(int32to32map, int32_t, int32_t, 1, kh_int_hash_func, kh_int_hash_equal)
   
 
     """

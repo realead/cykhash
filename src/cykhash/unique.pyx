@@ -6,6 +6,7 @@ from .khashsets cimport khint_t
 from .khashsets cimport Int64Set, Int64Set_from_buffer, kh_exist_int64set
 from .khashsets cimport Int32Set, Int32Set_from_buffer, kh_exist_int32set
 from .khashsets cimport Float64Set, Float64Set_from_buffer, kh_exist_float64set
+from .khashsets cimport Float32Set, Float32Set_from_buffer, kh_exist_float32set
 
 
 
@@ -153,5 +154,25 @@ cpdef unique_float64(float64_t[:] vals, double size_hint=1.25):
     # shrink to fit:
     mem = <float64_t*> realloc(mem, sizeof(float64_t)*current);
     return MemoryNanny.create_memory_nanny(mem, current, sizeof(float64_t), b"d")
+
+
+cpdef unique_float32(float32_t[:] vals, double size_hint=1.25):
+    cdef Float32Set s = Float32Set_from_buffer(vals, size_hint)
+    
+    # compress:
+    cdef float32_t* mem = s.table.keys
+    cdef khint_t i
+    cdef khint_t current = 0
+    for i in range(s.table.n_buckets):
+        if kh_exist_float32set(s.table, i):
+            mem[current] = mem[i]
+            current += 1
+
+    # take over the memory:
+    s.table.keys = NULL
+    
+    # shrink to fit:
+    mem = <float32_t*> realloc(mem, sizeof(float32_t)*current);
+    return MemoryNanny.create_memory_nanny(mem, current, sizeof(float32_t), b"f")
 
 

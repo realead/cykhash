@@ -1,9 +1,11 @@
 from cpython cimport buffer
 from libc.stdlib cimport realloc, free
 
+
 from .khashsets cimport khint_t
 from .khashsets cimport Int64Set, Int64Set_from_buffer, kh_exist_int64set
 from .khashsets cimport Int32Set, Int32Set_from_buffer, kh_exist_int32set
+from .khashsets cimport Float64Set, Float64Set_from_buffer, kh_exist_float64set
 
 
 
@@ -131,5 +133,25 @@ cpdef unique_int32(int32_t[:] vals, double size_hint=1.25):
     # shrink to fit:
     mem = <int32_t*> realloc(mem, sizeof(int32_t)*current);
     return MemoryNanny.create_memory_nanny(mem, current, sizeof(int32_t), b"i")
+
+
+cpdef unique_float64(float64_t[:] vals, double size_hint=1.25):
+    cdef Float64Set s = Float64Set_from_buffer(vals, size_hint)
+    
+    # compress:
+    cdef float64_t* mem = s.table.keys
+    cdef khint_t i
+    cdef khint_t current = 0
+    for i in range(s.table.n_buckets):
+        if kh_exist_float64set(s.table, i):
+            mem[current] = mem[i]
+            current += 1
+
+    # take over the memory:
+    s.table.keys = NULL
+    
+    # shrink to fit:
+    mem = <float64_t*> realloc(mem, sizeof(float64_t)*current);
+    return MemoryNanny.create_memory_nanny(mem, current, sizeof(float64_t), b"d")
 
 

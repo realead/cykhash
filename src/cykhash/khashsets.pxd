@@ -1,10 +1,10 @@
 from libc.stdint cimport  uint32_t,  int64_t,  int32_t
 from cpython.object cimport PyObject
 
+from .floatdef cimport float64_t, float32_t
 
 ### Common definitions:
-ctypedef double float64_t
-ctypedef float  float32_t 
+ 
 ctypedef PyObject* pyobject_t
 
 include "khash.pxi"

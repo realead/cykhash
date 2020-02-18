@@ -109,7 +109,7 @@ cpdef Int32Set_from_buffer(int32_t[:] buf, double size_hint = 1.25):
 
 from libc.stdint cimport  uint8_t
 
-def isin_int32(int32_t[:] query, Int32Set db, uint8_t[:] result):
+cpdef isin_int32(int32_t[:] query, Int32Set db, uint8_t[:] result):
     cdef size_t i
     cdef size_t n=len(query)
     for i in range(n):

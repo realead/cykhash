@@ -45,3 +45,5 @@ cdef class Float32SetIterator:
     cdef float32_t next(self) except *
     cdef void __move(self) except *
 
+cpdef Float32Set_from_buffer(float32_t[:] buf, double size_hint=*)
+

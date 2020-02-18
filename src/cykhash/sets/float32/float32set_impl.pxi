@@ -96,7 +96,7 @@ def Float32Set_from(it):
         res.add(i)
     return res
 
-def Float32Set_from_buffer(float32_t[:] buf, double size_hint = 1.25):
+cpdef Float32Set_from_buffer(float32_t[:] buf, double size_hint = 1.25):
     cdef Py_ssize_t n = len(buf)
     cdef Py_ssize_t start_size = <Py_ssize_t>(len(buf)*size_hint)+1
     res=Float32Set(start_size)
@@ -109,7 +109,7 @@ def Float32Set_from_buffer(float32_t[:] buf, double size_hint = 1.25):
 
 from libc.stdint cimport  uint8_t
 
-def isin_float32(float32_t[:] query, Float32Set db, uint8_t[:] result):
+cpdef isin_float32(float32_t[:] query, Float32Set db, uint8_t[:] result):
     cdef size_t i
     cdef size_t n=len(query)
     for i in range(n):

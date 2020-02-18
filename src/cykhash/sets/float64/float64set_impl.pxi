@@ -96,7 +96,7 @@ def Float64Set_from(it):
         res.add(i)
     return res
 
-def Float64Set_from_buffer(float64_t[:] buf, double size_hint = 1.25):
+cpdef Float64Set_from_buffer(float64_t[:] buf, double size_hint = 1.25):
     cdef Py_ssize_t n = len(buf)
     cdef Py_ssize_t start_size = <Py_ssize_t>(len(buf)*size_hint)+1
     res=Float64Set(start_size)
@@ -109,7 +109,7 @@ def Float64Set_from_buffer(float64_t[:] buf, double size_hint = 1.25):
 
 from libc.stdint cimport  uint8_t
 
-def isin_float64(float64_t[:] query, Float64Set db, uint8_t[:] result):
+cpdef isin_float64(float64_t[:] query, Float64Set db, uint8_t[:] result):
     cdef size_t i
     cdef size_t n=len(query)
     for i in range(n):

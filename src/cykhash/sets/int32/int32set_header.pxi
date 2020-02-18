@@ -45,3 +45,5 @@ cdef class Int32SetIterator:
     cdef int32_t next(self) except *
     cdef void __move(self) except *
 
+cpdef Int32Set_from_buffer(int32_t[:] buf, double size_hint=*)
+

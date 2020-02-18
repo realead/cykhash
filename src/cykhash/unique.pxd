@@ -6,4 +6,5 @@ ctypedef float  float32_t
 
 
 cpdef unique_int64(int64_t[:] vals, double size_hint=*)
+cpdef unique_int32(int32_t[:] vals, double size_hint=*)
 

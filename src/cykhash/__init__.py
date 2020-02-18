@@ -14,4 +14,4 @@ from .khashmaps import Float32to32Map, Float32to32MapIterator, Float32to32Map_fr
 from .khashmaps import PyObjectMap, PyObjectMapIterator, PyObjectMap_from_object_buffer
 
 
-from .unique import unique_int64
+from .unique import unique_int64, unique_int32

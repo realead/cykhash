@@ -5,16 +5,20 @@ import pyximport;
 pyximport.install(setup_args = {"script_args" : ["--force"]},
                   language_level=3)
 
-from cykhash import unique_int64
-from uniqueinterfacetester import use_unique_int64
+from cykhash import unique_int64, unique_int32
+from uniqueinterfacetester import use_unique_int64, use_unique_int32
 
-UNIQUE={'int64': unique_int64}
-CY_UNIQUE={'int64': use_unique_int64}
+UNIQUE={'int64': unique_int64,
+        'int32': unique_int32,
+       }
+CY_UNIQUE={'int64': use_unique_int64,
+           'int32': use_unique_int32,
+       }
 BUFFER_SIZE = {'int32': 'i', 'int64': 'q', 'float64' : 'd', 'float32' : 'f'}
 
 
 import array
-@uttemplate.from_templates(['int64'])
+@uttemplate.from_templates(['int64', 'int32'])
 class UniqueTester(unittest.TestCase): 
     def template_unique(self, value_type):
         a = array.array(BUFFER_SIZE[value_type], [1,1,1,1,1,2,3,4,5])

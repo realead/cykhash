@@ -16,6 +16,10 @@ extensions = [Extension(
                          name='cykhash.khashmaps',
                          sources = ["src/cykhash/khashmaps.pyx"],
                         ),
+              Extension(
+                         name='cykhash.unique',
+                         sources = ["src/cykhash/unique.pyx"],
+                        ),
              ]
 
 if USE_CYTHON:
@@ -24,7 +28,7 @@ if USE_CYTHON:
 kwargs = {
       'name':'cykhash',
       'version':'0.3.0',
-      'description':'Cython wrapper for khash-table/khash-set',
+      'description':'Cython wrapper for khash-map/khash-set',
       'author':'Egor Dranischnikow',
       'url':'https://github.com/realead/cykhash',
       'packages':find_packages(where='src'),

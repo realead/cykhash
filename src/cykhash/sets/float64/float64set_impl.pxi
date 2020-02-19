@@ -101,7 +101,7 @@ def Float64Set_from(it):
         res.add(i)
     return res
 
-cpdef Float64Set_from_buffer(float64_t[:] buf, double size_hint = 1.25):
+cpdef Float64Set_from_buffer(float64_t[:] buf, double size_hint = 1.3):
     cdef Py_ssize_t n = len(buf)
     cdef Py_ssize_t start_size = <Py_ssize_t>(len(buf)*size_hint)+1
     res=Float64Set(start_size)

@@ -108,7 +108,7 @@ class SetTester(unittest.TestCase):
    def template_get_state_info(self, set_type):
       s = set_type(100)
       info = s.get_state_info()
-      self.assertTrue(info['n_buckets']>0)
+      self.assertTrue(info['n_buckets'] == 128)
       self.assertTrue(info['n_occupied'] == 0)
       self.assertTrue("upper_bound" in info)
 

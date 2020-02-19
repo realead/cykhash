@@ -120,7 +120,7 @@ cdef class Int32to32MapIterator:
 
 ### Utils:
 
-def Int32to32Map_from_int32_buffer(int32_t[:] keys, int32_t[:] vals, double size_hint = 1.25):
+def Int32to32Map_from_int32_buffer(int32_t[:] keys, int32_t[:] vals, double size_hint=1.3):
     cdef Py_ssize_t n = len(keys)
     cdef Py_ssize_t b = len(vals)
     if b < n:
@@ -132,7 +132,7 @@ def Int32to32Map_from_int32_buffer(int32_t[:] keys, int32_t[:] vals, double size
         res.put_int32(keys[i], vals[i])
     return res
 
-def Int32to32Map_from_float32_buffer(int32_t[:] keys, float32_t[:] vals,double size_hint = 1.25):
+def Int32to32Map_from_float32_buffer(int32_t[:] keys, float32_t[:] vals,double size_hint=1.3):
     cdef Py_ssize_t n = len(keys)
     cdef Py_ssize_t b = len(vals)
     if b < n:

@@ -21,7 +21,7 @@ def cykhash_unique32(bufs):
 if True:  
     perfplot.show(
         setup = lambda n : (np.arange(n, dtype=np.int64), np.arange(n, dtype=np.int32)),
-        n_range=[2**k for k in range(5,18)],
+        n_range=[2**k for k in range(5,20)],
         kernels=[
             pandas_unique64,
             pandas_unique32,

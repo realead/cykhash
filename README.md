@@ -64,38 +64,34 @@ i.e. there is about 4 time less memory needed.
 
 #### pd.unique()
 
-The implementation of pandas' `unique` uses a hash-table instead of hash-set, which results in a 25% larger memory footprint. Using cykhash's set similar to this example
+Warning: cykhash's version of `unique` doesn't not return uniques in order of appearance (which pandas' version does!). `cykhash.unique` returns a object with buffer-interface, which can be used for creation of numpy-arrays via `np.frombuffer`.
+
+The implementation of pandas' `unique` uses a hash-table instead of hash-set, which results in a larger memory footprint. `cykhash.unique_int64` (or `unique_int32`, `unique_float32`, `unique_float64`) uses much less memory and is also faster. See also question https://stackoverflow.com/questions/51485816/curious-memory-consumption-of-pandas-unique for more details.
 
 
-    cimport numpy as np
-    import numpy as np
+![1](imgs/unique_time_comparison.png)
 
-    from cykhash.khashsets cimport Int64Set, Int64SetIterator
+There is no int32-version in `pandas`, such there is no difference to 64bit. `int32`-version of `cykhash` is twice as fast as `int64`-version, which is about factor 1.66 faster than the pandas' version. Run `tests/perf_tests/khashunique_vs_pdunique.py` to generate the plot.
 
-    def unique_int64(np.int64_t[::1] data):
-        cdef np.ndarray[dtype=np.int64_t] res
-        cdef Int64Set s=Int64Set(len(data))
-        cdef Int64SetIterator it
-        cdef Py_ssize_t i
-        cdef int cnt=0
-        for i in range(len(data)):
-            s.add(data[i])
-        res=np.empty(s.table.size, dtype=np.int64)
-        it = s.get_iter()
-        for i in range(s.table.size):
-            res[cnt]=it.next()
-            cnt+=1
-        return res
-
-we can achieve better results, here an example of memory footprint:
+Peak memory overhead (additional needed memory given as `maximal_overhead_factor`) for unique (run `tests/perf_tests/run_memory_unique_test.sh` to generate the numbers). i.e. additional memory needed is `N*maximal_overhead_factor`
 
 
-    N      pd.unique()   cykhash's unique
-    1e8      529 MB          364 MB
-    2e8      790 MB          616 MB
-    4e8     1950 MB         1200 MB
-    6e8     3690 MB         2050 MB
-    8e8     3000 MB         2300 MB
+    N      pd.unique()   cykhash.unique_int64
+    1e6        6.24          2.18
+    2e6        6.19          2.15
+    4e6        6.35          2.16
+    6e6        4.86          1.44
+    8e6        6.25          2.16
+    9e6        7.50          1.90
+
+While `pd.unique` needs up to 8 times the original memory, `cykhash` at most 3 times the original memory. For the special case of `int32` the overhead-factor of `pd.unique` more than doubles because it doesn't have a dedicated int32-version and data must be converted to int64. 
+
+More precise the worst case scenario (while still without triggering rehashing) for `cykhash.unique_int64`, the overhead-factor can be `1.3*2*(1+1/64)=2.64` where:
+  
+ * 1.3 due to the fact that rehashing happens when more than 77% of buckets are occupied.
+ * 2 due to the fact, that khash doubles the size every time
+ * 1+1/64 that one bit is used for flags
+
 
 
 #### isin
@@ -170,6 +166,12 @@ Also here the performance of the 64bit/32bit variant much better:
 
 
 ## Usage:
+
+### Unique
+
+  * `unique_int64`, `unique_int32`, `unique_float64`, `unique_float32`
+  * returns an object which implements the buffer protocol, so `np.frombuffer` can be used to create numpy arrays.
+  * differently as pandas, the returned uniques aren't in the order of the appearance.
 
 ### Sets
 
@@ -309,5 +311,5 @@ To install and running tests in currently active environment:
 
   * 0.1.0: Int64Set
   * 0.2.0: Int32Set, Float64Set, Float32Set
-  * 0.3.0: PyObjectSet
+  * 0.3.0: PyObjectSet, Maps for Int64/32 and also Float64/32, unique-versions
 

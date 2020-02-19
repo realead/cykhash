@@ -105,6 +105,13 @@ class SetTester(unittest.TestCase):
       self.assertTrue(4 in s)
       self.assertTrue(5 in s)
 
+   def template_get_state_info(self, set_type):
+      s = set_type(100)
+      info = s.get_state_info()
+      self.assertTrue(info['n_buckets']>0)
+      self.assertTrue(info['n_occupied'] == 0)
+      self.assertTrue("upper_bound" in info)
+
 
 @uttemplate.from_templates([Float64Set, PyObjectSet])
 class Float64NANTester(unittest.TestCase): 

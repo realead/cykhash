@@ -57,6 +57,11 @@ cdef class Int64Set:
     def __iter__(self):
         return self.get_iter()
 
+    def get_state_info(self):
+        return {"n_buckets" : self.table.n_buckets, 
+                "n_occupied" : self.table.n_occupied, 
+                "upper_bound" : self.table.upper_bound}
+
 
 ### Iterator:
 cdef class Int64SetIterator:

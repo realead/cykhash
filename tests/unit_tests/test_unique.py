@@ -49,4 +49,30 @@ class UniqueTester(unittest.TestCase):
         expected = set(array.array(BUFFER_SIZE[value_type], range(200)))
         self.assertTrue(expected==as_set, msg = "received: "+str(as_set))
 
+
+    def template_ctypeslib_as_array(self, value_type):
+        try:
+            import numpy as np
+        except:
+            return
+        a = array.array(BUFFER_SIZE[value_type], list(range(100))+list(range(200))+list(range(100)))
+        result = CY_UNIQUE[value_type](a)
+        as_set = set(np.ctypeslib.as_array(result))
+        expected = set(array.array(BUFFER_SIZE[value_type], range(200)))
+        self.assertTrue(expected==as_set, msg = "received: "+str(as_set))
+
+
+    def template_frombuffer(self, value_type):
+        try:
+            import numpy as np
+        except:
+            return
+        a = array.array(BUFFER_SIZE[value_type], list(range(100))+list(range(200))+list(range(100)))
+        result = CY_UNIQUE[value_type](a)
+        as_set = set(np.frombuffer(result, dtype=BUFFER_SIZE[value_type]))
+        expected = set(array.array(BUFFER_SIZE[value_type], range(200)))
+        self.assertTrue(expected==as_set, msg = "received: "+str(as_set))
+        
+
+
  

@@ -170,7 +170,7 @@ Also here the performance of the 64bit/32bit variant much better:
 ### Unique
 
   * `unique_int64`, `unique_int32`, `unique_float64`, `unique_float32`
-  * returns an object which implements the buffer protocol, so `np.frombuffer` can be used to create numpy arrays.
+  * returns an object which implements the buffer protocol, so `np.ctypeslib.as_array` (recommended) or `np.frombuffer` (less safe, as memory can get reinterpreted) can be used to create numpy arrays.
   * differently as pandas, the returned uniques aren't in the order of the appearance.
 
 ### Sets

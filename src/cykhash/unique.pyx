@@ -63,7 +63,11 @@ cdef class MemoryNanny:
         if (flags & buffer.PyBUF_FORMAT) == buffer.PyBUF_FORMAT:
              view.format = self.format
         else:
-             raise BufferError("PyBUF_FORMAT needed")
+             # NULL indicates that the buffer's data type has been cast to 'B'.
+             # view->itemsize is the _previous_ itemsize. n * itemsize = len still holds at this
+             # point. The equality calcsize(format) = itemsize does _not_ hold
+             # from here on! */
+             view.format = NULL
 
         # data is one-dimensional
         view.ndim = 1;

@@ -7,9 +7,6 @@ from .floatdef cimport float64_t, float32_t
 ctypedef PyObject* pyobject_t
 
 include "khash.pxi"
-cdef extern from *:
-    ctypedef uint32_t khint_t
-
 
 
 #utilities for int<->float

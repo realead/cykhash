@@ -110,9 +110,9 @@ def PyObjectSet_from(it):
         res.add(i)
     return res
     
-def PyObjectSet_from_buffer(object[:] buf, double size_hint = 1.3):
+def PyObjectSet_from_buffer(object[:] buf, double size_hint=0.0):
     cdef Py_ssize_t n = len(buf)
-    cdef Py_ssize_t start_size = <Py_ssize_t>(len(buf)*size_hint)+1
+    cdef Py_ssize_t start_size = bucket_n_from_size_hint(<khint_t>n, size_hint)
     res=PyObjectSet(start_size)
     cdef Py_ssize_t i
     for i in range(n):

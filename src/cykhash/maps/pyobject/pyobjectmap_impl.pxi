@@ -113,12 +113,12 @@ cdef class PyObjectMapIterator:
 
 ### Utils:
 
-def PyObjectMap_from_object_buffer(object[:] keys, object[:] vals, double size_hint = 1.3):
+def PyObjectMap_from_object_buffer(object[:] keys, object[:] vals, double size_hint=0.0):
     cdef Py_ssize_t n = len(keys)
     cdef Py_ssize_t b = len(vals)
     if b < n:
         n = b
-    cdef Py_ssize_t start_size = <Py_ssize_t>(n*size_hint)+1
+    cdef Py_ssize_t start_size = bucket_n_from_size_hint(<khint_t>n, size_hint)
     res=PyObjectMap(start_size)
     cdef Py_ssize_t i
     for i in range(n):

@@ -99,7 +99,7 @@ cdef class MemoryNanny:
 
 # TODO: reduce code duplication
 
-cpdef unique_int64(int64_t[:] vals, double size_hint=1.3):
+cpdef unique_int64(int64_t[:] vals, double size_hint=0.0):
     cdef Int64Set s = Int64Set_from_buffer(vals, size_hint)
     
     # compress:
@@ -119,7 +119,7 @@ cpdef unique_int64(int64_t[:] vals, double size_hint=1.3):
     return MemoryNanny.create_memory_nanny(mem, current, sizeof(int64_t), b"q")
 
 
-cpdef unique_int32(int32_t[:] vals, double size_hint=1.3):
+cpdef unique_int32(int32_t[:] vals, double size_hint=0.0):
     cdef Int32Set s = Int32Set_from_buffer(vals, size_hint)
     
 
@@ -140,7 +140,7 @@ cpdef unique_int32(int32_t[:] vals, double size_hint=1.3):
     return MemoryNanny.create_memory_nanny(mem, current, sizeof(int32_t), b"i")
 
 
-cpdef unique_float64(float64_t[:] vals, double size_hint=1.3):
+cpdef unique_float64(float64_t[:] vals, double size_hint=0.0):
     cdef Float64Set s = Float64Set_from_buffer(vals, size_hint)
     
     # compress:
@@ -160,7 +160,7 @@ cpdef unique_float64(float64_t[:] vals, double size_hint=1.3):
     return MemoryNanny.create_memory_nanny(mem, current, sizeof(float64_t), b"d")
 
 
-cpdef unique_float32(float32_t[:] vals, double size_hint=1.3):
+cpdef unique_float32(float32_t[:] vals, double size_hint=0.0):
     cdef Float32Set s = Float32Set_from_buffer(vals, size_hint)
     
     # compress:

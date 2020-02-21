@@ -172,6 +172,7 @@ Also here the performance of the 64bit/32bit variant much better:
   * `unique_int64`, `unique_int32`, `unique_float64`, `unique_float32`
   * returns an object which implements the buffer protocol, so `np.ctypeslib.as_array` (recommended) or `np.frombuffer` (less safe, as memory can get reinterpreted) can be used to create numpy arrays.
   * differently as pandas, the returned uniques aren't in the order of the appearance.
+  * the signature is `unique_int64(buffer, size_hint=0.0)` the initial memory-consumption of the hash-set will be `len(buffer)*size_hint` unless `size_hint<=0.0`, in this case it will be ensured, that no rehashing is needed even if all elements are unique in the buffer.
 
 ### Sets
 
@@ -205,7 +206,7 @@ with Cython interface:
 The following functions are available:
 
    * `XXXXSet_from(it)` - creates a `XXXXSet` from an iterable, with `XXXX` being either `Int64`, `Int32`, `Float64`, `Float32` or `PyObject`.
-   * `XXXXSet_from_buffer(buf, size_hint=1.25)` creates a `XXXXSet` from an object which implements buffer interface, with `XXXX` being either `Int64`, `Int32`, `Float64`, `Float32` or `PyObject`. Starting size of hash-set is `int(size_hint*len(buf))`.
+   * `XXXXSet_from_buffer(buf, size_hint=0.0)` creates a `XXXXSet` from an object which implements buffer interface, with `XXXX` being either `Int64`, `Int32`, `Float64`, `Float32` or `PyObject`. Starting size of hash-set is `int(size_hint*len(buf))` unless `size_hint<=0.0`, in which case it will be ensured that no rehashing is needed.
   * `isin_xxxx(query, db, result)` evaluates `isin` for `query` being a buffer of the right type, `db` - a corresponding `XXXXSet`, and result a buffer for with 8bit-itemsize, `xxxx` being either `int64`, `int32`, `float64`, `float32` or `pyobject`.
 
 
@@ -242,7 +243,7 @@ with Cython interface:
 
 The following functions are available:
 
-   * `TypeXXtoXXMap_from_typeXX_buffer(keys, vals, size_hint)` - creates a `TypeXXtoXXMyp` from buffers with  `Type` either `Float` or `Int`, `XX` either 32 or 64 and `type` either `float` or `int`. Starting size of hash-map is `int(size_hint*min(len(keys), len(vals)))`.
+   * `TypeXXtoXXMap_from_typeXX_buffer(keys, vals, size_hint=0.0)` - creates a `TypeXXtoXXMyp` from buffers with  `Type` either `Float` or `Int`, `XX` either 32 or 64 and `type` either `float` or `int`. Starting size of hash-map is `int(size_hint*min(len(keys), len(vals)))` unless `size_hint<=0.0`, in which case it will be ensured that no rehashing is needed.
    * `PyObjectMap_from_object_buffer` for keys, values as objects.
 
 ### Examples: 

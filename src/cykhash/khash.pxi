@@ -598,5 +598,26 @@ cdef extern from *:
 
     #endif /* __AC_KHASH_H */ 
     """
+    ctypedef uint32_t khint_t
 
-    pass
+
+cdef extern from *:
+    """
+    khint_t element_n_to_bucket_n(khint_t element_n){
+        khint_t candidate = element_n;
+        kroundup32(candidate);
+        khint_t upper_bound = (khint_t)(candidate * __ac_HASH_UPPER + 0.5);
+        return (upper_bound < element_n) ? 2*candidate : candidate;
+        
+    }
+
+    khint_t bucket_n_from_size_hint(khint_t element_n, double size_hint){
+        if(size_hint>0.0){
+            return (khint_t)(element_n * size_hint);
+        } 
+        return element_n_to_bucket_n(element_n);
+        
+    }
+    """
+    khint_t element_n_to_bucket_n(khint_t element_n)
+    khint_t bucket_n_from_size_hint(khint_t element_n, double size_hint)

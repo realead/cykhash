@@ -113,24 +113,24 @@ cdef class Float64to64MapIterator:
 
 ### Utils:
 
-def Float64to64Map_from_int64_buffer(float64_t[:] keys, int64_t[:] vals, double size_hint=1.3):
+def Float64to64Map_from_int64_buffer(float64_t[:] keys, int64_t[:] vals, double size_hint=0.0):
     cdef Py_ssize_t n = len(keys)
     cdef Py_ssize_t b = len(vals)
     if b < n:
         n = b
-    cdef Py_ssize_t start_size = <Py_ssize_t>(n*size_hint)+1
+    cdef Py_ssize_t start_size = bucket_n_from_size_hint(<khint_t>n, size_hint)
     res=Float64to64Map(start_size)
     cdef Py_ssize_t i
     for i in range(n):
         res.put_int64(keys[i], vals[i])
     return res
 
-def Float64to64Map_from_float64_buffer(float64_t[:] keys, float64_t[:] vals,double size_hint=1.3):
+def Float64to64Map_from_float64_buffer(float64_t[:] keys, float64_t[:] vals,double size_hint=0.0):
     cdef Py_ssize_t n = len(keys)
     cdef Py_ssize_t b = len(vals)
     if b < n:
         n = b
-    cdef Py_ssize_t start_size = <Py_ssize_t>(n*size_hint)+1
+    cdef Py_ssize_t start_size = bucket_n_from_size_hint(<khint_t>n, size_hint)
     res=Float64to64Map(start_size, False)
     cdef Py_ssize_t i
     for i in range(n):

@@ -101,9 +101,9 @@ def Int32Set_from(it):
         res.add(i)
     return res
 
-cpdef Int32Set_from_buffer(int32_t[:] buf, double size_hint = 1.3):
+cpdef Int32Set_from_buffer(int32_t[:] buf, double size_hint=0.0):
     cdef Py_ssize_t n = len(buf)
-    cdef Py_ssize_t start_size = <Py_ssize_t>(len(buf)*size_hint)+1
+    cdef Py_ssize_t start_size = bucket_n_from_size_hint(<khint_t>n, size_hint)
     res=Int32Set(start_size)
     cdef Py_ssize_t i
     for i in range(n):

@@ -22,7 +22,7 @@ cdef extern from *:
 
 cdef class Float64to64Map:
     cdef kh_float64to64map_t *table
-    cdef bint for_int64
+    cdef bint for_int
 
     cdef bint contains(self, float64_t key) except *
     cdef Float64to64MapIterator get_iter(self)

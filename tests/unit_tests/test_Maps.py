@@ -99,16 +99,16 @@ class CommonMapTester(unittest.TestCase):
 
    def template_negative_hint(self, map_type):
       with self.assertRaises(OverflowError) as context:
-            map_type(-1)
+            map_type(number_of_elements_hint=-1)
       self.assertEqual("can't convert negative value to uint32_t", context.exception.args[0])
 
    def template_no_such_key(self, map_type):
       with self.assertRaises(KeyError) as context:
-            map_type(100)[55]
+            map_type(number_of_elements_hint=100)[55]
       self.assertTrue(context.exception.args[0].startswith("No such key: 55"))
 
    def template_zero_hint_ok(self, map_type):
-      s = map_type(0)
+      s = map_type(number_of_elements_hint=0)
       s[4] = 7
       s[5] = 7
       self.assertTrue(4 in s)
@@ -116,17 +116,17 @@ class CommonMapTester(unittest.TestCase):
 
 
    def template_as_int64_a_float(self, map_type):
-      s = map_type(20, True)
+      s = map_type(number_of_elements_hint=20, for_int=True)
       s[4] = 5.4
       self.assertEqual(s[4], 5)
 
    def template_as_int64_put_get(self, map_type):
-      s = map_type(20, True)
+      s = map_type(number_of_elements_hint=20, for_int=True)
       s[4] = 5
       self.assertEqual(s[4], 5)
 
    def template_as_float64_put_get(self, map_type):
-      s = map_type(20, False)
+      s = map_type(number_of_elements_hint=20, for_int=False)
       s[4] = 5
       self.assertEqual(s[4], 5)
 

@@ -2,10 +2,13 @@ from cpython.ref cimport Py_INCREF,Py_DECREF
 
 cdef class PyObjectMap:
 
-    def __cinit__(self, size_hint=1):
+    def __cinit__(self, *, number_of_elements_hint=None):
+        """
+        number_of_elements_hint - number of elements without the need of reallocation.
+        """
         self.table = kh_init_pyobjectmap()
-        if size_hint is not None:
-            kh_resize_pyobjectmap(self.table, size_hint)
+        if number_of_elements_hint is not None:
+            kh_resize_pyobjectmap(self.table, element_n_to_bucket_n(number_of_elements_hint))
 
     def __len__(self):
         return self.size()
@@ -118,8 +121,8 @@ def PyObjectMap_from_object_buffer(object[:] keys, object[:] vals, double size_h
     cdef Py_ssize_t b = len(vals)
     if b < n:
         n = b
-    cdef Py_ssize_t start_size = bucket_n_from_size_hint(<khint_t>n, size_hint)
-    res=PyObjectMap(start_size)
+    cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
+    res=PyObjectMap(number_of_elements_hint=at_least_needed)
     cdef Py_ssize_t i
     for i in range(n):
         res.put_object(keys[i], vals[i])

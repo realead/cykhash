@@ -22,7 +22,7 @@ cdef extern from *:
 
 cdef class Float32to32Map:
     cdef kh_float32to32map_t *table
-    cdef bint for_int32
+    cdef bint for_int
 
     cdef bint contains(self, float32_t key) except *
     cdef Float32to32MapIterator get_iter(self)

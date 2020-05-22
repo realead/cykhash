@@ -27,7 +27,7 @@ cdef extern from *:
 
 cdef class Int32to32Map:
     cdef kh_int32to32map_t *table
-    cdef bint for_int32
+    cdef bint for_int
 
     cdef bint contains(self, int32_t key) except *
     cdef Int32to32MapIterator get_iter(self)

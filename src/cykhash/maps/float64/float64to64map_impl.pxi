@@ -1,11 +1,15 @@
 
 cdef class Float64to64Map:
 
-    def __cinit__(self, size_hint=1, for_int64 = True):
-        self.for_int64 = for_int64
+    def __cinit__(self, *, number_of_elements_hint=None, for_int=True):
+        """
+        number_of_elements_hint - number of elements without the need of reallocation.
+        for_int  if True, __setitem__/__getitem__ sets/gets a in64-object, otherwise a float64-object
+        """
+        self.for_int = for_int
         self.table = kh_init_float64to64map()
-        if size_hint is not None:
-            kh_resize_float64to64map(self.table, size_hint)
+        if number_of_elements_hint is not None:
+            kh_resize_float64to64map(self.table, element_n_to_bucket_n(number_of_elements_hint))
 
     def __len__(self):
         return self.size()
@@ -43,7 +47,7 @@ cdef class Float64to64Map:
 
     
     def __setitem__(self, key, val):
-        if self.for_int64:
+        if self.for_int:
             self.put_int64(key, val)
         else:
             self.put_float64(key, val)
@@ -59,7 +63,7 @@ cdef class Float64to64Map:
         return i64_to_f64(self.get_int64(key))
 
     def __getitem__(self, key):
-        if self.for_int64:
+        if self.for_int:
             return self.get_int64(key)
         else:
             return self.get_float64(key)
@@ -118,8 +122,8 @@ def Float64to64Map_from_int64_buffer(float64_t[:] keys, int64_t[:] vals, double 
     cdef Py_ssize_t b = len(vals)
     if b < n:
         n = b
-    cdef Py_ssize_t start_size = bucket_n_from_size_hint(<khint_t>n, size_hint)
-    res=Float64to64Map(start_size)
+    cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
+    res=Float64to64Map(number_of_elements_hint=at_least_needed, for_int=True)
     cdef Py_ssize_t i
     for i in range(n):
         res.put_int64(keys[i], vals[i])
@@ -130,8 +134,8 @@ def Float64to64Map_from_float64_buffer(float64_t[:] keys, float64_t[:] vals,doub
     cdef Py_ssize_t b = len(vals)
     if b < n:
         n = b
-    cdef Py_ssize_t start_size = bucket_n_from_size_hint(<khint_t>n, size_hint)
-    res=Float64to64Map(start_size, False)
+    cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
+    res=Float64to64Map(number_of_elements_hint=at_least_needed, for_int=False)
     cdef Py_ssize_t i
     for i in range(n):
         res.put_float64(keys[i], vals[i])

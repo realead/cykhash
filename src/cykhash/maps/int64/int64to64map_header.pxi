@@ -27,7 +27,7 @@ cdef extern from *:
 
 cdef class Int64to64Map:
     cdef kh_int64to64map_t *table
-    cdef bint for_int64
+    cdef bint for_int
 
     cdef bint contains(self, int64_t key) except *
     cdef Int64to64MapIterator get_iter(self)

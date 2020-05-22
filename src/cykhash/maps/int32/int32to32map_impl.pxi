@@ -8,11 +8,15 @@
 
 cdef class Int32to32Map:
 
-    def __cinit__(self, size_hint=1, for_int32 = True):
-        self.for_int32 = for_int32
+    def __cinit__(self, *, number_of_elements_hint=None, for_int=True):
+        """
+        number_of_elements_hint - number of elements without the need of reallocation.
+        for_int  if True, __setitem__/__getitem__ sets/gets a in32-object, otherwise a float32-object
+        """
+        self.for_int = for_int
         self.table = kh_init_int32to32map()
-        if size_hint is not None:
-            kh_resize_int32to32map(self.table, size_hint)
+        if number_of_elements_hint is not None:
+            kh_resize_int32to32map(self.table, element_n_to_bucket_n(number_of_elements_hint))
 
     def __len__(self):
         return self.size()
@@ -50,7 +54,7 @@ cdef class Int32to32Map:
 
     
     def __setitem__(self, key, val):
-        if self.for_int32:
+        if self.for_int:
             self.put_int32(key, val)
         else:
             self.put_float32(key, val)
@@ -66,7 +70,7 @@ cdef class Int32to32Map:
         return i32_to_f32(self.get_int32(key))
 
     def __getitem__(self, key):
-        if self.for_int32:
+        if self.for_int:
             return self.get_int32(key)
         else:
             return self.get_float32(key)
@@ -125,8 +129,8 @@ def Int32to32Map_from_int32_buffer(int32_t[:] keys, int32_t[:] vals, double size
     cdef Py_ssize_t b = len(vals)
     if b < n:
         n = b
-    cdef Py_ssize_t start_size = bucket_n_from_size_hint(<khint_t>n, size_hint)
-    res=Int32to32Map(start_size)
+    cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
+    res=Int32to32Map(number_of_elements_hint=at_least_needed, for_int=True)
     cdef Py_ssize_t i
     for i in range(n):
         res.put_int32(keys[i], vals[i])
@@ -137,8 +141,8 @@ def Int32to32Map_from_float32_buffer(int32_t[:] keys, float32_t[:] vals,double s
     cdef Py_ssize_t b = len(vals)
     if b < n:
         n = b
-    cdef Py_ssize_t start_size = bucket_n_from_size_hint(<khint_t>n, size_hint)
-    res=Int32to32Map(start_size, False)
+    cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
+    res=Int32to32Map(number_of_elements_hint=at_least_needed, for_int=False)
     cdef Py_ssize_t i
     for i in range(n):
         res.put_float32(keys[i], vals[i])

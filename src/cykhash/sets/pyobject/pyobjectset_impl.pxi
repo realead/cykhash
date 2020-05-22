@@ -9,10 +9,13 @@ from cpython.ref cimport Py_INCREF,Py_DECREF
 
 cdef class PyObjectSet:
 
-    def __cinit__(self, size_hint=1):
+    def __cinit__(self,  *, number_of_elements_hint=None):
+        """
+        number_of_elements_hint - number of elements without the need of reallocation.
+        """
         self.table = kh_init_pyobjectset()
-        if size_hint is not None:
-            kh_resize_pyobjectset(self.table, size_hint)
+        if number_of_elements_hint is not None:
+            kh_resize_pyobjectset(self.table, element_n_to_bucket_n(number_of_elements_hint))
 
     def __len__(self):
         return self.size()
@@ -112,8 +115,8 @@ def PyObjectSet_from(it):
     
 def PyObjectSet_from_buffer(object[:] buf, double size_hint=0.0):
     cdef Py_ssize_t n = len(buf)
-    cdef Py_ssize_t start_size = bucket_n_from_size_hint(<khint_t>n, size_hint)
-    res=PyObjectSet(start_size)
+    cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
+    res=PyObjectSet(number_of_elements_hint=at_least_needed)
     cdef Py_ssize_t i
     for i in range(n):
         res.add(buf[i])

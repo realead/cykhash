@@ -611,6 +611,14 @@ cdef extern from *:
         
     }
 
+    khint_t element_n_from_size_hint(khint_t element_n, double size_hint){
+        if(size_hint>0.0){
+            return (khint_t)(element_n * size_hint);
+        } 
+        return element_n;
+        
+    }
+
     khint_t bucket_n_from_size_hint(khint_t element_n, double size_hint){
         if(size_hint>0.0){
             return (khint_t)(element_n * size_hint);
@@ -620,4 +628,5 @@ cdef extern from *:
     }
     """
     khint_t element_n_to_bucket_n(khint_t element_n)
+    khint_t element_n_from_size_hint(khint_t element_n, double size_hint)
     khint_t bucket_n_from_size_hint(khint_t element_n, double size_hint)

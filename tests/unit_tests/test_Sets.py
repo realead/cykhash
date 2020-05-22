@@ -95,20 +95,20 @@ class SetTester(unittest.TestCase):
 
    def template_negative_hint(self, set_type):
       with self.assertRaises(OverflowError) as context:
-            set_type(-1)
+            set_type(number_of_elements_hint=-1)
       self.assertEqual("can't convert negative value to uint32_t", context.exception.args[0])
 
    def template_zero_hint_ok(self, set_type):
-      s = set_type(0)
+      s = set_type(number_of_elements_hint=0)
       s.add(4)
       s.add(5)
       self.assertTrue(4 in s)
       self.assertTrue(5 in s)
 
    def template_get_state_info(self, set_type):
-      s = set_type(100)
+      s = set_type(number_of_elements_hint=100)
       info = s.get_state_info()
-      self.assertTrue(info['n_buckets'] == 128)
+      self.assertTrue(info['n_buckets'] == 256)
       self.assertTrue(info['n_occupied'] == 0)
       self.assertTrue("upper_bound" in info)
 

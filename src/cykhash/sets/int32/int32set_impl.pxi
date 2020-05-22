@@ -8,10 +8,13 @@
 
 cdef class Int32Set:
 
-    def __cinit__(self, size_hint=1):
+    def __cinit__(self, *, number_of_elements_hint=None):
+        """
+        number_of_elements_hint - number of elements without the need of reallocation.
+        """
         self.table = kh_init_int32set()
-        if size_hint is not None:
-            kh_resize_int32set(self.table, size_hint)
+        if number_of_elements_hint is not None:    
+            kh_resize_int32set(self.table, element_n_to_bucket_n(number_of_elements_hint))
 
     def __len__(self):
         return self.size()
@@ -103,8 +106,8 @@ def Int32Set_from(it):
 
 cpdef Int32Set_from_buffer(int32_t[:] buf, double size_hint=0.0):
     cdef Py_ssize_t n = len(buf)
-    cdef Py_ssize_t start_size = bucket_n_from_size_hint(<khint_t>n, size_hint)
-    res=Int32Set(start_size)
+    cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
+    res=Int32Set(number_of_elements_hint=at_least_needed)
     cdef Py_ssize_t i
     for i in range(n):
         res.add(buf[i])

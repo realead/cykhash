@@ -117,6 +117,8 @@ from libc.stdint cimport  uint8_t
 cpdef isin_int32(int32_t[:] query, Int32Set db, uint8_t[:] result):
     cdef size_t i
     cdef size_t n=len(query)
+    if n!=len(result):
+        raise ValueError("Different sizes for query({n}) and result({m})".format(n=n, m=len(result)))
     for i in range(n):
         result[i]=db.contains(query[i])
 

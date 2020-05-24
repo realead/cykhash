@@ -34,6 +34,22 @@ class BufferTester(unittest.TestCase):
         expected=array.array('B', [False, False, True, False, True, False, True])
         self.assertTrue(expected==result)
 
+    def template_isin_result_shorter(self, value_type):
+        s=FROM_SET[value_type]([2,4,6])
+        a=array.array(BUFFER_SIZE[value_type], range(0,7))
+        result=array.array('B', [False]*6)
+        with self.assertRaises(ValueError) as context:
+            ISIN[value_type](a,s,result)
+        self.assertEqual("Different sizes for query(7) and result(6)", context.exception.args[0])
+
+    def template_isin_result_longer(self, value_type):
+        s=FROM_SET[value_type]([2,4,6])
+        a=array.array(BUFFER_SIZE[value_type], range(0,7))
+        result=array.array('B', [False]*8)
+        with self.assertRaises(ValueError) as context:
+            ISIN[value_type](a,s,result)
+        self.assertEqual("Different sizes for query(7) and result(8)", context.exception.args[0])
+
     def template_from_buffer(self, value_type):
         a=array.array(BUFFER_SIZE[value_type], [6,7,8])
         s=FROM_BUFFER_SET[value_type](a)

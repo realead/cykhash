@@ -7,7 +7,6 @@ from Cython.Build import cythonize
 USE_CYTHON = True
 
 
-
 extensions = [Extension(
                          name='cykhash.khashsets',
                          sources = ["src/cykhash/khashsets.pyx"],
@@ -22,18 +21,22 @@ extensions = [Extension(
                         ),
              ]
 
+
 if USE_CYTHON:
     extensions = cythonize(extensions, language_level=3)
 
 kwargs = {
       'name':'cykhash',
-      'version':'0.3.0',
+      'version':'0.4.0',
       'description':'Cython wrapper for khash-map/khash-set',
       'author':'Egor Dranischnikow',
       'url':'https://github.com/realead/cykhash',
       'packages':find_packages(where='src'),
       'package_dir':{"": "src"},
       'license': 'MIT',
+      'classifiers': [
+            "Programming Language :: Python :: 3",
+        ],
       'ext_modules':  extensions,
 
        #ensure pxd-files:

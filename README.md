@@ -179,7 +179,7 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_API.md) for a mor
 
 ## Performance
 
-See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMACE.md) for results of performance tests.
+See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) for results of performance tests.
 
 
 ## History:

@@ -1,4 +1,4 @@
-#Performance:
+# Performance:
 
 Run `sh run_perf_tests.sh` in tests-folder to reproduce. numpy and pandas need to be installed in addition to be able to run the performance tests. The easiest way is to call first `sh test_instalation.sh p3 local keep` and then activate it via `. ../p3/bin/activate` and only then call the performance tests, or to run `sh test_in_active_env.sh` to install in developer-mode in the current environment.
 

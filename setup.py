@@ -1,7 +1,8 @@
 from setuptools import setup, find_packages, Extension
 from Cython.Build import cythonize
 
-
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 #for the time being only with cython:
 USE_CYTHON = True
@@ -27,16 +28,18 @@ if USE_CYTHON:
 
 kwargs = {
       'name':'cykhash',
-      'version':'0.4.0',
-      'description':'Cython wrapper for khash-map/khash-set',
+      'version':'1.0.0',
+      'description':'cython wrapper for khash-sets/maps, efficient implementation of `isin` and `unique`',
       'author':'Egor Dranischnikow',
+      'long_description':long_description,
+      'long_description_content_type':"text/markdown",
       'url':'https://github.com/realead/cykhash',
       'packages':find_packages(where='src'),
       'package_dir':{"": "src"},
       'license': 'MIT',
       'classifiers': [
             "Programming Language :: Python :: 3",
-        ],
+       ],
       'ext_modules':  extensions,
 
        #ensure pxd-files:

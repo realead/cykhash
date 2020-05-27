@@ -188,7 +188,7 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
 
 ## History:
 
-#### Release 1.0.0 (??.??.2020):
+#### Release 1.0.1 (27.05.2020):
 
   * released on PyPi
 

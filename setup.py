@@ -28,7 +28,7 @@ if USE_CYTHON:
 
 kwargs = {
       'name':'cykhash',
-      'version':'1.0.0',
+      'version':'1.0.1',
       'description':'cython wrapper for khash-sets/maps, efficient implementation of `isin` and `unique`',
       'author':'Egor Dranischnikow',
       'long_description':long_description,

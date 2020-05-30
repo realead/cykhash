@@ -8,11 +8,9 @@ echo "Testing python3"
 #activate environment
 . "$ENV_DIR/bin/activate"
 
-#prepare:
-pip install cython
-pip install numpy
-pip install https://github.com/realead/uttemplate/zipball/master
+python -c "import setuptools; print('setuptools version:', setuptools.__version__)"
 
+# test installation in clean environment
 if [ "$1" = "from-github" ]; then
     pip install https://github.com/realead/cykhash/zipball/master
 elif [ "$1" = "from-test-pypi" ]; then
@@ -20,8 +18,14 @@ elif [ "$1" = "from-test-pypi" ]; then
 elif [ "$1" = "from-pypi" ]; then
     pip install cykhash
 else
-    (cd .. && python setup.py install)
+      (cd .. && python -m pip install .)
+#     (cd .. && python setup.py build install)
 fi;
+
+# needed for testing:
+pip install numpy
+pip install cython
+pip install https://github.com/realead/uttemplate/zipball/master
 
 pip freeze
 

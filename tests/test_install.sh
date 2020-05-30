@@ -14,7 +14,7 @@ python -c "import setuptools; print('setuptools version:', setuptools.__version_
 if [ "$1" = "from-github" ]; then
     pip install https://github.com/realead/cykhash/zipball/master
 elif [ "$1" = "from-test-pypi" ]; then
-    pip install -i https://test.pypi.org/simple/ cykhash
+    pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple cykhash
 elif [ "$1" = "from-pypi" ]; then
     pip install cykhash
 else

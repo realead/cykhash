@@ -5,9 +5,6 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 #for the time being only with cython:
-USE_CYTHON = True
-
-
 extensions = [Extension(
                          name='cykhash.khashsets',
                          sources = ["src/cykhash/khashsets.pyx"],
@@ -22,13 +19,11 @@ extensions = [Extension(
                         ),
              ]
 
-
-if USE_CYTHON:
-    extensions = cythonize(extensions, language_level=3)
+extensions = cythonize(extensions, language_level=3)
 
 kwargs = {
       'name':'cykhash',
-      'version':'1.0.1',
+      'version':'1.0.2',
       'description':'cython wrapper for khash-sets/maps, efficient implementation of `isin` and `unique`',
       'author':'Egor Dranischnikow',
       'long_description':long_description,
@@ -45,7 +40,7 @@ kwargs = {
        #ensure pxd-files:
       'package_data' : { 'cykhash': ['*.pxd','*.pxi','*/*/*.pxi']},
       'include_package_data' : True,
-      'zip_safe' : False  #needed because setuptools are used
+      'zip_safe' : False,  #needed because setuptools are used
 }
 
 

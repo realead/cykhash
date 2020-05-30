@@ -79,5 +79,45 @@ class DocTester(unittest.TestCase):
 
         self.assertTrue(True)
 
+
+    def test_quick_tutorial_1(self):
+        import numpy as np 
+        a = np.arange(42, dtype=np.int64)
+        b = np.arange(84, dtype=np.int64)
+        result = np.empty(b.size, dtype=np.bool)
+
+        # actually usage
+        from cykhash import Int64Set_from_buffer, isin_int64
+
+        lookup = Int64Set_from_buffer(a) # create a hashset
+        isin_int64(b, lookup, result)    # running time O(b.size)
+        isin_int64(b, lookup, result)    # lookup is reused and not recreated
+
+        self.assertTrue(True)
+
+   
+    def test_quick_tutorial_2(self):
+        import numpy as np
+        a = np.array([1,2,3,3,2,1], dtype=np.int64)
+        
+        # actual usage:
+        from cykhash import unique_int64
+        unique_buffer = unique_int64(a) # unique element are exposed via buffer-protocol
+
+        # can be converted to a numpy-array without copying via
+        unique_array = np.ctypeslib.as_array(unique_buffer)
+
+        self.assertTrue(True)
+
+
+   
+    def test_quick_tutorial_3(self):
+        from cykhash import Float64to64Map
+        my_map = Float64to64Map(for_int=True) # values are 64bit integers
+        my_map[float("nan")] = 1
+        assert my_map[float("nan")] == 1
+        
+        self.assertTrue(True)
+
         
     

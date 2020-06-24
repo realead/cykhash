@@ -10,16 +10,13 @@ cython wrapper for khash-sets/maps, efficient implementation of `isin` and `uniq
 
   * Python-set/dict have big memory-footprint. For some datatypes the overhead can be reduced by using khash.
 
+## Installation:
 
-## Dependencies:
+The recommended way to install the library is via `conda` package manager using the `conda-forge` channel:
 
-To build the library, Cython>=0.28 (happens automatically) and c-build tool chain are necessary.
+    conda install -c conda-forge cykhash
 
-See (https://github.com/realead/cykhash/blob/master/doc/README4DEVELOPER.md) for depenencies needed for development.
-
-## Instalation:
-
-To install latest realease:
+You can also install the library using `pip`. To install the latest release:
 
     pip install cykhash
 
@@ -27,6 +24,11 @@ To install the most recent version of the module:
 
     pip install https://github.com/realead/cykhash/zipball/master
 
+## Dependencies:
+
+To build the library from source, Cython>=0.28 is required as well as c-build tool chain.
+
+See (https://github.com/realead/cykhash/blob/master/doc/README4DEVELOPER.md) for dependencies needed for development.
 
 ## Quick start
 
@@ -237,6 +239,7 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
 
 #### Release 1.0.2 (30.05.2020):
 
+  * can be install via conda-forge to all operating systems
   * can be installed via pip in a clean environment (Cython>=0.18 is now fetched automatically)
 
 #### Release 1.0.1 (27.05.2020):

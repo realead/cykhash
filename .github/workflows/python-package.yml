@@ -31,7 +31,6 @@ jobs:
         pip install numpy
         pip install cython
         pip install https://github.com/realead/uttemplate/zipball/master
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with pytest
       run: |
         (cd tests/unit_tests && pytest)

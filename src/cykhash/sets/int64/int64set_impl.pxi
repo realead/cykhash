@@ -114,9 +114,6 @@ cpdef Int64Set_from_buffer(int64_t[:] buf, double size_hint=0.0):
     return res
     
 
-
-from libc.stdint cimport  uint8_t
-
 cpdef isin_int64(int64_t[:] query, Int64Set db, uint8_t[:] result):
     cdef size_t i
     cdef size_t n=len(query)

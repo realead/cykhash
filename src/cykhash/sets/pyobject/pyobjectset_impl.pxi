@@ -113,7 +113,7 @@ def PyObjectSet_from(it):
         res.add(i)
     return res
     
-def PyObjectSet_from_buffer(object[:] buf, double size_hint=0.0):
+cpdef PyObjectSet_from_buffer(object[:] buf, double size_hint=0.0):
     cdef Py_ssize_t n = len(buf)
     cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
     res=PyObjectSet(number_of_elements_hint=at_least_needed)
@@ -122,9 +122,8 @@ def PyObjectSet_from_buffer(object[:] buf, double size_hint=0.0):
         res.add(buf[i])
     return res
 
-from libc.stdint cimport  uint8_t
 
-def isin_pyobject(object[:] query, PyObjectSet db, uint8_t[:] result):
+cpdef isin_pyobject(object[:] query, PyObjectSet db, uint8_t[:] result):
     cdef size_t i
     cdef size_t n=len(query)
     for i in range(n):

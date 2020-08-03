@@ -45,5 +45,10 @@ cdef class Float64SetIterator:
     cdef float64_t next(self) except *
     cdef void __move(self) except *
 
+
 cpdef Float64Set_from_buffer(float64_t[:] buf, double size_hint=*)
+
+
+from libc.stdint cimport  uint8_t
+cpdef isin_float64(float64_t[:] query, Float64Set db, uint8_t[:] result)
 

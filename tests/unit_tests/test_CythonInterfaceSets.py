@@ -12,7 +12,7 @@ from cykhash import Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet
 class CyIntegerfaceTester(unittest.TestCase): 
 
    def test_cimport_works_i64(self):
-      received=cyt.isin_int64([1,2,3,4], [2,4])
+      received=cyt.py_isin_int64([1,2,3,4], [2,4])
       expected=[False, True, False, True]
       self.assertEqual(received, expected)
 
@@ -28,7 +28,7 @@ class CyIntegerfaceTester(unittest.TestCase):
 ### -------------------------------
 
    def test_cimport_works_i32(self):
-      received=cyt.isin_int32([1,2,3,4], [2,4])
+      received=cyt.py_isin_int32([1,2,3,4], [2,4])
       expected=[False, True, False, True]
       self.assertEqual(received, expected)
 
@@ -44,7 +44,7 @@ class CyIntegerfaceTester(unittest.TestCase):
 ### -------------------------------
 
    def test_cimport_works_f64(self):
-      received=cyt.isin_float64([1,2,3,4], [2,4])
+      received=cyt.py_isin_float64([1,2,3,4], [2,4])
       expected=[False, True, False, True]
       self.assertEqual(received, expected)
 
@@ -61,7 +61,7 @@ class CyIntegerfaceTester(unittest.TestCase):
 ### -------------------------------
 
    def test_cimport_works_f32(self):
-      received=cyt.isin_float32([1,2,3,4], [2,4])
+      received=cyt.py_isin_float32([1,2,3,4], [2,4])
       expected=[False, True, False, True]
       self.assertEqual(received, expected)
 
@@ -77,7 +77,7 @@ class CyIntegerfaceTester(unittest.TestCase):
 ### -------------------------------
 
    def test_cimport_works_pyobject(self):
-      received=cyt.isin_pyobject([1,2,3,4], [2,4])
+      received=cyt.py_isin_pyobject([1,2,3,4], [2,4])
       expected=[False, True, False, True]
       self.assertEqual(received, expected)
 

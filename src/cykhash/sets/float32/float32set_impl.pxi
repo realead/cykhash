@@ -114,9 +114,6 @@ cpdef Float32Set_from_buffer(float32_t[:] buf, double size_hint=0.0):
     return res
     
 
-
-from libc.stdint cimport  uint8_t
-
 cpdef isin_float32(float32_t[:] query, Float32Set db, uint8_t[:] result):
     cdef size_t i
     cdef size_t n=len(query)

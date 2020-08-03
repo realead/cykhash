@@ -2,9 +2,9 @@
 
 ############# int64 - test
 
-from cykhash.khashsets cimport Int64Set, Int64SetIterator
+from cykhash.khashsets cimport Int64Set, Int64SetIterator, isin_int64, Int64Set_from_buffer
 
-def isin_int64(query, db):
+def py_isin_int64(query, db):
     s=Int64Set()
     for d in db:
         s.add(d)
@@ -24,9 +24,9 @@ def as_py_set_int64(Int64Set db):
 
 ############# int32 - test
 
-from cykhash.khashsets cimport Int32Set, Int32SetIterator
+from cykhash.khashsets cimport Int32Set, Int32SetIterator, isin_int32, Int32Set_from_buffer
 
-def isin_int32(query, db):
+def py_isin_int32(query, db):
     s=Int32Set()
     for d in db:
         s.add(d)
@@ -47,9 +47,9 @@ def as_py_set_int32(Int32Set db):
 
 ############# float64 - test
 
-from cykhash.khashsets cimport Float64Set, Float64SetIterator
+from cykhash.khashsets cimport Float64Set, Float64SetIterator, isin_float64, Float64Set_from_buffer
 
-def isin_float64(query, db):
+def py_isin_float64(query, db):
     s=Float64Set()
     for d in db:
         s.add(d)
@@ -71,9 +71,9 @@ def as_py_set_float64(Float64Set db):
 
 ############# float32 - test
 
-from cykhash.khashsets cimport Float32Set, Float32SetIterator
+from cykhash.khashsets cimport Float32Set, Float32SetIterator, isin_float32, Float32Set_from_buffer
 
-def isin_float32(query, db):
+def py_isin_float32(query, db):
     s=Float32Set()
     for d in db:
         s.add(d)
@@ -94,9 +94,9 @@ def as_py_set_float32(Float32Set db):
 
 ############# PyObject - test
 
-from cykhash.khashsets cimport PyObjectSet, PyObjectSetIterator
+from cykhash.khashsets cimport PyObjectSet, PyObjectSetIterator, isin_pyobject, PyObjectSet_from_buffer
 
-def isin_pyobject(query, db):
+def py_isin_pyobject(query, db):
     s=PyObjectSet()
     for d in db:
         s.add(d)

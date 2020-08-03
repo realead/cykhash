@@ -116,9 +116,9 @@ class SetTester(unittest.TestCase):
 @uttemplate.from_templates([Float64Set, PyObjectSet])
 class Float64NANTester(unittest.TestCase): 
     def test_nan_right(self):
-        NAN1=struct.unpack("d", struct.pack("L", 9221120237041090560))[0]
-        NAN2=struct.unpack("d", struct.pack("L", 9221120237041090561))[0]
-        NAN3=struct.unpack("d", struct.pack("L", 9221120237041090562))[0]
+        NAN1=struct.unpack("d", struct.pack("=Q", 9221120237041090560))[0]
+        NAN2=struct.unpack("d", struct.pack("=Q", 9221120237041090561))[0]
+        NAN3=struct.unpack("d", struct.pack("=Q", 9221120237041090562))[0]
         s=Float64Set()
         s.add(NAN1)
         s.add(NAN2)

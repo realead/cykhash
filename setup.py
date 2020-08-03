@@ -23,7 +23,7 @@ extensions = cythonize(extensions, language_level=3)
 
 kwargs = {
       'name':'cykhash',
-      'version':'1.0.2',
+      'version':'1.0.3',
       'description':'cython wrapper for khash-sets/maps, efficient implementation of `isin` and `unique`',
       'author':'Egor Dranischnikow',
       'long_description':long_description,

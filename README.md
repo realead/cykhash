@@ -233,14 +233,18 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
 
 * A similar approach for sets/maps in pure Cython: https://github.com/realead/tighthash, which is quite slower than khash.
 
-* There is no dependency on `numpy`: this library uses buffer protocol, thus it works for `array.array`, `numpy.ndarray`, `ctypes`-arrays and anything else. However, some interface are somewhat cumbersome (which type should be created as answer?) and for convenient usage it might be a good idea to wrap the functionality so objects of right types are created.
+* There is no dependency on `numpy`: this library uses buffer protocol, thus it works for `array.array`, `numpy.ndarray`, `ctypes`-arrays and anything else. However, some interfaces are somewhat cumbersome (which type should be created as answer?) and for convenient usage it might be a good idea to wrap the functionality so objects of right types are created.
 
 ## History:
+
+#### Release 1.0.3 (??.??.2020):
+
+  * TODO
 
 #### Release 1.0.2 (30.05.2020):
 
   * can be install via conda-forge to all operating systems
-  * can be installed via pip in a clean environment (Cython>=0.18 is now fetched automatically)
+  * can be installed via pip in a clean environment (Cython>=0.28 is now fetched automatically)
 
 #### Release 1.0.1 (27.05.2020):
 

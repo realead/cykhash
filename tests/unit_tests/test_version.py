@@ -12,4 +12,4 @@ class VersionTester(unittest.TestCase):
       self.assertEqual(cykhash.__version__[1], 0)
 
    def test_last(self):
-      self.assertEqual(cykhash.__version__[2], 2)
+      self.assertEqual(cykhash.__version__[2], 3)

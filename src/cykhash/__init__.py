@@ -1,4 +1,4 @@
-__version__=(1,0,2)
+__version__=(1,0,3)
 
 from .khashsets import Int64Set, Int64SetIterator, isin_int64,  Int64Set_from, Int64Set_from_buffer
 from .khashsets import Int32Set, Int32SetIterator, isin_int32,  Int32Set_from, Int32Set_from_buffer

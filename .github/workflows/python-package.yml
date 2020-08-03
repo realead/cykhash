@@ -25,9 +25,12 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install pytest
+        python -m pip install --upgrade pip    
         pip install .
+        pip install pytest
+        pip install numpy
+        pip install cython
+        pip install https://github.com/realead/uttemplate/zipball/master
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with pytest
       run: |

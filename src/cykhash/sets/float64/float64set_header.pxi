@@ -50,5 +50,7 @@ cpdef Float64Set_from_buffer(float64_t[:] buf, double size_hint=*)
 
 
 from libc.stdint cimport  uint8_t
-cpdef isin_float64(float64_t[:] query, Float64Set db, uint8_t[:] result)
+cpdef void isin_float64(float64_t[:] query, Float64Set db, uint8_t[:] result) except *
+
+cpdef bint all_float64(float64_t[:] query, Float64Set db)
 

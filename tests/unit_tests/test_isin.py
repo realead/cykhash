@@ -1,6 +1,8 @@
 import unittest
 import uttemplate
 
+import numpy as np
+
 from cykhash import isin_int64, Int64Set_from, Int64Set_from_buffer
 from cykhash import isin_int32, Int32Set_from, Int32Set_from_buffer
 from cykhash import isin_float64, Float64Set_from, Float64Set_from_buffer
@@ -60,10 +62,6 @@ class BufferTester(unittest.TestCase):
 
 class BufferTesterPyObject(unittest.TestCase): 
     def test_pyobject_isin(self):
-        try:
-            import numpy as np
-        except:
-            return # well what should I do?
         s=PyObjectSet_from([2,4,6])
         a=np.array(range(0,7), dtype=np.object)
         result=array.array('B', [False]*7)
@@ -72,13 +70,25 @@ class BufferTesterPyObject(unittest.TestCase):
         self.assertTrue(expected==result)
 
     def test_pyobject_from_buffer(self):
-        try:
-            import numpy as np
-        except:
-            return # well what should I do?
         a=np.array([6,7,8], dtype=np.object)
         s=PyObjectSet_from_buffer(a)
         self.assertEqual(len(s), len(a))
         for x in a:
             self.assertTrue(x in s)
+
+    def test_isin_result_shorter(self):      
+        s=PyObjectSet_from([2,4,6])
+        a=np.array(range(0,7), dtype=np.object)
+        result=array.array('B', [False]*6)
+        with self.assertRaises(ValueError) as context:
+            isin_pyobject(a,s,result)
+        self.assertEqual("Different sizes for query(7) and result(6)", context.exception.args[0])
+
+    def test_isin_result_longer(self):
+        s=PyObjectSet_from([2,4,6])
+        a=np.array(range(0,7), dtype=np.object)
+        result=array.array('B', [False]*8)
+        with self.assertRaises(ValueError) as context:
+            isin_pyobject(a,s,result)
+        self.assertEqual("Different sizes for query(7) and result(8)", context.exception.args[0])
  

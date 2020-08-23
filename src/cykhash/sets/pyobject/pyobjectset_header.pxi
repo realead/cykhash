@@ -44,5 +44,7 @@ cpdef PyObjectSet_from_buffer(object[:] buf, double size_hint=*)
 
 
 from libc.stdint cimport  uint8_t
-cpdef isin_pyobject(object[:] query, PyObjectSet db, uint8_t[:] result)
+cpdef void isin_pyobject(object[:] query, PyObjectSet db, uint8_t[:] result) except *
+
+cpdef bint all_pyobject(object[:] query, PyObjectSet db)
 

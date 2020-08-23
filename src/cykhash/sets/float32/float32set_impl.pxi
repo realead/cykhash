@@ -114,7 +114,7 @@ cpdef Float32Set_from_buffer(float32_t[:] buf, double size_hint=0.0):
     return res
     
 
-cpdef isin_float32(float32_t[:] query, Float32Set db, uint8_t[:] result):
+cpdef void isin_float32(float32_t[:] query, Float32Set db, uint8_t[:] result) except *:
     cdef size_t i
     cdef size_t n=len(query)
     if n!=len(result):
@@ -122,4 +122,11 @@ cpdef isin_float32(float32_t[:] query, Float32Set db, uint8_t[:] result):
     for i in range(n):
         result[i]=db.contains(query[i])
 
+cpdef bint all_float32(float32_t[:] query, Float32Set db):
+    cdef size_t i
+    cdef size_t n=len(query)
+    for i in range(n):
+        if not db.contains(query[i]):
+            return False
+    return True
 

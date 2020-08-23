@@ -138,3 +138,10 @@ cpdef bint all_pyobject(object[:] query, PyObjectSet db):
         if not db.contains(query[i]):
             return False
     return True
+
+cpdef bint all_pyobject_from_iter(object query, PyObjectSet db):
+    cdef object el
+    for el in query:
+        if not db.contains(el):
+            return False
+    return True

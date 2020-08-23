@@ -53,4 +53,5 @@ from libc.stdint cimport  uint8_t
 cpdef void isin_int32(int32_t[:] query, Int32Set db, uint8_t[:] result) except *
 
 cpdef bint all_int32(int32_t[:] query, Int32Set db)
+cpdef bint all_int32_from_iter(object query, Int32Set db)
 

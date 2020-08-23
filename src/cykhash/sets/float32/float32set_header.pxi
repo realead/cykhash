@@ -53,4 +53,5 @@ from libc.stdint cimport  uint8_t
 cpdef void isin_float32(float32_t[:] query, Float32Set db, uint8_t[:] result) except *
 
 cpdef bint all_float32(float32_t[:] query, Float32Set db)
+cpdef bint all_float32_from_iter(object query, Float32Set db)
 

@@ -130,3 +130,10 @@ cpdef bint all_int32(int32_t[:] query, Int32Set db):
             return False
     return True
 
+cpdef bint all_int32_from_iter(object query, Int32Set db):
+    cdef int32_t el
+    for el in query:
+        if not db.contains(el):
+            return False
+    return True
+

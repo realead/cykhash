@@ -130,3 +130,10 @@ cpdef bint all_int64(int64_t[:] query, Int64Set db):
             return False
     return True
 
+cpdef bint all_int64_from_iter(object query, Int64Set db):
+    cdef int64_t el
+    for el in query:
+        if not db.contains(el):
+            return False
+    return True
+

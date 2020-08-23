@@ -130,3 +130,10 @@ cpdef bint all_float32(float32_t[:] query, Float32Set db):
             return False
     return True
 
+cpdef bint all_float32_from_iter(object query, Float32Set db):
+    cdef float32_t el
+    for el in query:
+        if not db.contains(el):
+            return False
+    return True
+

@@ -158,3 +158,20 @@ cpdef bint any_int32(int32_t[:] query, Int32Set db) except *:
 cpdef bint any_int32_from_iter(object query, Int32Set db) except *:
     return not none_int32_from_iter(query, db)
 
+cpdef size_t count_if_int32(int32_t[:] query, Int32Set db) except *:
+    cdef size_t i
+    cdef size_t n=len(query)
+    cdef size_t res=0
+    for i in range(n):
+        if db.contains(query[i]):
+            res+=1
+    return res
+
+cpdef size_t count_if_int32_from_iter(object query, Int32Set db) except *:
+    cdef int32_t el
+    cdef size_t res=0
+    for el in query:
+        if db.contains(el):
+            res+=1
+    return res
+

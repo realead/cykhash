@@ -61,3 +61,6 @@ cpdef bint none_int32_from_iter(object query, Int32Set db) except *
 cpdef bint any_int32(int32_t[:] query, Int32Set db) except *
 cpdef bint any_int32_from_iter(object query, Int32Set db) except *
 
+cpdef size_t count_if_int32(int32_t[:] query, Int32Set db) except *
+cpdef size_t count_if_int32_from_iter(object query, Int32Set db) except *
+

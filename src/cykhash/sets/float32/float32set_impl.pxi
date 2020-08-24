@@ -158,3 +158,20 @@ cpdef bint any_float32(float32_t[:] query, Float32Set db) except *:
 cpdef bint any_float32_from_iter(object query, Float32Set db) except *:
     return not none_float32_from_iter(query, db)
 
+cpdef size_t count_if_float32(float32_t[:] query, Float32Set db) except *:
+    cdef size_t i
+    cdef size_t n=len(query)
+    cdef size_t res=0
+    for i in range(n):
+        if db.contains(query[i]):
+            res+=1
+    return res
+
+cpdef size_t count_if_float32_from_iter(object query, Float32Set db) except *:
+    cdef float32_t el
+    cdef size_t res=0
+    for el in query:
+        if db.contains(el):
+            res+=1
+    return res
+

@@ -61,3 +61,6 @@ cpdef bint none_float32_from_iter(object query, Float32Set db) except *
 cpdef bint any_float32(float32_t[:] query, Float32Set db) except *
 cpdef bint any_float32_from_iter(object query, Float32Set db) except *
 
+cpdef size_t count_if_float32(float32_t[:] query, Float32Set db) except *
+cpdef size_t count_if_float32_from_iter(object query, Float32Set db) except *
+

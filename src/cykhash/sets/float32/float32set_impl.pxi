@@ -104,7 +104,7 @@ def Float32Set_from(it):
         res.add(i)
     return res
 
-cpdef Float32Set_from_buffer(float32_t[:] buf, double size_hint=0.0):
+cpdef Float32Set Float32Set_from_buffer(float32_t[:] buf, double size_hint=0.0):
     cdef Py_ssize_t n = len(buf)
     cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
     res=Float32Set(number_of_elements_hint=at_least_needed)
@@ -122,7 +122,7 @@ cpdef void isin_float32(float32_t[:] query, Float32Set db, uint8_t[:] result) ex
     for i in range(n):
         result[i]=db.contains(query[i])
 
-cpdef bint all_float32(float32_t[:] query, Float32Set db):
+cpdef bint all_float32(float32_t[:] query, Float32Set db) except *:
     cdef size_t i
     cdef size_t n=len(query)
     for i in range(n):
@@ -130,7 +130,7 @@ cpdef bint all_float32(float32_t[:] query, Float32Set db):
             return False
     return True
 
-cpdef bint all_float32_from_iter(object query, Float32Set db):
+cpdef bint all_float32_from_iter(object query, Float32Set db) except *:
     cdef float32_t el
     for el in query:
         if not db.contains(el):

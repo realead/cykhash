@@ -104,7 +104,7 @@ def Int32Set_from(it):
         res.add(i)
     return res
 
-cpdef Int32Set_from_buffer(int32_t[:] buf, double size_hint=0.0):
+cpdef Int32Set Int32Set_from_buffer(int32_t[:] buf, double size_hint=0.0):
     cdef Py_ssize_t n = len(buf)
     cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
     res=Int32Set(number_of_elements_hint=at_least_needed)
@@ -122,7 +122,7 @@ cpdef void isin_int32(int32_t[:] query, Int32Set db, uint8_t[:] result) except *
     for i in range(n):
         result[i]=db.contains(query[i])
 
-cpdef bint all_int32(int32_t[:] query, Int32Set db):
+cpdef bint all_int32(int32_t[:] query, Int32Set db) except *:
     cdef size_t i
     cdef size_t n=len(query)
     for i in range(n):
@@ -130,7 +130,7 @@ cpdef bint all_int32(int32_t[:] query, Int32Set db):
             return False
     return True
 
-cpdef bint all_int32_from_iter(object query, Int32Set db):
+cpdef bint all_int32_from_iter(object query, Int32Set db) except *:
     cdef int32_t el
     for el in query:
         if not db.contains(el):

@@ -65,6 +65,13 @@ class AllTester(unittest.TestCase):
         result=ALL_FROM_ITER[value_type](a,s)
         self.assertEqual(result, False)
 
+    def template_noniter_from_iter(self, value_type):
+        s=FROM_SET[value_type]([])
+        a=1
+        with self.assertRaises(TypeError) as context:
+            ALL_FROM_ITER[value_type](a,s)
+        self.assertTrue("object is not iterable" in context.exception.args[0])
+
 
 class AllTesterPyObject(unittest.TestCase): 
     def test_all_yes(self):
@@ -114,5 +121,12 @@ class AllTesterPyObject(unittest.TestCase):
         a=[1]
         result=all_pyobject_from_iter(a,s)
         self.assertEqual(result, False)
+
+    def test_noniter_from_iter(self):
+        s=PyObjectSet_from([])
+        a=1
+        with self.assertRaises(TypeError) as context:
+            all_pyobject_from_iter(a,s)
+        self.assertTrue("object is not iterable" in context.exception.args[0])
 
  

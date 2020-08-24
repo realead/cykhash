@@ -113,7 +113,7 @@ def PyObjectSet_from(it):
         res.add(i)
     return res
     
-cpdef PyObjectSet_from_buffer(object[:] buf, double size_hint=0.0):
+cpdef PyObjectSet PyObjectSet_from_buffer(object[:] buf, double size_hint=0.0):
     cdef Py_ssize_t n = len(buf)
     cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
     res=PyObjectSet(number_of_elements_hint=at_least_needed)
@@ -131,7 +131,7 @@ cpdef void  isin_pyobject(object[:] query, PyObjectSet db, uint8_t[:] result) ex
     for i in range(n):
         result[i]=db.contains(query[i])
 
-cpdef bint all_pyobject(object[:] query, PyObjectSet db):
+cpdef bint all_pyobject(object[:] query, PyObjectSet db) except *:
     cdef size_t i
     cdef size_t n=len(query)
     for i in range(n):
@@ -139,7 +139,7 @@ cpdef bint all_pyobject(object[:] query, PyObjectSet db):
             return False
     return True
 
-cpdef bint all_pyobject_from_iter(object query, PyObjectSet db):
+cpdef bint all_pyobject_from_iter(object query, PyObjectSet db) except *:
     cdef object el
     for el in query:
         if not db.contains(el):

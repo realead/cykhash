@@ -1,0 +1,132 @@
+import unittest
+import uttemplate
+import numpy as np
+
+from cykhash import none_int64, none_int64_from_iter, Int64Set_from, Int64Set_from_buffer
+from cykhash import none_int32, none_int32_from_iter, Int32Set_from, Int32Set_from_buffer
+from cykhash import none_float64, none_float64_from_iter, Float64Set_from, Float64Set_from_buffer
+from cykhash import none_float32, none_float32_from_iter, Float32Set_from, Float32Set_from_buffer
+from cykhash import none_pyobject, none_pyobject_from_iter,  PyObjectSet_from, PyObjectSet_from_buffer
+
+NONE={'int32': none_int32, 'int64': none_int64, 'float64' : none_float64, 'float32' : none_float32}
+NONE_FROM_ITER={'int32': none_int32_from_iter, 'int64': none_int64_from_iter, 'float64' : none_float64_from_iter, 'float32' : none_float32_from_iter}
+FROM_SET={'int32': Int32Set_from, 'int64': Int64Set_from, 'float64' : Float64Set_from, 'float32' : Float32Set_from, 'pyobject' : PyObjectSet_from}
+BUFFER_SIZE = {'int32': 'i', 'int64': 'q', 'float64' : 'd', 'float32' : 'f'}
+
+
+import array
+@uttemplate.from_templates(['int64', 'int32', 'float64', 'float32'])
+class NoneTester(unittest.TestCase): 
+    def template_none_yes(self, value_type):
+        s=FROM_SET[value_type]([2,4,6])
+        a=array.array(BUFFER_SIZE[value_type], [1,3,5]*6)
+        result=NONE[value_type](a,s)
+        self.assertEqual(result, True)
+
+    def template_none_yes_from_iter(self, value_type):
+        s=FROM_SET[value_type]([2,4,6])
+        a=[1,3,5]*6
+        result=NONE_FROM_ITER[value_type](a,s)
+        self.assertEqual(result, True)
+
+    def template_none_last_no(self, value_type):
+        s=FROM_SET[value_type]([2,4,6])
+        a=array.array(BUFFER_SIZE[value_type], [1]*6+[2])
+        result=NONE[value_type](a,s)
+        self.assertEqual(result, False)
+
+    def template_none_last_no_from_iter(self, value_type):
+        s=FROM_SET[value_type]([2,4,6])
+        a=[1]*6+[2]
+        result=NONE_FROM_ITER[value_type](a,s)
+        self.assertEqual(result, False)
+
+    def template_none_empty(self, value_type):
+        s=FROM_SET[value_type]([])
+        a=array.array(BUFFER_SIZE[value_type],[])
+        result=NONE[value_type](a,s)
+        self.assertEqual(result, True)
+
+    def template_none_empty_from_iter(self, value_type):
+        s=FROM_SET[value_type]([])
+        a=[]
+        result=NONE_FROM_ITER[value_type](a,s)
+        self.assertEqual(result, True)
+
+    def template_none_empty_set(self, value_type):
+        s=FROM_SET[value_type]([])
+        a=array.array(BUFFER_SIZE[value_type],[1])
+        result=NONE[value_type](a,s)
+        self.assertEqual(result, True)
+
+    def template_none_empty_set_from_iter(self, value_type):
+        s=FROM_SET[value_type]([])
+        a=[1]
+        result=NONE_FROM_ITER[value_type](a,s)
+        self.assertEqual(result, True)
+
+    def template_noniter_from_iter(self, value_type):
+        s=FROM_SET[value_type]([])
+        a=1
+        with self.assertRaises(TypeError) as context:
+            NONE_FROM_ITER[value_type](a,s)
+        self.assertTrue("object is not iterable" in context.exception.args[0])
+
+
+class NoneTesterPyObject(unittest.TestCase): 
+    def test_none_yes(self):
+        s=PyObjectSet_from([2,4,666])
+        a=np.array([1,3,333]*6, dtype=np.object)
+        result=none_pyobject(a,s)
+        self.assertEqual(result, True)
+
+    def test_none_from_iter(self):
+        s=PyObjectSet_from([2,4,666])
+        a=[1,3,333]*6
+        result=none_pyobject_from_iter(a,s)
+        self.assertEqual(result, True)
+
+    def test_none_last_no(self):
+        s=PyObjectSet_from([2,4,666])
+        a=np.array([1,3,333]*6+[2], dtype=np.object)
+        result=none_pyobject(a,s)
+        self.assertEqual(result, False)
+
+    def test_none_last_no_from_iter(self):
+        s=PyObjectSet_from([2,4,666])
+        a=[1,3,333]*6+[2]
+        result=none_pyobject_from_iter(a,s)
+        self.assertEqual(result, False)
+
+    def test_none_empty(self):
+        s=PyObjectSet_from([])
+        a=np.array([], dtype=np.object)
+        result=none_pyobject(a,s)
+        self.assertEqual(result, True)
+
+    def test_none_empty_from_iter(self):
+        s=PyObjectSet_from([])
+        a=[]
+        result=none_pyobject_from_iter(a,s)
+        self.assertEqual(result, True)
+
+    def test_none_empty_set(self):
+        s=PyObjectSet_from([])
+        a=np.array([1], dtype=np.object)
+        result=none_pyobject(a,s)
+        self.assertEqual(result, True)
+
+    def test_none_empty_set_from_iter(self):
+        s=PyObjectSet_from([])
+        a=[1]
+        result=none_pyobject_from_iter(a,s)
+        self.assertEqual(result, True)
+
+    def test_noniter_from_iter(self):
+        s=PyObjectSet_from([])
+        a=1
+        with self.assertRaises(TypeError) as context:
+            none_pyobject_from_iter(a,s)
+        self.assertTrue("object is not iterable" in context.exception.args[0])
+
+ 

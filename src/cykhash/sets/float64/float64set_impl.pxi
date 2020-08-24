@@ -137,3 +137,18 @@ cpdef bint all_float64_from_iter(object query, Float64Set db) except *:
             return False
     return True
 
+cpdef bint none_float64(float64_t[:] query, Float64Set db) except *:
+    cdef size_t i
+    cdef size_t n=len(query)
+    for i in range(n):
+        if db.contains(query[i]):
+            return False
+    return True
+
+cpdef bint none_float64_from_iter(object query, Float64Set db) except *:
+    cdef float64_t el
+    for el in query:
+        if db.contains(el):
+            return False
+    return True
+

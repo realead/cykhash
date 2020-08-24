@@ -49,3 +49,6 @@ cpdef void isin_pyobject(object[:] query, PyObjectSet db, uint8_t[:] result) exc
 cpdef bint all_pyobject(object[:] query, PyObjectSet db) except *
 cpdef bint all_pyobject_from_iter(object query, PyObjectSet db) except *
 
+cpdef bint none_pyobject(object[:] query, PyObjectSet db) except *
+cpdef bint none_pyobject_from_iter(object query, PyObjectSet db) except *
+

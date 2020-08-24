@@ -55,3 +55,6 @@ cpdef void isin_float64(float64_t[:] query, Float64Set db, uint8_t[:] result) ex
 cpdef bint all_float64(float64_t[:] query, Float64Set db) except *
 cpdef bint all_float64_from_iter(object query, Float64Set db) except *
 
+cpdef bint none_float64(float64_t[:] query, Float64Set db) except *
+cpdef bint none_float64_from_iter(object query, Float64Set db) except *
+

@@ -137,3 +137,18 @@ cpdef bint all_int32_from_iter(object query, Int32Set db) except *:
             return False
     return True
 
+cpdef bint none_int32(int32_t[:] query, Int32Set db) except *:
+    cdef size_t i
+    cdef size_t n=len(query)
+    for i in range(n):
+        if db.contains(query[i]):
+            return False
+    return True
+
+cpdef bint none_int32_from_iter(object query, Int32Set db) except *:
+    cdef int32_t el
+    for el in query:
+        if db.contains(el):
+            return False
+    return True
+

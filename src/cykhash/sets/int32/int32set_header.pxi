@@ -55,3 +55,6 @@ cpdef void isin_int32(int32_t[:] query, Int32Set db, uint8_t[:] result) except *
 cpdef bint all_int32(int32_t[:] query, Int32Set db) except *
 cpdef bint all_int32_from_iter(object query, Int32Set db) except *
 
+cpdef bint none_int32(int32_t[:] query, Int32Set db) except *
+cpdef bint none_int32_from_iter(object query, Int32Set db) except *
+

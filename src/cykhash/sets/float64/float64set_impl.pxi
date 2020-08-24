@@ -152,3 +152,9 @@ cpdef bint none_float64_from_iter(object query, Float64Set db) except *:
             return False
     return True
 
+cpdef bint any_float64(float64_t[:] query, Float64Set db) except *:
+    return not none_float64(query, db)
+
+cpdef bint any_float64_from_iter(object query, Float64Set db) except *:
+    return not none_float64_from_iter(query, db)
+

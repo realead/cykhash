@@ -152,3 +152,9 @@ cpdef bint none_int32_from_iter(object query, Int32Set db) except *:
             return False
     return True
 
+cpdef bint any_int32(int32_t[:] query, Int32Set db) except *:
+    return not none_int32(query, db)
+
+cpdef bint any_int32_from_iter(object query, Int32Set db) except *:
+    return not none_int32_from_iter(query, db)
+

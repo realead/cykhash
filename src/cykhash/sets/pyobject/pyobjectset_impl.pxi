@@ -160,3 +160,10 @@ cpdef bint none_pyobject_from_iter(object query, PyObjectSet db) except *:
         if db.contains(el):
             return False
     return True
+
+
+cpdef bint any_pyobject(object[:] query, PyObjectSet db) except *:
+    return not none_pyobject(query, db)
+
+cpdef bint any_pyobject_from_iter(object query, PyObjectSet db) except *:
+    return not none_pyobject_from_iter(query, db)

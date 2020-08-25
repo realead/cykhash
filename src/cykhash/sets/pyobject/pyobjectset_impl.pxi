@@ -129,24 +129,32 @@ cpdef void  isin_pyobject(object[:] query, PyObjectSet db, uint8_t[:] result) ex
     if n!=len(result):
         raise ValueError("Different sizes for query({n}) and result({m})".format(n=n, m=len(result)))
     for i in range(n):
-        result[i]=db.contains(query[i])
+        result[i]=db is not None and db.contains(query[i])
 
 cpdef bint all_pyobject(object[:] query, PyObjectSet db) except *:
+    if query is None:
+        return True
     cdef size_t i
     cdef size_t n=len(query)
+    if db is None:
+        return n==0
     for i in range(n):
         if not db.contains(query[i]):
             return False
     return True
 
 cpdef bint all_pyobject_from_iter(object query, PyObjectSet db) except *:
+    if query is None:
+        return True
     cdef object el
     for el in query:
-        if not db.contains(el):
+        if db is None or not db.contains(el):
             return False
     return True
 
 cpdef bint none_pyobject(object[:] query, PyObjectSet db) except *:
+    if query is None or db is None:
+        return True
     cdef size_t i
     cdef size_t n=len(query)
     for i in range(n):
@@ -155,6 +163,8 @@ cpdef bint none_pyobject(object[:] query, PyObjectSet db) except *:
     return True
 
 cpdef bint none_pyobject_from_iter(object query, PyObjectSet db) except *:
+    if query is None or db is None:
+        return True
     cdef object el
     for el in query:
         if db.contains(el):
@@ -169,6 +179,8 @@ cpdef bint any_pyobject_from_iter(object query, PyObjectSet db) except *:
     return not none_pyobject_from_iter(query, db)
 
 cpdef size_t count_if_pyobject(object[:] query, PyObjectSet db) except *:
+    if query is None or db is None:
+        return 0
     cdef size_t i
     cdef size_t n=len(query)
     cdef size_t res=0
@@ -178,6 +190,8 @@ cpdef size_t count_if_pyobject(object[:] query, PyObjectSet db) except *:
     return res
 
 cpdef size_t count_if_pyobject_from_iter(object query, PyObjectSet db) except *:
+    if query is None or db is None:
+        return 0
     cdef object el
     cdef size_t res=0
     for el in query:

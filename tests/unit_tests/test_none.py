@@ -72,6 +72,18 @@ class NoneTester(unittest.TestCase):
             NONE_FROM_ITER[value_type](a,s)
         self.assertTrue("object is not iterable" in context.exception.args[0])
 
+    def template_memview_none(self, value_type):
+        s=FROM_SET[value_type]([])
+        self.assertEqual(NONE[value_type](None,s), True)
+
+    def template_dbnone(self, value_type):
+        a=array.array(BUFFER_SIZE[value_type],[1])
+        self.assertEqual(NONE[value_type](a,None), True)
+
+    def template_dbnone_from_iter(self, value_type):
+        a=1
+        self.assertEqual(NONE_FROM_ITER[value_type](a,None), True)
+
 
 class NoneTesterPyObject(unittest.TestCase): 
     def test_none_yes(self):
@@ -128,5 +140,17 @@ class NoneTesterPyObject(unittest.TestCase):
         with self.assertRaises(TypeError) as context:
             none_pyobject_from_iter(a,s)
         self.assertTrue("object is not iterable" in context.exception.args[0])
+
+    def test_memview_none(self):
+        s=PyObjectSet_from([])
+        self.assertEqual(none_pyobject(None,s), True)
+
+    def test_dbnone(self):
+        a=np.array([1], dtype=np.object)
+        self.assertEqual(none_pyobject(a,None), True)
+
+    def test_dbnone_from_iter(self):
+        a=1
+        self.assertEqual(none_pyobject_from_iter(a,None), True)
 
  

@@ -72,6 +72,18 @@ class CountIfTester(unittest.TestCase):
             COUNT_IF_FROM_ITER[value_type](a,s)
         self.assertTrue("object is not iterable" in context.exception.args[0])
 
+    def template_memview_none(self, value_type):
+        s=FROM_SET[value_type]([])
+        self.assertEqual(COUNT_IF[value_type](None,s), 0)
+
+    def template_dbnone(self, value_type):
+        a=array.array(BUFFER_SIZE[value_type],[1])
+        self.assertEqual(COUNT_IF[value_type](a,None), 0)
+
+    def template_dbnone_from_iter(self, value_type):
+        a=1
+        self.assertEqual(COUNT_IF_FROM_ITER[value_type](a,None), 0)
+
 
 class CountIfTesterPyObject(unittest.TestCase): 
     def test_count_if_all(self):
@@ -128,5 +140,17 @@ class CountIfTesterPyObject(unittest.TestCase):
         with self.assertRaises(TypeError) as context:
             count_if_pyobject_from_iter(a,s)
         self.assertTrue("object is not iterable" in context.exception.args[0])
+
+    def test_memview_none(self):
+        s=PyObjectSet_from([])
+        self.assertEqual(count_if_pyobject(None,s), 0)
+
+    def test_dbnone(self):
+        a=np.array([1], dtype=np.object)
+        self.assertEqual(count_if_pyobject(a,None), 0)
+
+    def test_dbnone_from_iter(self):
+        a=1
+        self.assertEqual(count_if_pyobject_from_iter(a,None), 0)
 
  

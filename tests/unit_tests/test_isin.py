@@ -52,6 +52,18 @@ class BufferTester(unittest.TestCase):
             ISIN[value_type](a,s,result)
         self.assertEqual("Different sizes for query(7) and result(8)", context.exception.args[0])
 
+    def template_isin_db_none(self, value_type):
+        a=array.array(BUFFER_SIZE[value_type], range(0,7))
+        result=array.array('B', [True]*7)
+        ISIN[value_type](a,None,result)
+        expected=array.array('B', [False, False, False, False, False, False, False])
+        self.assertTrue(expected==result)
+
+    def template_isin_nones(self, value_type):
+        s=FROM_SET[value_type]([2,4,6])
+        ISIN[value_type](None,s,None)
+        self.assertTrue(True)
+
     def template_from_buffer(self, value_type):
         a=array.array(BUFFER_SIZE[value_type], [6,7,8])
         s=FROM_BUFFER_SET[value_type](a)
@@ -91,4 +103,16 @@ class BufferTesterPyObject(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             isin_pyobject(a,s,result)
         self.assertEqual("Different sizes for query(7) and result(8)", context.exception.args[0])
+
+    def test_isin_db_none(self):
+        a=np.array(range(0,7), dtype=np.object)
+        result=array.array('B', [True]*7)
+        isin_pyobject(a,None,result)
+        expected=array.array('B', [False, False, False, False, False, False, False])
+        self.assertTrue(expected==result)
+
+    def test_isin_nones(self):
+        s=PyObjectSet_from([2,4,6])
+        isin_pyobject(None,s,None)
+        self.assertTrue(True)
  

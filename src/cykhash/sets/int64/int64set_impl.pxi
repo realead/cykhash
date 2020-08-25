@@ -120,24 +120,32 @@ cpdef void isin_int64(int64_t[:] query, Int64Set db, uint8_t[:] result) except *
     if n!=len(result):
         raise ValueError("Different sizes for query({n}) and result({m})".format(n=n, m=len(result)))
     for i in range(n):
-        result[i]=db.contains(query[i])
+        result[i]=db is not None and db.contains(query[i])
 
 cpdef bint all_int64(int64_t[:] query, Int64Set db) except *:
+    if query is None:
+        return True
     cdef size_t i
     cdef size_t n=len(query)
+    if db is None:
+        return n==0
     for i in range(n):
         if not db.contains(query[i]):
             return False
     return True
 
 cpdef bint all_int64_from_iter(object query, Int64Set db) except *:
+    if query is None:
+        return True
     cdef int64_t el
     for el in query:
-        if not db.contains(el):
+        if db is None or not db.contains(el):
             return False
     return True
 
 cpdef bint none_int64(int64_t[:] query, Int64Set db) except *:
+    if query is None or db is None:
+        return True
     cdef size_t i
     cdef size_t n=len(query)
     for i in range(n):
@@ -146,6 +154,8 @@ cpdef bint none_int64(int64_t[:] query, Int64Set db) except *:
     return True
 
 cpdef bint none_int64_from_iter(object query, Int64Set db) except *:
+    if query is None or db is None:
+        return True
     cdef int64_t el
     for el in query:
         if db.contains(el):
@@ -159,6 +169,8 @@ cpdef bint any_int64_from_iter(object query, Int64Set db) except *:
     return not none_int64_from_iter(query, db)
 
 cpdef size_t count_if_int64(int64_t[:] query, Int64Set db) except *:
+    if query is None or db is None:
+        return 0
     cdef size_t i
     cdef size_t n=len(query)
     cdef size_t res=0
@@ -168,6 +180,8 @@ cpdef size_t count_if_int64(int64_t[:] query, Int64Set db) except *:
     return res
 
 cpdef size_t count_if_int64_from_iter(object query, Int64Set db) except *:
+    if query is None or db is None:
+        return 0
     cdef int64_t el
     cdef size_t res=0
     for el in query:

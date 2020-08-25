@@ -72,6 +72,25 @@ class AllTester(unittest.TestCase):
             ALL_FROM_ITER[value_type](a,s)
         self.assertTrue("object is not iterable" in context.exception.args[0])
 
+    def template_memview_none(self, value_type):
+        s=FROM_SET[value_type]([])
+        self.assertEqual(ALL[value_type](None,s), True)
+
+    def template_dbnone(self, value_type):
+        a=array.array(BUFFER_SIZE[value_type],[1])
+        self.assertEqual(ALL[value_type](a,None), False)
+
+    def template_dbnone_empty_query(self, value_type):
+        a=array.array(BUFFER_SIZE[value_type],[])
+        self.assertEqual(ALL[value_type](a,None), True)
+
+    def template_dbnone_from_iter(self, value_type):
+        a=[1]
+        self.assertEqual(ALL_FROM_ITER[value_type](a,None), False)
+
+    def template_dbnone_empty_query_from_iter(self, value_type):
+        self.assertEqual(ALL_FROM_ITER[value_type]([],None), True)
+
 
 class AllTesterPyObject(unittest.TestCase): 
     def test_all_yes(self):
@@ -128,5 +147,17 @@ class AllTesterPyObject(unittest.TestCase):
         with self.assertRaises(TypeError) as context:
             all_pyobject_from_iter(a,s)
         self.assertTrue("object is not iterable" in context.exception.args[0])
+
+    def test_memview_none(self):
+        s=PyObjectSet_from([])
+        self.assertEqual(all_pyobject(None,s), True)
+
+    def test_dbnone(self):
+        a=np.array([1], dtype=np.object)
+        self.assertEqual(all_pyobject(a,None), False)
+
+    def test_dbnone_from_iter(self):
+        a=[1]
+        self.assertEqual(all_pyobject_from_iter(a,None), False)
 
  

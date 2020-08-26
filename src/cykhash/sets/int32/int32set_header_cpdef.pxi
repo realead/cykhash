@@ -24,5 +24,7 @@ cpdef bint any_int32_from_iter(object query, Int32Set db) except *
 cpdef size_t count_if_int32(int32_t[:] query, Int32Set db) except *
 cpdef size_t count_if_int32_from_iter(object query, Int32Set db) except *
 
+# for drop-in replacements:
 cpdef bint aredisjoint_int32(Int32Set a, Int32Set b) except *
+cpdef bint issubset_int32(Int32Set s, Int32Set sub) except *
 

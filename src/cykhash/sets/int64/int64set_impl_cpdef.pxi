@@ -109,6 +109,18 @@ cpdef bint aredisjoint_int64(Int64Set a, Int64Set b) except *:
         if s.contains(el):
             return False
     return True
+
+cpdef bint issubset_int64(Int64Set s, Int64Set sub) except *:
+    if s is None or sub is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef Int64SetIterator it=sub.get_iter()
+    cdef int64_t el
+    while it.has_next():
+        el = it.next()
+        if not s.contains(el):
+            return False
+    return True
     
    
 

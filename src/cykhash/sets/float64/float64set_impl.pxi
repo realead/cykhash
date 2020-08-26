@@ -80,6 +80,37 @@ cdef class Float64Set:
                 return False
         return True
 
+    def issuperset(self, other):
+        if isinstance(other, Float64Set):
+            return issubset_float64(self, other)
+        cdef float64_t el
+        for el in other:
+            if not self.contains(el):
+                return False
+        return True
+
+    def issubset(self, other):
+        if isinstance(other, Float64Set):
+            return issubset_float64(other, self)
+        cdef float64_t el
+        cdef Float64Set mem=Float64Set()
+        for el in other:
+            if self.contains(el):
+                mem.add(el)
+        return mem.size()==self.size()
+
+    def __le__(self, Float64Set other):
+        return issubset_float64(other, self)
+
+    def __lt__(self, Float64Set other):
+        return issubset_float64(other, self) and self.size()<other.size()
+
+    def __ge__(self, Float64Set other):
+        return issubset_float64(self,  other)
+
+    def __gt__(self, Float64Set other):
+        return issubset_float64(self, other) and self.size()>other.size()
+
 
 
 ### Iterator:

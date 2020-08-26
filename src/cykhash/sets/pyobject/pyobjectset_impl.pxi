@@ -87,6 +87,36 @@ cdef class PyObjectSet:
                 return False
         return True
 
+    def issuperset(self, other):
+        if isinstance(other, PyObjectSet):
+            return issubset_pyobject(self, other)
+        cdef object el
+        for el in other:
+            if not self.contains(el):
+                return False
+        return True
+
+    def issubset(self, other):
+        if isinstance(other, PyObjectSet):
+            return issubset_pyobject(other, self)
+        cdef PyObjectSet mem=PyObjectSet()
+        for el in other:
+            if self.contains(el):
+                mem.add(el)
+        return mem.size()==self.size()
+
+    def __le__(self, PyObjectSet other):
+        return issubset_pyobject(other, self)
+
+    def __lt__(self, PyObjectSet other):
+        return issubset_pyobject(other, self) and self.size()<other.size()
+
+    def __ge__(self, PyObjectSet other):
+        return issubset_pyobject(self,  other)
+
+    def __gt__(self, PyObjectSet other):
+        return issubset_pyobject(self, other) and self.size()>other.size()
+
 
 ### Iterator:
 cdef class PyObjectSetIterator:

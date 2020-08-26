@@ -109,6 +109,18 @@ cpdef bint aredisjoint_float64(Float64Set a, Float64Set b) except *:
         if s.contains(el):
             return False
     return True
+
+cpdef bint issubset_float64(Float64Set s, Float64Set sub) except *:
+    if s is None or sub is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef Float64SetIterator it=sub.get_iter()
+    cdef float64_t el
+    while it.has_next():
+        el = it.next()
+        if not s.contains(el):
+            return False
+    return True
     
    
 

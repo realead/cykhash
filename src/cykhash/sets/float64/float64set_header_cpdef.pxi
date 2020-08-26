@@ -24,5 +24,7 @@ cpdef bint any_float64_from_iter(object query, Float64Set db) except *
 cpdef size_t count_if_float64(float64_t[:] query, Float64Set db) except *
 cpdef size_t count_if_float64_from_iter(object query, Float64Set db) except *
 
+# for drop-in replacements:
 cpdef bint aredisjoint_float64(Float64Set a, Float64Set b) except *
+cpdef bint issubset_float64(Float64Set s, Float64Set sub) except *
 

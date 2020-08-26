@@ -109,6 +109,18 @@ cpdef bint aredisjoint_pyobject(PyObjectSet a, PyObjectSet b) except *:
         if s.contains(el):
             return False
     return True
+
+cpdef bint issubset_pyobject(PyObjectSet s, PyObjectSet sub) except *:
+    if s is None or sub is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef PyObjectSetIterator it=sub.get_iter()
+    cdef object el
+    while it.has_next():
+        el = it.next()
+        if not s.contains(el):
+            return False
+    return True
     
    
 

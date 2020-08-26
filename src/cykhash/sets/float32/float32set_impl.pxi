@@ -8,13 +8,18 @@
 
 cdef class Float32Set:
 
-    def __cinit__(self, *, number_of_elements_hint=None):
+    def __cinit__(self, iterable=None, *, number_of_elements_hint=None):
         """
+        iterable - initial elements in the set
         number_of_elements_hint - number of elements without the need of reallocation.
         """
         self.table = kh_init_float32set()
         if number_of_elements_hint is not None:    
             kh_resize_float32set(self.table, element_n_to_bucket_n(number_of_elements_hint))
+        cdef float32_t el
+        if iterable is not None:
+            for el in iterable:
+                self.add(el)
 
     def __len__(self):
         return self.size()
@@ -188,4 +193,5 @@ cpdef size_t count_if_float32_from_iter(object query, Float32Set db) except *:
         if db.contains(el):
             res+=1
     return res
+
 

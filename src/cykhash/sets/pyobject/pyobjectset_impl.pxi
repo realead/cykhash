@@ -9,13 +9,17 @@ from cpython.ref cimport Py_INCREF,Py_DECREF
 
 cdef class PyObjectSet:
 
-    def __cinit__(self,  *, number_of_elements_hint=None):
+    def __cinit__(self, iterable=None,  *, number_of_elements_hint=None):
         """
+        iterable - initial elements in the set
         number_of_elements_hint - number of elements without the need of reallocation.
         """
         self.table = kh_init_pyobjectset()
         if number_of_elements_hint is not None:
             kh_resize_pyobjectset(self.table, element_n_to_bucket_n(number_of_elements_hint))
+        if iterable is not None:
+            for el in iterable:
+                self.add(el)
 
     def __len__(self):
         return self.size()

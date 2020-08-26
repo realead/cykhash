@@ -70,6 +70,17 @@ cdef class Float64Set:
                 "n_occupied" : self.table.n_occupied, 
                 "upper_bound" : self.table.upper_bound}
 
+    ### drop-in for set:
+    def isdisjoint(self, other):
+        if isinstance(other, Float64Set):
+            return aredisjoint_float64(self, other)
+        cdef float64_t el
+        for el in other:
+            if self.contains(el):
+                return False
+        return True
+
+
 
 ### Iterator:
 cdef class Float64SetIterator:
@@ -194,4 +205,24 @@ cpdef size_t count_if_float64_from_iter(object query, Float64Set db) except *:
             res+=1
     return res
 
+cpdef bint aredisjoint_float64(Float64Set a, Float64Set b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef Float64SetIterator it
+    cdef Float64Set s
+    cdef float64_t el
+    if a.size()<b.size():
+        it=a.get_iter()
+        s =b
+    else:
+        it=b.get_iter()
+        s =a
+    while it.has_next():
+        el = it.next()
+        if s.contains(el):
+            return False
+    return True
+    
+   
 

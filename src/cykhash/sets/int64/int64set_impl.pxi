@@ -70,6 +70,17 @@ cdef class Int64Set:
                 "n_occupied" : self.table.n_occupied, 
                 "upper_bound" : self.table.upper_bound}
 
+    ### drop-in for set:
+    def isdisjoint(self, other):
+        if isinstance(other, Int64Set):
+            return aredisjoint_int64(self, other)
+        cdef int64_t el
+        for el in other:
+            if self.contains(el):
+                return False
+        return True
+
+
 
 ### Iterator:
 cdef class Int64SetIterator:
@@ -194,4 +205,24 @@ cpdef size_t count_if_int64_from_iter(object query, Int64Set db) except *:
             res+=1
     return res
 
+cpdef bint aredisjoint_int64(Int64Set a, Int64Set b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef Int64SetIterator it
+    cdef Int64Set s
+    cdef int64_t el
+    if a.size()<b.size():
+        it=a.get_iter()
+        s =b
+    else:
+        it=b.get_iter()
+        s =a
+    while it.has_next():
+        el = it.next()
+        if s.contains(el):
+            return False
+    return True
+    
+   
 

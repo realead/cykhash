@@ -58,3 +58,5 @@ cpdef bint any_pyobject_from_iter(object query, PyObjectSet db) except *
 cpdef size_t count_if_pyobject(object[:] query, PyObjectSet db) except *
 cpdef size_t count_if_pyobject_from_iter(object query, PyObjectSet db) except *
 
+cpdef bint aredisjoint_pyobject(PyObjectSet a, PyObjectSet b) except *
+

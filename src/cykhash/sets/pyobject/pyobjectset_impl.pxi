@@ -78,6 +78,15 @@ cdef class PyObjectSet:
                 "n_occupied" : self.table.n_occupied, 
                 "upper_bound" : self.table.upper_bound}
 
+    ### drop-in for set:
+    def isdisjoint(self, other):
+        if isinstance(other, Int64Set):
+            return aredisjoint_pyobject(self, other)
+        for el in other:
+            if self.contains(el):
+                return False
+        return True
+
 
 ### Iterator:
 cdef class PyObjectSetIterator:
@@ -202,3 +211,22 @@ cpdef size_t count_if_pyobject_from_iter(object query, PyObjectSet db) except *:
         if db.contains(el):
             res+=1
     return res
+
+cpdef bint aredisjoint_pyobject(PyObjectSet a, PyObjectSet b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef PyObjectSetIterator it
+    cdef PyObjectSet s
+    cdef object el
+    if a.size()<b.size():
+        it=a.get_iter()
+        s =b
+    else:
+        it=b.get_iter()
+        s =a
+    while it.has_next():
+        el = it.next()
+        if s.contains(el):
+            return False
+    return True

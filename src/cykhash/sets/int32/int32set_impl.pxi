@@ -70,6 +70,17 @@ cdef class Int32Set:
                 "n_occupied" : self.table.n_occupied, 
                 "upper_bound" : self.table.upper_bound}
 
+    ### drop-in for set:
+    def isdisjoint(self, other):
+        if isinstance(other, Int32Set):
+            return aredisjoint_int32(self, other)
+        cdef int32_t el
+        for el in other:
+            if self.contains(el):
+                return False
+        return True
+
+
 
 ### Iterator:
 cdef class Int32SetIterator:
@@ -194,4 +205,24 @@ cpdef size_t count_if_int32_from_iter(object query, Int32Set db) except *:
             res+=1
     return res
 
+cpdef bint aredisjoint_int32(Int32Set a, Int32Set b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef Int32SetIterator it
+    cdef Int32Set s
+    cdef int32_t el
+    if a.size()<b.size():
+        it=a.get_iter()
+        s =b
+    else:
+        it=b.get_iter()
+        s =a
+    while it.has_next():
+        el = it.next()
+        if s.contains(el):
+            return False
+    return True
+    
+   
 

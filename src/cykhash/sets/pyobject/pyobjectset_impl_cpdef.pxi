@@ -2,11 +2,10 @@
 #
 # Don't edit it, unless this is I_n_t_6_4_S_e_t implementation
 #
-# run sh all_from_XXX.sh to create it from bluepring - I_n_t_6_4_S_e_t
+# run sh all_from_XXX.sh to create it from blueprint - I_n_t_6_4_S_e_t
 #
 #
 
-    
 cpdef PyObjectSet PyObjectSet_from_buffer(object[:] buf, double size_hint=0.0):
     cdef Py_ssize_t n = len(buf)
     cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
@@ -15,9 +14,9 @@ cpdef PyObjectSet PyObjectSet_from_buffer(object[:] buf, double size_hint=0.0):
     for i in range(n):
         res.add(buf[i])
     return res
+    
 
-
-cpdef void  isin_pyobject(object[:] query, PyObjectSet db, uint8_t[:] result) except *:
+cpdef void isin_pyobject(object[:] query, PyObjectSet db, uint8_t[:] result) except *:
     cdef size_t i
     cdef size_t n=len(query)
     if n!=len(result):
@@ -65,7 +64,6 @@ cpdef bint none_pyobject_from_iter(object query, PyObjectSet db) except *:
             return False
     return True
 
-
 cpdef bint any_pyobject(object[:] query, PyObjectSet db) except *:
     return not none_pyobject(query, db)
 
@@ -111,3 +109,6 @@ cpdef bint aredisjoint_pyobject(PyObjectSet a, PyObjectSet b) except *:
         if s.contains(el):
             return False
     return True
+    
+   
+

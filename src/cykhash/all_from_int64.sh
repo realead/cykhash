@@ -51,16 +51,19 @@ sed -i -- 's/64/32/g'             $TARGET_DIR/float32set_impl_cpdef.pxi
 
 ### pyobjectset:
 #
-#  pyobjectset is special, so it should not be used here
+#  pyobjectset is special, so not everything can be copied...
 #
-#echo "Creating pyobjectset from in64set..."
-#cp int64set_header.pxi  pyobjectset_header.pxi
-#sed -i -- 's/int64/pyobject/g'   pyobjectset_header.pxi
-#sed -i -- 's/Int64/PyObject/g'   pyobjectset_header.pxi
-#
-#cp int64set_impl.pxi    pyobjectset_impl.pxi
-#sed -i -- 's/int64/pyobject/g'   pyobjectset_impl.pxi
-#sed -i -- 's/Int64/PyObject/g'   pyobjectset_impl.pxi
+SOURCE_DIR_FLOAT64=$SET_DIR/int64/
+TARGET_DIR=$SET_DIR/pyobject/
+echo "Partly creating pyobjectset from in64set..."
+cp $SOURCE_DIR/int64set_header_cpdef.pxi          $TARGET_DIR/pyobjectset_header_cpdef.pxi
+sed -i -- 's/_int64/_pyobject/g'   $TARGET_DIR/pyobjectset_header_cpdef.pxi
+sed -i -- 's/Int64/PyObject/g'   $TARGET_DIR/pyobjectset_header_cpdef.pxi
+sed -i -- 's/int64_t/object/g'   $TARGET_DIR/pyobjectset_header_cpdef.pxi
+cp $SOURCE_DIR/int64set_impl_cpdef.pxi            $TARGET_DIR/pyobjectset_impl_cpdef.pxi
+sed -i -- 's/_int64/_pyobject/g'   $TARGET_DIR/pyobjectset_impl_cpdef.pxi
+sed -i -- 's/Int64/PyObject/g'   $TARGET_DIR/pyobjectset_impl_cpdef.pxi
+sed -i -- 's/int64_t/object/g'   $TARGET_DIR/pyobjectset_impl_cpdef.pxi
 
 
 ###  MAPS

@@ -190,4 +190,16 @@ class IsSubsetIsSupersetTester(unittest.TestCase):
         self.assertEqual(a<b, False)
         self.assertEqual(a>b, False)
 
+    def template_compare_equal_yes(self, set_type):
+        a=set_type([2,5,7,8,1,3])
+        b=set_type([1,3,7,7,7,7,7,2,5,8,8,8,8,8,8])
+        self.assertEqual(a==b, True)
+        self.assertEqual(a==b, True)
+
+    def template_compare_equal_yes(self, set_type):
+        a=set_type([2,5,7,8,1,3])
+        b=set_type([3,7,7,7,7,7,2,5,8,8,8,8,8,8])
+        self.assertEqual(a==b, False)
+        self.assertEqual(a==b, False)
+
   

@@ -102,6 +102,9 @@ cdef class PyObjectSet:
     def __gt__(self, PyObjectSet other):
         return issubset_pyobject(self, other) and self.size()>other.size()
 
+    def __eq__(self, PyObjectSet other):
+        return issubset_pyobject(self, other) and self.size()==other.size()
+
 
 ### Utils:
 

@@ -102,6 +102,9 @@ cdef class Float32Set:
     def __gt__(self, Float32Set other):
         return issubset_float32(self, other) and self.size()>other.size()
 
+    def __eq__(self, Float32Set other):
+        return issubset_float32(self, other) and self.size()==other.size()
+
 
 ### Utils:
 

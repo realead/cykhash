@@ -102,6 +102,9 @@ cdef class Int32Set:
     def __gt__(self, Int32Set other):
         return issubset_int32(self, other) and self.size()>other.size()
 
+    def __eq__(self, Int32Set other):
+        return issubset_int32(self, other) and self.size()==other.size()
+
 
 ### Utils:
 

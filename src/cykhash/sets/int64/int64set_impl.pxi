@@ -102,6 +102,9 @@ cdef class Int64Set:
     def __gt__(self, Int64Set other):
         return issubset_int64(self, other) and self.size()>other.size()
 
+    def __eq__(self, Int64Set other):
+        return issubset_int64(self, other) and self.size()==other.size()
+
 
 ### Utils:
 

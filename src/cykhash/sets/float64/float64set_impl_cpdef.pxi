@@ -114,6 +114,9 @@ cpdef bint issubset_float64(Float64Set s, Float64Set sub) except *:
     if s is None or sub is None:
         raise TypeError("'NoneType' object is not iterable")
 
+    if s.size() < sub.size():
+        return False
+
     cdef Float64SetIterator it=sub.get_iter()
     cdef float64_t el
     while it.has_next():

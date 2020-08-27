@@ -114,6 +114,9 @@ cpdef bint issubset_pyobject(PyObjectSet s, PyObjectSet sub) except *:
     if s is None or sub is None:
         raise TypeError("'NoneType' object is not iterable")
 
+    if s.size() < sub.size():
+        return False
+
     cdef PyObjectSetIterator it=sub.get_iter()
     cdef object el
     while it.has_next():

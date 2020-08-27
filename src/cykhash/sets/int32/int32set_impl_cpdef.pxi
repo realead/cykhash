@@ -114,6 +114,9 @@ cpdef bint issubset_int32(Int32Set s, Int32Set sub) except *:
     if s is None or sub is None:
         raise TypeError("'NoneType' object is not iterable")
 
+    if s.size() < sub.size():
+        return False
+
     cdef Int32SetIterator it=sub.get_iter()
     cdef int32_t el
     while it.has_next():

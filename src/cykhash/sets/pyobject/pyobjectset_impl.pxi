@@ -105,6 +105,9 @@ cdef class PyObjectSet:
     def __eq__(self, PyObjectSet other):
         return issubset_pyobject(self, other) and self.size()==other.size()
 
+    def copy(self):
+        return copy_pyobject(self)
+
 
 ### Utils:
 

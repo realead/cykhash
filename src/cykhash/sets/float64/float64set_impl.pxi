@@ -105,6 +105,9 @@ cdef class Float64Set:
     def __eq__(self, Float64Set other):
         return issubset_float64(self, other) and self.size()==other.size()
 
+    def copy(self):
+        return copy_float64(self)
+
 
 ### Utils:
 

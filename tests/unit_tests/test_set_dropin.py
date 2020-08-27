@@ -39,6 +39,15 @@ class IsDisjointTester(unittest.TestCase):
             fun(None,None)
         self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
 
+    def template_aredisjoint_with_empty(self, set_type):
+        empty1=set_type()
+        empty2=set_type()
+        non_empty=set_type(range(3))
+        aredisjoint=pick_fun("aredisjoint", set_type)
+        self.assertEqual(aredisjoint(empty1, non_empty), True)
+        self.assertEqual(aredisjoint(non_empty, empty2), True)
+        self.assertEqual(aredisjoint(empty1, empty2), True)
+
     def template_aredisjoint_yes(self, set_type):
         a=set_type([1,2,3,1])
         b=set_type([4,55])
@@ -202,4 +211,32 @@ class IsSubsetIsSupersetTester(unittest.TestCase):
         self.assertEqual(a==b, False)
         self.assertEqual(a==b, False)
 
-  
+
+@uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet])
+class CopyTester(unittest.TestCase): 
+
+    def template_with_none(self, set_type):
+        s=set_type([1,2,3,1])
+        copy=pick_fun("copy", set_type)
+        self.assertTrue(copy(None) is None)
+
+    def template_with_empty(self, set_type):
+        a=set_type([])
+        copy=pick_fun("copy", set_type)
+        self.assertEqual(len(copy(a)), 0)
+
+    def template_small(self, set_type):
+        a=set_type([1,2,3,1])
+        copy=pick_fun("copy", set_type)
+        self.assertEqual(copy(a)==a, True)
+
+    def template_large(self, set_type):
+        a=set_type(range(33,10000,3))
+        copy=pick_fun("copy", set_type)
+        self.assertEqual(copy(a)==a, True)
+
+    def template_large_method(self, set_type):
+        a=set_type(range(33,10000,3))
+        self.assertEqual(a.copy()==a, True)
+
+

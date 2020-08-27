@@ -124,6 +124,18 @@ cpdef bint issubset_float64(Float64Set s, Float64Set sub) except *:
         if not s.contains(el):
             return False
     return True
+
+cpdef Float64Set copy_float64(Float64Set s):
+    if s is None:
+        return None
+    cdef Float64Set result = Float64Set(number_of_elements_hint=s.size())
+    cdef Float64SetIterator it=s.get_iter()
+    cdef float64_t el
+    while it.has_next():
+        el = it.next()
+        result.add(el)
+    return result
+    
     
    
 

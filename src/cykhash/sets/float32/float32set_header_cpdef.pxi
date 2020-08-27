@@ -27,4 +27,5 @@ cpdef size_t count_if_float32_from_iter(object query, Float32Set db) except *
 # for drop-in replacements:
 cpdef bint aredisjoint_float32(Float32Set a, Float32Set b) except *
 cpdef bint issubset_float32(Float32Set s, Float32Set sub) except *
+cpdef Float32Set copy_float32(Float32Set s)
 

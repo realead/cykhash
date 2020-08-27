@@ -124,6 +124,18 @@ cpdef bint issubset_float32(Float32Set s, Float32Set sub) except *:
         if not s.contains(el):
             return False
     return True
+
+cpdef Float32Set copy_float32(Float32Set s):
+    if s is None:
+        return None
+    cdef Float32Set result = Float32Set(number_of_elements_hint=s.size())
+    cdef Float32SetIterator it=s.get_iter()
+    cdef float32_t el
+    while it.has_next():
+        el = it.next()
+        result.add(el)
+    return result
+    
     
    
 

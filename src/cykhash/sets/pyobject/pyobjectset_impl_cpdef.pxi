@@ -124,6 +124,18 @@ cpdef bint issubset_pyobject(PyObjectSet s, PyObjectSet sub) except *:
         if not s.contains(el):
             return False
     return True
+
+cpdef PyObjectSet copy_pyobject(PyObjectSet s):
+    if s is None:
+        return None
+    cdef PyObjectSet result = PyObjectSet(number_of_elements_hint=s.size())
+    cdef PyObjectSetIterator it=s.get_iter()
+    cdef object el
+    while it.has_next():
+        el = it.next()
+        result.add(el)
+    return result
+    
     
    
 

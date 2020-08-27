@@ -105,6 +105,9 @@ cdef class Int32Set:
     def __eq__(self, Int32Set other):
         return issubset_int32(self, other) and self.size()==other.size()
 
+    def copy(self):
+        return copy_int32(self)
+
 
 ### Utils:
 

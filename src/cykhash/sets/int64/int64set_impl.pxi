@@ -105,6 +105,9 @@ cdef class Int64Set:
     def __eq__(self, Int64Set other):
         return issubset_int64(self, other) and self.size()==other.size()
 
+    def copy(self):
+        return copy_int64(self)
+
 
 ### Utils:
 

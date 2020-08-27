@@ -124,6 +124,18 @@ cpdef bint issubset_int64(Int64Set s, Int64Set sub) except *:
         if not s.contains(el):
             return False
     return True
+
+cpdef Int64Set copy_int64(Int64Set s):
+    if s is None:
+        return None
+    cdef Int64Set result = Int64Set(number_of_elements_hint=s.size())
+    cdef Int64SetIterator it=s.get_iter()
+    cdef int64_t el
+    while it.has_next():
+        el = it.next()
+        result.add(el)
+    return result
+    
     
    
 

@@ -124,6 +124,18 @@ cpdef bint issubset_int32(Int32Set s, Int32Set sub) except *:
         if not s.contains(el):
             return False
     return True
+
+cpdef Int32Set copy_int32(Int32Set s):
+    if s is None:
+        return None
+    cdef Int32Set result = Int32Set(number_of_elements_hint=s.size())
+    cdef Int32SetIterator it=s.get_iter()
+    cdef int32_t el
+    while it.has_next():
+        el = it.next()
+        result.add(el)
+    return result
+    
     
    
 

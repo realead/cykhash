@@ -27,4 +27,5 @@ cpdef size_t count_if_int64_from_iter(object query, Int64Set db) except *
 # for drop-in replacements:
 cpdef bint aredisjoint_int64(Int64Set a, Int64Set b) except *
 cpdef bint issubset_int64(Int64Set s, Int64Set sub) except *
+cpdef Int64Set copy_int64(Int64Set s)
 

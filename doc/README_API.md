@@ -65,8 +65,8 @@ with Python interface:
 
   * `__len__`: number of elements in the map
   * `__contains__`: whether an element is contained in the map
-  * `put_XXint/get_XXint`: setting/retrieving elements with XX=32 or 64 bits integer 
-  * `put_XXfloat/get_XXfloat`: setting/retrieving elements with XX=32 or 64 bits float 
+  * `put_intXX/get_intXX`: setting/retrieving elements with XX=32 or 64 bits integer 
+  * `put_floatXX/get_floatXX`: setting/retrieving elements with XX=32 or 64 bits float 
   * `__setitem__/__getitem___`: parameter `for_intXX` in the constructor deceides whether elements are intepreted as int or float (XX =  32 or 64 bits)
   * `discard`: remove an element or do nothing if element is not in the map
   * `__iter__`: returns an iterator through all elements in map
@@ -74,7 +74,7 @@ with Python interface:
 with Cython interface:
 
   * `contains`: checks whether an element is contained in the map
-  * `put_XXint/get_XXint,put_XXfloat/get_XXfloat` : setting/getting elements in the map
+  * `put_intXX/get_intXX,put_floatXX/get_floatXX` : setting/getting elements in the map
   * `discard` : remove an element or do nothing if element is not in the map
   * `get_iter`: returns an iterator with the following Cython interface:
        * `has_next`:returns true if there are more elements in the iterator

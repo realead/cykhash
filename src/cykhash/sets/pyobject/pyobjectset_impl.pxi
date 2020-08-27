@@ -2,7 +2,7 @@
 #
 # Don't edit it, unless this is I_n_t_6_4_S_e_t implementation
 #
-# run sh all_from_XXX.sh to create it from bluepring - I_n_t_6_4_S_e_t
+# run sh all_from_XXX.sh to create it from blueprint - I_n_t_6_4_S_e_t
 #
 #
 
@@ -10,14 +10,15 @@ include "pyobjectset_impl_core.pxi"
 
 cdef class PyObjectSet:
 
-    def __cinit__(self, iterable=None,  *, number_of_elements_hint=None):
+    def __cinit__(self, iterable=None, *, number_of_elements_hint=None):
         """
         iterable - initial elements in the set
         number_of_elements_hint - number of elements without the need of reallocation.
         """
         self.table = kh_init_pyobjectset()
-        if number_of_elements_hint is not None:
+        if number_of_elements_hint is not None:    
             kh_resize_pyobjectset(self.table, element_n_to_bucket_n(number_of_elements_hint))
+        cdef object el
         if iterable is not None:
             for el in iterable:
                 self.add(el)
@@ -62,8 +63,9 @@ cdef class PyObjectSet:
 
     ### drop-in for set:
     def isdisjoint(self, other):
-        if isinstance(other, Int64Set):
+        if isinstance(other, PyObjectSet):
             return aredisjoint_pyobject(self, other)
+        cdef object el
         for el in other:
             if self.contains(el):
                 return False
@@ -81,6 +83,7 @@ cdef class PyObjectSet:
     def issubset(self, other):
         if isinstance(other, PyObjectSet):
             return issubset_pyobject(other, self)
+        cdef object el
         cdef PyObjectSet mem=PyObjectSet()
         for el in other:
             if self.contains(el):
@@ -107,6 +110,5 @@ def PyObjectSet_from(it):
     for i in it:
         res.add(i)
     return res
-    
 
 include "pyobjectset_impl_cpdef.pxi"

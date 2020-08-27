@@ -71,6 +71,11 @@ cp $SOURCE_DIR/int64set_impl_cpdef.pxi            $TARGET_DIR/pyobjectset_impl_c
 sed -i -- 's/_int64/_pyobject/g'   $TARGET_DIR/pyobjectset_impl_cpdef.pxi
 sed -i -- 's/Int64/PyObject/g'   $TARGET_DIR/pyobjectset_impl_cpdef.pxi
 sed -i -- 's/int64_t/object/g'   $TARGET_DIR/pyobjectset_impl_cpdef.pxi
+cp $SOURCE_DIR/int64set_impl.pxi            $TARGET_DIR/pyobjectset_impl.pxi
+sed -i -- 's/_int64/_pyobject/g'   $TARGET_DIR/pyobjectset_impl.pxi
+sed -i -- 's/int64set/pyobjectset/g'   $TARGET_DIR/pyobjectset_impl.pxi
+sed -i -- 's/Int64/PyObject/g'   $TARGET_DIR/pyobjectset_impl.pxi
+sed -i -- 's/int64_t/object/g'   $TARGET_DIR/pyobjectset_impl.pxi
 
 
 ###  MAPS

@@ -296,6 +296,33 @@ class UpdateTester(unittest.TestCase):
         a.update(range(60))
         self.assertEqual(a, set_type(range(60)))
 
+    def template_ior(self, set_type):
+        a=set_type(range(50))
+        a|=set_type(range(60))
+        self.assertEqual(a, set_type(range(60)))
+
+    def template_union(self, set_type):
+        a=set_type(range(30))
+        a_copy = a.copy()
+        b=a.union(range(30,40), set_type(range(40,50)), range(50,60))
+        self.assertEqual(b, set_type(range(60)))
+        self.assertEqual(a, a_copy)
+
+    def template_union_empty(self, set_type):
+        a=set_type(range(30))
+        a.union()
+        self.assertEqual(a, set_type(range(30)))
+
+    def template_or(self, set_type):
+        a=set_type(range(30))
+        b=set_type(range(30,40))
+        c=set_type(range(40,50))
+        d=a|b|c
+        self.assertEqual(d, set_type(range(50)))
+        self.assertEqual(a, set_type(range(30)))
+        self.assertEqual(b, set_type(range(30,40)))
+        self.assertEqual(c, set_type(range(40,50)))
+
 
 @uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet])
 class SwapTester(unittest.TestCase): 

@@ -105,6 +105,21 @@ cdef class Float32Set:
     def __eq__(self, Float32Set other):
         return issubset_float32(self, other) and self.size()==other.size()
 
+    def __or__(self, Float32Set other):
+        cdef Float32Set res = copy_float32(self)
+        update_float32(res, other)
+        return res
+
+    def __ior__(self, Float32Set other):
+        update_float32(self, other)
+        return self
+
+    def union(self, *others):
+        cdef Float32Set res = copy_float32(self)
+        for o in others:
+            res.update(o)
+        return res
+
     def copy(self):
         return copy_float32(self)
 

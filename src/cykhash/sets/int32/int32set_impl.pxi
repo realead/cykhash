@@ -105,6 +105,21 @@ cdef class Int32Set:
     def __eq__(self, Int32Set other):
         return issubset_int32(self, other) and self.size()==other.size()
 
+    def __or__(self, Int32Set other):
+        cdef Int32Set res = copy_int32(self)
+        update_int32(res, other)
+        return res
+
+    def __ior__(self, Int32Set other):
+        update_int32(self, other)
+        return self
+
+    def union(self, *others):
+        cdef Int32Set res = copy_int32(self)
+        for o in others:
+            res.update(o)
+        return res
+
     def copy(self):
         return copy_int32(self)
 

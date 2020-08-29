@@ -105,6 +105,21 @@ cdef class Int64Set:
     def __eq__(self, Int64Set other):
         return issubset_int64(self, other) and self.size()==other.size()
 
+    def __or__(self, Int64Set other):
+        cdef Int64Set res = copy_int64(self)
+        update_int64(res, other)
+        return res
+
+    def __ior__(self, Int64Set other):
+        update_int64(self, other)
+        return self
+
+    def union(self, *others):
+        cdef Int64Set res = copy_int64(self)
+        for o in others:
+            res.update(o)
+        return res
+
     def copy(self):
         return copy_int64(self)
 

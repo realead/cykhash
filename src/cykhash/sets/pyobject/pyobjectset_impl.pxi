@@ -105,6 +105,21 @@ cdef class PyObjectSet:
     def __eq__(self, PyObjectSet other):
         return issubset_pyobject(self, other) and self.size()==other.size()
 
+    def __or__(self, PyObjectSet other):
+        cdef PyObjectSet res = copy_pyobject(self)
+        update_pyobject(res, other)
+        return res
+
+    def __ior__(self, PyObjectSet other):
+        update_pyobject(self, other)
+        return self
+
+    def union(self, *others):
+        cdef PyObjectSet res = copy_pyobject(self)
+        for o in others:
+            res.update(o)
+        return res
+
     def copy(self):
         return copy_pyobject(self)
 

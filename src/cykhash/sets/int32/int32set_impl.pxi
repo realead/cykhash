@@ -114,14 +114,22 @@ cdef class Int32Set:
         update_int32(self, other)
         return self
 
+    def __and__(self, Int32Set other):
+        return intersect_int32(self, other)
+
+    def __iand__(self, Int32Set other):
+        cdef Int32Set res = intersect_int32(self, other)
+        swap_int32(self, res)
+        return self
+
+    def copy(self):
+        return copy_int32(self)
+
     def union(self, *others):
         cdef Int32Set res = copy_int32(self)
         for o in others:
             res.update(o)
         return res
-
-    def copy(self):
-        return copy_int32(self)
 
     def update(self, other):
         if isinstance(other, Int32Set):
@@ -130,6 +138,24 @@ cdef class Int32Set:
         cdef int32_t el
         for el in other:
             self.add(el)
+
+    def intersection(self, *others):
+        cdef Int32Set res = copy_int32(self)
+        for o in others:
+            res.intersection_update(o)
+        return res
+
+    def intersection_update(self, other):
+        cdef Int32Set res 
+        cdef int32_t el
+        if isinstance(other, Int32Set):
+            res = intersect_int32(self, other)
+        else:
+            res = Int32Set()
+            for el in other:
+                if self.contains(el):
+                    res.add(el)
+        swap_int32(self, res)
 
 
 

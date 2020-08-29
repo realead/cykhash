@@ -31,4 +31,5 @@ cpdef bint aredisjoint_float32(Float32Set a, Float32Set b) except *
 cpdef bint issubset_float32(Float32Set s, Float32Set sub) except *
 cpdef Float32Set copy_float32(Float32Set s)
 cpdef void update_float32(Float32Set s, Float32Set other) except *
+cpdef Float32Set intersect_float32(Float32Set a, Float32Set b)
 

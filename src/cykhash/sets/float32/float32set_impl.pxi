@@ -114,14 +114,22 @@ cdef class Float32Set:
         update_float32(self, other)
         return self
 
+    def __and__(self, Float32Set other):
+        return intersect_float32(self, other)
+
+    def __iand__(self, Float32Set other):
+        cdef Float32Set res = intersect_float32(self, other)
+        swap_float32(self, res)
+        return self
+
+    def copy(self):
+        return copy_float32(self)
+
     def union(self, *others):
         cdef Float32Set res = copy_float32(self)
         for o in others:
             res.update(o)
         return res
-
-    def copy(self):
-        return copy_float32(self)
 
     def update(self, other):
         if isinstance(other, Float32Set):
@@ -130,6 +138,24 @@ cdef class Float32Set:
         cdef float32_t el
         for el in other:
             self.add(el)
+
+    def intersection(self, *others):
+        cdef Float32Set res = copy_float32(self)
+        for o in others:
+            res.intersection_update(o)
+        return res
+
+    def intersection_update(self, other):
+        cdef Float32Set res 
+        cdef float32_t el
+        if isinstance(other, Float32Set):
+            res = intersect_float32(self, other)
+        else:
+            res = Float32Set()
+            for el in other:
+                if self.contains(el):
+                    res.add(el)
+        swap_float32(self, res)
 
 
 

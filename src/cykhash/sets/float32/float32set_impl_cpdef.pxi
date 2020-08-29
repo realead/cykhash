@@ -110,6 +110,26 @@ cpdef bint aredisjoint_float32(Float32Set a, Float32Set b) except *:
             return False
     return True
 
+cpdef Float32Set intersect_float32(Float32Set a, Float32Set b):
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef Float32Set result = Float32Set()
+    cdef Float32SetIterator it
+    cdef Float32Set s
+    cdef float32_t el
+    if a.size()<b.size():
+        it=a.get_iter()
+        s =b
+    else:
+        it=b.get_iter()
+        s =a
+    while it.has_next():
+        el = it.next()
+        if s.contains(el):
+            result.add(el)
+    return result
+
 cpdef bint issubset_float32(Float32Set s, Float32Set sub) except *:
     if s is None or sub is None:
         raise TypeError("'NoneType' object is not iterable")

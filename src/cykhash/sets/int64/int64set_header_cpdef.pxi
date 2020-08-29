@@ -31,4 +31,5 @@ cpdef bint aredisjoint_int64(Int64Set a, Int64Set b) except *
 cpdef bint issubset_int64(Int64Set s, Int64Set sub) except *
 cpdef Int64Set copy_int64(Int64Set s)
 cpdef void update_int64(Int64Set s, Int64Set other) except *
+cpdef Int64Set intersect_int64(Int64Set a, Int64Set b)
 

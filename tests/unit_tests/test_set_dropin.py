@@ -354,4 +354,109 @@ class SwapTester(unittest.TestCase):
         self.assertEqual(b, b_copy)
 
 
+@uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet])
+class IntersectTester(unittest.TestCase): 
+
+    def template_with_none(self, set_type):
+        s=set_type([1,2,3,1])
+        intersect=pick_fun("intersect", set_type)        
+        with self.assertRaises(TypeError) as context:
+            intersect(None,s)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            intersect(s,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            intersect(None,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+
+    def template_small(self, set_type):
+        a=set_type([1,2,3,4])
+        b=set_type([5,2,4])
+        a_copy=a.copy()
+        b_copy=b.copy()
+        intersect=pick_fun("intersect", set_type) 
+        c=intersect(a,b)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, set_type([2,4]))
+        c=intersect(b,a)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, set_type([2,4]))
+
+    def template_disjunct(self, set_type):
+        a=set_type([1,3,5,7,9])
+        b=set_type([2,2,4,6,8,10])
+        a_copy=a.copy()
+        b_copy=b.copy()
+        intersect=pick_fun("intersect", set_type) 
+        c=intersect(a,b)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, set_type())
+        c=intersect(b,a)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, set_type([]))
+
+    def template_empty(self, set_type):
+        a=set_type([])
+        b=set_type([])
+        c=set_type([2,2,4,6,8,10])
+        intersect=pick_fun("intersect", set_type) 
+        d=intersect(a,b)
+        self.assertEqual(len(d), 0)
+        d=intersect(c,b)
+        self.assertEqual(len(d), 0)
+        d=intersect(a,c)
+        self.assertEqual(len(d), 0)
+
+    def template_intersection_update(self, set_type):
+        a=set_type([1,2,3,4,5,6,7,8])
+        b=set_type([2,4,6,8,10,12])
+        b_copy = b.copy()
+        a.intersection_update(b)
+        self.assertEqual(a, set_type([2,4,6,8]))
+        self.assertEqual(b, b_copy)
+
+    def template_intersection_update_iter(self, set_type):
+        a=set_type([1,2,3,4,5,6,7,8])
+        a.intersection_update([2,4,6,8,10,12])
+        self.assertEqual(a, set_type([2,4,6,8]))
+
+    def template_empty_update(self, set_type):
+        a=set_type([1,2,3,4,5,6,7,8])
+        b=set_type([])
+        a.intersection_update(b)
+        self.assertEqual(len(a), 0)
+
+    def template_empty_update_iter(self, set_type):
+        a=set_type([1,2,3,4,5,6,7,8])
+        a.intersection_update([])
+        self.assertEqual(a, set_type())
+
+    def template_iadd(self, set_type):
+        a=set_type([1,2,3,4,5,6,7,8])
+        b=set_type([1,104,3])
+        a&=b
+        self.assertEqual(a, set_type([1,3]))
+
+    def template_add(self, set_type):
+        a=set_type([1,2,3,4,5,6,7,8])
+        b=set_type([1,104,3])
+        a_copy=a.copy()
+        b_copy=b.copy()
+        c=a&b
+        self.assertEqual(c, set_type([1,3]))
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+
+    def template_intersection(self, set_type):
+        a=set_type([1,2,3,4,5,6,7,8])
+        a_copy=a.copy()
+        c=a.intersection([1,2,3,4,5,6], set_type([1,2,3,4,5]), [1,2,3])
+        self.assertEqual(c, set_type([1,2,3]))
+        self.assertEqual(a, a_copy)
+
 

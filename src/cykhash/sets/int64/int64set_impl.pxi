@@ -114,14 +114,22 @@ cdef class Int64Set:
         update_int64(self, other)
         return self
 
+    def __and__(self, Int64Set other):
+        return intersect_int64(self, other)
+
+    def __iand__(self, Int64Set other):
+        cdef Int64Set res = intersect_int64(self, other)
+        swap_int64(self, res)
+        return self
+
+    def copy(self):
+        return copy_int64(self)
+
     def union(self, *others):
         cdef Int64Set res = copy_int64(self)
         for o in others:
             res.update(o)
         return res
-
-    def copy(self):
-        return copy_int64(self)
 
     def update(self, other):
         if isinstance(other, Int64Set):
@@ -130,6 +138,24 @@ cdef class Int64Set:
         cdef int64_t el
         for el in other:
             self.add(el)
+
+    def intersection(self, *others):
+        cdef Int64Set res = copy_int64(self)
+        for o in others:
+            res.intersection_update(o)
+        return res
+
+    def intersection_update(self, other):
+        cdef Int64Set res 
+        cdef int64_t el
+        if isinstance(other, Int64Set):
+            res = intersect_int64(self, other)
+        else:
+            res = Int64Set()
+            for el in other:
+                if self.contains(el):
+                    res.add(el)
+        swap_int64(self, res)
 
 
 

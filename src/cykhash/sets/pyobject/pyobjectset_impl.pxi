@@ -114,14 +114,22 @@ cdef class PyObjectSet:
         update_pyobject(self, other)
         return self
 
+    def __and__(self, PyObjectSet other):
+        return intersect_pyobject(self, other)
+
+    def __iand__(self, PyObjectSet other):
+        cdef PyObjectSet res = intersect_pyobject(self, other)
+        swap_pyobject(self, res)
+        return self
+
+    def copy(self):
+        return copy_pyobject(self)
+
     def union(self, *others):
         cdef PyObjectSet res = copy_pyobject(self)
         for o in others:
             res.update(o)
         return res
-
-    def copy(self):
-        return copy_pyobject(self)
 
     def update(self, other):
         if isinstance(other, PyObjectSet):
@@ -130,6 +138,24 @@ cdef class PyObjectSet:
         cdef object el
         for el in other:
             self.add(el)
+
+    def intersection(self, *others):
+        cdef PyObjectSet res = copy_pyobject(self)
+        for o in others:
+            res.intersection_update(o)
+        return res
+
+    def intersection_update(self, other):
+        cdef PyObjectSet res 
+        cdef object el
+        if isinstance(other, PyObjectSet):
+            res = intersect_pyobject(self, other)
+        else:
+            res = PyObjectSet()
+            for el in other:
+                if self.contains(el):
+                    res.add(el)
+        swap_pyobject(self, res)
 
 
 

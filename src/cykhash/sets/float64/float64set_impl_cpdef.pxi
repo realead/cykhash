@@ -110,6 +110,26 @@ cpdef bint aredisjoint_float64(Float64Set a, Float64Set b) except *:
             return False
     return True
 
+cpdef Float64Set intersect_float64(Float64Set a, Float64Set b):
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef Float64Set result = Float64Set()
+    cdef Float64SetIterator it
+    cdef Float64Set s
+    cdef float64_t el
+    if a.size()<b.size():
+        it=a.get_iter()
+        s =b
+    else:
+        it=b.get_iter()
+        s =a
+    while it.has_next():
+        el = it.next()
+        if s.contains(el):
+            result.add(el)
+    return result
+
 cpdef bint issubset_float64(Float64Set s, Float64Set sub) except *:
     if s is None or sub is None:
         raise TypeError("'NoneType' object is not iterable")

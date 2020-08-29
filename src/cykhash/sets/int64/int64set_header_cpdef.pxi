@@ -24,6 +24,8 @@ cpdef bint any_int64_from_iter(object query, Int64Set db) except *
 cpdef size_t count_if_int64(int64_t[:] query, Int64Set db) except *
 cpdef size_t count_if_int64_from_iter(object query, Int64Set db) except *
 
+cpdef void swap_int64(Int64Set a, Int64Set b) except *
+
 # for drop-in replacements:
 cpdef bint aredisjoint_int64(Int64Set a, Int64Set b) except *
 cpdef bint issubset_int64(Int64Set s, Int64Set sub) except *

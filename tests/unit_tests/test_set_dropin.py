@@ -297,4 +297,34 @@ class UpdateTester(unittest.TestCase):
         self.assertEqual(a, set_type(range(60)))
 
 
+@uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet])
+class SwapTester(unittest.TestCase): 
+
+    def template_with_none(self, set_type):
+        s=set_type([1,2,3,1])
+        swap=pick_fun("swap", set_type)        
+        with self.assertRaises(TypeError) as context:
+            swap(None,s)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            swap(s,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            swap(None,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+
+    def template_some_common(self, set_type):
+        a=set_type([1,2,3,4])
+        b=set_type([5,2,4])
+        a_copy=a.copy()
+        b_copy=b.copy()
+        swap=pick_fun("swap", set_type) 
+        swap(a,b)
+        self.assertEqual(a, b_copy)
+        self.assertEqual(b, a_copy)
+        swap(a,b)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+
+
 

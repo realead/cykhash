@@ -143,6 +143,16 @@ cpdef void update_int64(Int64Set s, Int64Set other) except *:
     cdef int64_t el
     while it.has_next():
         el = it.next()
-        s.add(el)  
+        s.add(el)
+
+cpdef void swap_int64(Int64Set a, Int64Set b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef kh_int64set_t *tmp=a.table
+    a.table=b.table
+    b.table=tmp
+
+  
    
 

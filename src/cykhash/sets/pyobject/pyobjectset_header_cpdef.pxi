@@ -24,6 +24,8 @@ cpdef bint any_pyobject_from_iter(object query, PyObjectSet db) except *
 cpdef size_t count_if_pyobject(object[:] query, PyObjectSet db) except *
 cpdef size_t count_if_pyobject_from_iter(object query, PyObjectSet db) except *
 
+cpdef void swap_pyobject(PyObjectSet a, PyObjectSet b) except *
+
 # for drop-in replacements:
 cpdef bint aredisjoint_pyobject(PyObjectSet a, PyObjectSet b) except *
 cpdef bint issubset_pyobject(PyObjectSet s, PyObjectSet sub) except *

@@ -143,6 +143,16 @@ cpdef void update_int32(Int32Set s, Int32Set other) except *:
     cdef int32_t el
     while it.has_next():
         el = it.next()
-        s.add(el)  
+        s.add(el)
+
+cpdef void swap_int32(Int32Set a, Int32Set b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef kh_int32set_t *tmp=a.table
+    a.table=b.table
+    b.table=tmp
+
+  
    
 

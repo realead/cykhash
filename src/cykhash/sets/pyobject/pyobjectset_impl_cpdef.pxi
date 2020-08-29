@@ -143,6 +143,16 @@ cpdef void update_pyobject(PyObjectSet s, PyObjectSet other) except *:
     cdef object el
     while it.has_next():
         el = it.next()
-        s.add(el)  
+        s.add(el)
+
+cpdef void swap_pyobject(PyObjectSet a, PyObjectSet b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef kh_pyobjectset_t *tmp=a.table
+    a.table=b.table
+    b.table=tmp
+
+  
    
 

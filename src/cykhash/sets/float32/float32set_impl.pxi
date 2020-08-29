@@ -108,6 +108,15 @@ cdef class Float32Set:
     def copy(self):
         return copy_float32(self)
 
+    def update(self, other):
+        if isinstance(other, Float32Set):
+            update_float32(self, other)
+            return
+        cdef float32_t el
+        for el in other:
+            self.add(el)
+
+
 
 ### Utils:
 

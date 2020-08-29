@@ -135,7 +135,14 @@ cpdef Float32Set copy_float32(Float32Set s):
         el = it.next()
         result.add(el)
     return result
-    
-    
+
+cpdef void update_float32(Float32Set s, Float32Set other) except *:
+    if s is None or other is None:
+        raise TypeError("'NoneType' object is not iterable")
+    cdef Float32SetIterator it=other.get_iter()
+    cdef float32_t el
+    while it.has_next():
+        el = it.next()
+        s.add(el)  
    
 

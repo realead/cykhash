@@ -135,7 +135,14 @@ cpdef Int64Set copy_int64(Int64Set s):
         el = it.next()
         result.add(el)
     return result
-    
-    
+
+cpdef void update_int64(Int64Set s, Int64Set other) except *:
+    if s is None or other is None:
+        raise TypeError("'NoneType' object is not iterable")
+    cdef Int64SetIterator it=other.get_iter()
+    cdef int64_t el
+    while it.has_next():
+        el = it.next()
+        s.add(el)  
    
 

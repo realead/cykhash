@@ -135,7 +135,14 @@ cpdef Int32Set copy_int32(Int32Set s):
         el = it.next()
         result.add(el)
     return result
-    
-    
+
+cpdef void update_int32(Int32Set s, Int32Set other) except *:
+    if s is None or other is None:
+        raise TypeError("'NoneType' object is not iterable")
+    cdef Int32SetIterator it=other.get_iter()
+    cdef int32_t el
+    while it.has_next():
+        el = it.next()
+        s.add(el)  
    
 

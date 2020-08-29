@@ -28,4 +28,5 @@ cpdef size_t count_if_pyobject_from_iter(object query, PyObjectSet db) except *
 cpdef bint aredisjoint_pyobject(PyObjectSet a, PyObjectSet b) except *
 cpdef bint issubset_pyobject(PyObjectSet s, PyObjectSet sub) except *
 cpdef PyObjectSet copy_pyobject(PyObjectSet s)
+cpdef void update_pyobject(PyObjectSet s, PyObjectSet other) except *
 

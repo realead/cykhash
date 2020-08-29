@@ -108,6 +108,15 @@ cdef class Float64Set:
     def copy(self):
         return copy_float64(self)
 
+    def update(self, other):
+        if isinstance(other, Float64Set):
+            update_float64(self, other)
+            return
+        cdef float64_t el
+        for el in other:
+            self.add(el)
+
+
 
 ### Utils:
 

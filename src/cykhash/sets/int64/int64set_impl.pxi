@@ -108,6 +108,15 @@ cdef class Int64Set:
     def copy(self):
         return copy_int64(self)
 
+    def update(self, other):
+        if isinstance(other, Int64Set):
+            update_int64(self, other)
+            return
+        cdef int64_t el
+        for el in other:
+            self.add(el)
+
+
 
 ### Utils:
 

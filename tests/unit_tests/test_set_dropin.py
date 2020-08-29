@@ -240,3 +240,61 @@ class CopyTester(unittest.TestCase):
         self.assertEqual(a.copy()==a, True)
 
 
+@uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet])
+class UpdateTester(unittest.TestCase): 
+
+    def template_with_none(self, set_type):
+        s=set_type([1,2,3,1])
+        update=pick_fun("update", set_type)        
+        with self.assertRaises(TypeError) as context:
+            update(None,s)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            update(s,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            update(None,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+
+    def template_some_common(self, set_type):
+        a=set_type([1,2,3,4])
+        b=set_type([2,1,2,5])
+        c=b.copy()
+        update=pick_fun("update", set_type) 
+        update(a,b)
+        self.assertEqual(a, set_type([1,2,3,4,5]))
+        self.assertEqual(b, c)
+
+    def template_with_itself(self, set_type):
+        a=set_type([1,2,3,1])
+        b=a.copy()
+        update=pick_fun("update", set_type) 
+        update(a,a)
+        self.assertEqual(a, b)
+
+    def template_with_disjunct(self, set_type):
+        a=set_type(range(50))
+        b=set_type(range(50,100))
+        update=pick_fun("update", set_type) 
+        update(a,b)
+        self.assertEqual(a, set_type(range(100)))
+
+    def template_method_with_set(self, set_type):
+        a=set_type(range(50))
+        b=set_type(range(100))
+        a.update(b)
+        self.assertEqual(a, set_type(range(100)))
+
+    def template_method_with_set(self, set_type):
+        a=set_type(range(50))
+        b=set_type(range(100))
+        a.update(b)
+        self.assertEqual(a, set_type(range(100)))
+
+    def template_method_with_iterator(self, set_type):
+        a=set_type(range(50))
+        a.update(range(60))
+        self.assertEqual(a, set_type(range(60)))
+
+
+

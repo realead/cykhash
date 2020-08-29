@@ -135,7 +135,14 @@ cpdef PyObjectSet copy_pyobject(PyObjectSet s):
         el = it.next()
         result.add(el)
     return result
-    
-    
+
+cpdef void update_pyobject(PyObjectSet s, PyObjectSet other) except *:
+    if s is None or other is None:
+        raise TypeError("'NoneType' object is not iterable")
+    cdef PyObjectSetIterator it=other.get_iter()
+    cdef object el
+    while it.has_next():
+        el = it.next()
+        s.add(el)  
    
 

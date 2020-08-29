@@ -135,7 +135,14 @@ cpdef Float64Set copy_float64(Float64Set s):
         el = it.next()
         result.add(el)
     return result
-    
-    
+
+cpdef void update_float64(Float64Set s, Float64Set other) except *:
+    if s is None or other is None:
+        raise TypeError("'NoneType' object is not iterable")
+    cdef Float64SetIterator it=other.get_iter()
+    cdef float64_t el
+    while it.has_next():
+        el = it.next()
+        s.add(el)  
    
 

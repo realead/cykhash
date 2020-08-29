@@ -108,6 +108,15 @@ cdef class Int32Set:
     def copy(self):
         return copy_int32(self)
 
+    def update(self, other):
+        if isinstance(other, Int32Set):
+            update_int32(self, other)
+            return
+        cdef int32_t el
+        for el in other:
+            self.add(el)
+
+
 
 ### Utils:
 

@@ -108,6 +108,15 @@ cdef class PyObjectSet:
     def copy(self):
         return copy_pyobject(self)
 
+    def update(self, other):
+        if isinstance(other, PyObjectSet):
+            update_pyobject(self, other)
+            return
+        cdef object el
+        for el in other:
+            self.add(el)
+
+
 
 ### Utils:
 

@@ -215,6 +215,12 @@ cdef class PyObjectSet:
     def clear(self):
         cdef PyObjectSet res = PyObjectSet()
         swap_pyobject(self, res)
+
+    def remove(self, key):
+        cdef size_t old=self.size()
+        self.discard(key)
+        if old==self.size():
+            raise KeyError(key)
         
 
 

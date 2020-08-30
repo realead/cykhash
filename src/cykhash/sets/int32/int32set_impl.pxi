@@ -215,6 +215,12 @@ cdef class Int32Set:
     def clear(self):
         cdef Int32Set res = Int32Set()
         swap_int32(self, res)
+
+    def remove(self, key):
+        cdef size_t old=self.size()
+        self.discard(key)
+        if old==self.size():
+            raise KeyError(key)
         
 
 

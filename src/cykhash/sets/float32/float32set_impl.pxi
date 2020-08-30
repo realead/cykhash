@@ -215,6 +215,12 @@ cdef class Float32Set:
     def clear(self):
         cdef Float32Set res = Float32Set()
         swap_float32(self, res)
+
+    def remove(self, key):
+        cdef size_t old=self.size()
+        self.discard(key)
+        if old==self.size():
+            raise KeyError(key)
         
 
 

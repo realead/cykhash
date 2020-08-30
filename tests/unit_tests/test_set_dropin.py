@@ -42,6 +42,19 @@ class SetDropInTester(unittest.TestCase):
         self.assertTrue(ss.startswith("{"))
         self.assertTrue(ss.endswith("}"))
 
+    def template_remove_yes(self, set_type):
+        s=set_type([1,2])
+        s.remove(1)
+        self.assertEqual(s,set_type([2]))
+        s.remove(2)
+        self.assertEqual(s,set_type([]))
+
+    def template_remove_no(self, set_type):
+        s=set_type([1,2])
+        with self.assertRaises(KeyError) as context:
+            s.remove(3)
+        self.assertEqual(3, context.exception.args[0])
+
 
 
 @uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet])

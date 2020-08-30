@@ -55,6 +55,30 @@ class SetDropInTester(unittest.TestCase):
             s.remove(3)
         self.assertEqual(3, context.exception.args[0])
 
+    def template_pop_one(self, set_type):
+        s=set_type([1])
+        el=s.pop()
+        self.assertEqual(s,set_type([]))
+        self.assertEqual(el,1)
+
+    def template_pop_all(self, set_type):
+        s=set_type([1,2,3])
+        new_s={s.pop(), s.pop(), s.pop()}
+        self.assertEqual(s,set_type([]))
+        self.assertEqual(new_s,{1,2,3})
+
+    def template_pop_empty(self, set_type):
+        s=set_type([])
+        with self.assertRaises(KeyError) as context:
+            s.pop()
+        self.assertEqual("pop from empty set", context.exception.args[0])
+
+    def test_pyobject_same_object_pop(self):
+        a=float("3333.2")
+        s=PyObjectSet([a])
+        b=s.pop()
+        self.assertTrue(a is b)
+
 
 
 @uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet])

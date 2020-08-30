@@ -221,6 +221,14 @@ cdef class Float64Set:
         self.discard(key)
         if old==self.size():
             raise KeyError(key)
+
+    def pop(self):
+        if self.size()== 0:
+            raise KeyError("pop from empty set")
+        cdef Float64SetIterator it = self.get_iter()
+        cdef float64_t el = it.next()
+        self.discard(el)
+        return el
         
 
 

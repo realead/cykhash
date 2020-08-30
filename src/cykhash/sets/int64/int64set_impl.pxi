@@ -122,6 +122,14 @@ cdef class Int64Set:
         swap_int64(self, res)
         return self
 
+    def __sub__(self, Int64Set other):
+        return difference_int64(self, other)
+
+    def __isub__(self, Int64Set other):
+        cdef Int64Set res = difference_int64(self, other)
+        swap_int64(self, res)
+        return self
+
     def copy(self):
         return copy_int64(self)
 
@@ -156,6 +164,23 @@ cdef class Int64Set:
                 if self.contains(el):
                     res.add(el)
         swap_int64(self, res)
+
+    def difference_update(self, other):
+        cdef Int64Set res 
+        cdef int64_t el
+        if isinstance(other, Int64Set):
+            res = difference_int64(self, other)
+            swap_int64(self, res)
+        else:
+            for el in other:
+                self.discard(el)
+
+    def difference(self, *others):
+        cdef Int64Set res = copy_int64(self)
+        for o in others:
+            res.difference_update(o)
+        return res
+        
 
 
 

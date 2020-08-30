@@ -173,6 +173,19 @@ cpdef void swap_int32(Int32Set a, Int32Set b) except *:
     a.table=b.table
     b.table=tmp
 
+cpdef Int32Set difference_int32(Int32Set a, Int32Set b):
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef int32_t el
+    cdef Int32Set result = Int32Set()
+    cdef Int32SetIterator it = a.get_iter()
+    while it.has_next():
+        el = it.next()
+        if not b.contains(el):
+            result.add(el)
+    return result
+
   
    
 

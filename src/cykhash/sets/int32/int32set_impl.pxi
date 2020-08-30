@@ -122,6 +122,14 @@ cdef class Int32Set:
         swap_int32(self, res)
         return self
 
+    def __sub__(self, Int32Set other):
+        return difference_int32(self, other)
+
+    def __isub__(self, Int32Set other):
+        cdef Int32Set res = difference_int32(self, other)
+        swap_int32(self, res)
+        return self
+
     def copy(self):
         return copy_int32(self)
 
@@ -156,6 +164,23 @@ cdef class Int32Set:
                 if self.contains(el):
                     res.add(el)
         swap_int32(self, res)
+
+    def difference_update(self, other):
+        cdef Int32Set res 
+        cdef int32_t el
+        if isinstance(other, Int32Set):
+            res = difference_int32(self, other)
+            swap_int32(self, res)
+        else:
+            for el in other:
+                self.discard(el)
+
+    def difference(self, *others):
+        cdef Int32Set res = copy_int32(self)
+        for o in others:
+            res.difference_update(o)
+        return res
+        
 
 
 

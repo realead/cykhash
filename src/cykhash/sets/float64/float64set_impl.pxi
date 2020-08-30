@@ -122,6 +122,14 @@ cdef class Float64Set:
         swap_float64(self, res)
         return self
 
+    def __sub__(self, Float64Set other):
+        return difference_float64(self, other)
+
+    def __isub__(self, Float64Set other):
+        cdef Float64Set res = difference_float64(self, other)
+        swap_float64(self, res)
+        return self
+
     def copy(self):
         return copy_float64(self)
 
@@ -156,6 +164,23 @@ cdef class Float64Set:
                 if self.contains(el):
                     res.add(el)
         swap_float64(self, res)
+
+    def difference_update(self, other):
+        cdef Float64Set res 
+        cdef float64_t el
+        if isinstance(other, Float64Set):
+            res = difference_float64(self, other)
+            swap_float64(self, res)
+        else:
+            for el in other:
+                self.discard(el)
+
+    def difference(self, *others):
+        cdef Float64Set res = copy_float64(self)
+        for o in others:
+            res.difference_update(o)
+        return res
+        
 
 
 

@@ -122,6 +122,14 @@ cdef class PyObjectSet:
         swap_pyobject(self, res)
         return self
 
+    def __sub__(self, PyObjectSet other):
+        return difference_pyobject(self, other)
+
+    def __isub__(self, PyObjectSet other):
+        cdef PyObjectSet res = difference_pyobject(self, other)
+        swap_pyobject(self, res)
+        return self
+
     def copy(self):
         return copy_pyobject(self)
 
@@ -156,6 +164,23 @@ cdef class PyObjectSet:
                 if self.contains(el):
                     res.add(el)
         swap_pyobject(self, res)
+
+    def difference_update(self, other):
+        cdef PyObjectSet res 
+        cdef object el
+        if isinstance(other, PyObjectSet):
+            res = difference_pyobject(self, other)
+            swap_pyobject(self, res)
+        else:
+            for el in other:
+                self.discard(el)
+
+    def difference(self, *others):
+        cdef PyObjectSet res = copy_pyobject(self)
+        for o in others:
+            res.difference_update(o)
+        return res
+        
 
 
 

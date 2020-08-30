@@ -173,6 +173,19 @@ cpdef void swap_float64(Float64Set a, Float64Set b) except *:
     a.table=b.table
     b.table=tmp
 
+cpdef Float64Set difference_float64(Float64Set a, Float64Set b):
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef float64_t el
+    cdef Float64Set result = Float64Set()
+    cdef Float64SetIterator it = a.get_iter()
+    while it.has_next():
+        el = it.next()
+        if not b.contains(el):
+            result.add(el)
+    return result
+
   
    
 

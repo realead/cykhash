@@ -173,6 +173,19 @@ cpdef void swap_pyobject(PyObjectSet a, PyObjectSet b) except *:
     a.table=b.table
     b.table=tmp
 
+cpdef PyObjectSet difference_pyobject(PyObjectSet a, PyObjectSet b):
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef object el
+    cdef PyObjectSet result = PyObjectSet()
+    cdef PyObjectSetIterator it = a.get_iter()
+    while it.has_next():
+        el = it.next()
+        if not b.contains(el):
+            result.add(el)
+    return result
+
   
    
 

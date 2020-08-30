@@ -460,3 +460,136 @@ class IntersectTester(unittest.TestCase):
         self.assertEqual(a, a_copy)
 
 
+@uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet])
+class DifferenceTester(unittest.TestCase): 
+
+    def template_with_none(self, set_type):
+        s=set_type([1,2,3,1])
+        difference=pick_fun("difference", set_type)        
+        with self.assertRaises(TypeError) as context:
+            difference(None,s)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            difference(s,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            difference(None,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+
+    def template_small(self, set_type):
+        a=set_type([1,2,3,4])
+        b=set_type([5,2,4])
+        a_copy=a.copy()
+        b_copy=b.copy()
+        difference=pick_fun("difference", set_type) 
+        c=difference(a,b)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, set_type([1,3]))
+        c=difference(b,a)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, set_type([5]))
+
+    def template_disjunct(self, set_type):
+        a=set_type([1,3,5,7,9])
+        b=set_type([2,2,4,6,8,10])
+        a_copy=a.copy()
+        b_copy=b.copy()
+        difference=pick_fun("difference", set_type) 
+        c=difference(a,b)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, a)
+        c=difference(b,a)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, b)
+
+    def template_empty(self, set_type):
+        a=set_type([])
+        b=set_type([])
+        c=set_type([2,2,4,6,8,10])
+        difference=pick_fun("difference", set_type) 
+        d=difference(a,b)
+        self.assertEqual(len(d), 0)
+        d=difference(c,b)
+        self.assertEqual(c, d)
+        d=difference(a,c)
+        self.assertEqual(len(d), 0)
+
+    def template_method_update(self, set_type):
+        a=set_type([1,2,3,4])
+        b=set_type([5,2,4])
+        b_copy=b.copy()
+        a.difference_update(b)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(a, set_type([1,3]))
+
+    def template_method_update2(self, set_type):
+        a=set_type([1,2,3,4])
+        b=set_type([5,2,4])
+        a_copy=a.copy()
+        b.difference_update(a)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, set_type([5]))
+
+    def template_method_update_from_iter(self, set_type):
+        a=set_type([1,2,3,4])
+        a.difference_update([5,2,4])
+        self.assertEqual(a, set_type([1,3]))
+
+    def template_method_update_from_iter2(self, set_type):
+        a=set_type(range(1000))
+        a.difference_update(range(0,1000,2))
+        self.assertEqual(a, set_type(range(1,1000,2)))
+
+    def template_method_update_from_iter3(self, set_type):
+        a=set_type([1,2])
+        a.difference_update([1]*10000)
+        self.assertEqual(a, set_type([2]))
+
+    def template_sub(self, set_type):
+        a=set_type([0,222,3,444,5])
+        b=set_type([222,3,4])
+        a_copy=a.copy()
+        b_copy=b.copy()
+        c=a-b
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, set_type([0,444,5]))
+        c=b-a
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, set_type([4]))
+
+    def template_sub2(self, set_type):
+        a=set_type([1,2,3,4])
+        a_copy=a.copy()
+        b=a-a-a-a
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, set_type())
+
+    def template_isub(self, set_type):
+        a=set_type([0,222,3,444,5])
+        b=set_type([222,3,4])
+        b_copy=b.copy()
+        a-=b
+        self.assertEqual(b, b_copy)
+        self.assertEqual(a, set_type([0,444,5]))
+
+    def template_sub2(self, set_type):
+        a=set_type([1,2,3,4])
+        a-=a
+        self.assertEqual(a, set_type())
+
+
+    def template_difference_method(self, set_type):
+        a=set_type(range(10000))
+        a_copy=a.copy()
+        b=a.difference(range(5000), set_type(range(5000,10000,2)), range(1,9999,2))
+        self.assertEqual(b, set_type([9999]))
+        self.assertEqual(a, a_copy)
+        
+
+

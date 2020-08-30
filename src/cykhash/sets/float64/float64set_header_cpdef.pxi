@@ -32,4 +32,5 @@ cpdef bint issubset_float64(Float64Set s, Float64Set sub) except *
 cpdef Float64Set copy_float64(Float64Set s)
 cpdef void update_float64(Float64Set s, Float64Set other) except *
 cpdef Float64Set intersect_float64(Float64Set a, Float64Set b)
+cpdef Float64Set difference_float64(Float64Set a, Float64Set b)
 

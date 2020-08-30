@@ -211,6 +211,10 @@ cdef class PyObjectSet:
         for o in others:
             res.symmetric_difference_update(o)
         return res
+
+    def clear(self):
+        cdef PyObjectSet res = PyObjectSet()
+        swap_pyobject(self, res)
         
 
 

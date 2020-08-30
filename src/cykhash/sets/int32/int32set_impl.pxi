@@ -211,6 +211,10 @@ cdef class Int32Set:
         for o in others:
             res.symmetric_difference_update(o)
         return res
+
+    def clear(self):
+        cdef Int32Set res = Int32Set()
+        swap_int32(self, res)
         
 
 

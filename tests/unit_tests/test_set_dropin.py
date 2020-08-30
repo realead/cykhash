@@ -23,6 +23,27 @@ class SetDropInTester(unittest.TestCase):
         self.assertTrue(2 in s)
         self.assertTrue(3 in s)
 
+    def template_clear(self, set_type):
+        s=set_type([1,2,3,1])
+        s.clear()
+        self.assertEqual(len(s), 0)
+        s.add(5)
+        s.update([3,4,5,6])
+        self.assertEqual(s, set_type([3,4,5,6]))
+        s.clear()
+        self.assertEqual(len(s), 0)
+
+    def template_str(self, set_type):
+        s=set_type([1,2,3,1])
+        ss = str(s)
+        self.assertTrue("1" in ss)
+        self.assertTrue("2" in ss)
+        self.assertTrue("3" in ss)
+        self.assertTrue(ss.startswith("{"))
+        self.assertTrue(ss.endswith("}"))
+
+
+
 @uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet])
 class IsDisjointTester(unittest.TestCase): 
 

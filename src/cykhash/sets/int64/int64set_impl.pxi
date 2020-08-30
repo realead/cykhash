@@ -90,6 +90,9 @@ cdef class Int64Set:
                 mem.add(el)
         return mem.size()==self.size()
 
+    def __repr__(self):
+        return "{"+','.join(map(str, self))+"}"
+
     def __le__(self, Int64Set other):
         return issubset_int64(other, self)
 
@@ -127,6 +130,14 @@ cdef class Int64Set:
 
     def __isub__(self, Int64Set other):
         cdef Int64Set res = difference_int64(self, other)
+        swap_int64(self, res)
+        return self
+
+    def __xor__(self, Int64Set other):
+        return symmetric_difference_int64(self, other)
+
+    def __ixor__(self, Int64Set other):
+        cdef Int64Set res = symmetric_difference_int64(self, other)
         swap_int64(self, res)
         return self
 
@@ -179,6 +190,26 @@ cdef class Int64Set:
         cdef Int64Set res = copy_int64(self)
         for o in others:
             res.difference_update(o)
+        return res
+
+    def symmetric_difference_update(self, other):
+        cdef Int64Set res 
+        cdef int64_t el
+        if isinstance(other, Int64Set):
+            res = symmetric_difference_int64(self, other)
+        else:
+            res = self.copy()
+            for el in other:
+                if self.contains(el):
+                    res.discard(el)
+                else:
+                    res.add(el)
+        swap_int64(self, res)
+
+    def symmetric_difference(self, *others):
+        cdef Int64Set res = copy_int64(self)
+        for o in others:
+            res.symmetric_difference_update(o)
         return res
         
 

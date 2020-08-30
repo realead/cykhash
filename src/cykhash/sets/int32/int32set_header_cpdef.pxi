@@ -33,4 +33,6 @@ cpdef Int32Set copy_int32(Int32Set s)
 cpdef void update_int32(Int32Set s, Int32Set other) except *
 cpdef Int32Set intersect_int32(Int32Set a, Int32Set b)
 cpdef Int32Set difference_int32(Int32Set a, Int32Set b)
+cpdef Int32Set symmetric_difference_int32(Int32Set a, Int32Set b)
+
 

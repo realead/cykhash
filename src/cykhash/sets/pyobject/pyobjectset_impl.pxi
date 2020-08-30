@@ -90,6 +90,9 @@ cdef class PyObjectSet:
                 mem.add(el)
         return mem.size()==self.size()
 
+    def __repr__(self):
+        return "{"+','.join(map(str, self))+"}"
+
     def __le__(self, PyObjectSet other):
         return issubset_pyobject(other, self)
 
@@ -127,6 +130,14 @@ cdef class PyObjectSet:
 
     def __isub__(self, PyObjectSet other):
         cdef PyObjectSet res = difference_pyobject(self, other)
+        swap_pyobject(self, res)
+        return self
+
+    def __xor__(self, PyObjectSet other):
+        return symmetric_difference_pyobject(self, other)
+
+    def __ixor__(self, PyObjectSet other):
+        cdef PyObjectSet res = symmetric_difference_pyobject(self, other)
         swap_pyobject(self, res)
         return self
 
@@ -179,6 +190,26 @@ cdef class PyObjectSet:
         cdef PyObjectSet res = copy_pyobject(self)
         for o in others:
             res.difference_update(o)
+        return res
+
+    def symmetric_difference_update(self, other):
+        cdef PyObjectSet res 
+        cdef object el
+        if isinstance(other, PyObjectSet):
+            res = symmetric_difference_pyobject(self, other)
+        else:
+            res = self.copy()
+            for el in other:
+                if self.contains(el):
+                    res.discard(el)
+                else:
+                    res.add(el)
+        swap_pyobject(self, res)
+
+    def symmetric_difference(self, *others):
+        cdef PyObjectSet res = copy_pyobject(self)
+        for o in others:
+            res.symmetric_difference_update(o)
         return res
         
 

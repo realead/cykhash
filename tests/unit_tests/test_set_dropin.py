@@ -578,7 +578,7 @@ class DifferenceTester(unittest.TestCase):
         self.assertEqual(b, b_copy)
         self.assertEqual(a, set_type([0,444,5]))
 
-    def template_sub2(self, set_type):
+    def template_isub2(self, set_type):
         a=set_type([1,2,3,4])
         a-=a
         self.assertEqual(a, set_type())
@@ -590,6 +590,148 @@ class DifferenceTester(unittest.TestCase):
         b=a.difference(range(5000), set_type(range(5000,10000,2)), range(1,9999,2))
         self.assertEqual(b, set_type([9999]))
         self.assertEqual(a, a_copy)
-        
 
+
+@uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet])
+class SymmetricDifferenceTester(unittest.TestCase): 
+
+    def template_with_none(self, set_type):
+        s=set_type([1,2,3,1])
+        symmetric_difference=pick_fun("symmetric_difference", set_type)        
+        with self.assertRaises(TypeError) as context:
+            symmetric_difference(None,s)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            symmetric_difference(s,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            symmetric_difference(None,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+
+    def template_small(self, set_type):
+        a=set_type([1,2,3,4])
+        b=set_type([5,2,4])
+        a_copy=a.copy()
+        b_copy=b.copy()
+        symmetric_difference=pick_fun("symmetric_difference", set_type) 
+        c=symmetric_difference(a,b)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, set_type([1,3,5]))
+        c=symmetric_difference(b,a)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, set_type([1,3,5]))
+
+    def template_disjunct(self, set_type):
+        a=set_type([1,3,5,7,9])
+        b=set_type([2,2,4,6,8,10])
+        a_copy=a.copy()
+        b_copy=b.copy()
+        symmetric_difference=pick_fun("symmetric_difference", set_type) 
+        c=symmetric_difference(a,b)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, a|b)
+        c=symmetric_difference(b,a)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, a|b)
+
+    def template_empty(self, set_type):
+        a=set_type([])
+        b=set_type([])
+        c=set_type([2,2,4,6,8,10])
+        symmetric_difference=pick_fun("symmetric_difference", set_type) 
+        d=symmetric_difference(a,b)
+        self.assertEqual(len(d), 0)
+        d=symmetric_difference(c,b)
+        self.assertEqual(c, d)
+        d=symmetric_difference(a,c)
+        self.assertEqual(c, d)
+
+    def template_method_update(self, set_type):
+        a=set_type([1,2,3,4])
+        b=set_type([5,2,4])
+        b_copy=b.copy()
+        a.symmetric_difference_update(b)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(a, set_type([1,3,5]))
+
+    def template_method_update2(self, set_type):
+        a=set_type([1,2,3,4])
+        b=set_type([5,2,4])
+        a_copy=a.copy()
+        b.symmetric_difference_update(a)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, set_type([1,3,5]))
+
+    def template_method_update_from_iter(self, set_type):
+        a=set_type([1,2,3,4])
+        a.symmetric_difference_update([5,2,4])
+        self.assertEqual(a, set_type([1,3, 5]))
+
+    def template_method_update_from_iter2(self, set_type):
+        a=set_type(range(1000))
+        a.symmetric_difference_update(range(0,1000,2))
+        self.assertEqual(a, set_type(range(1,1000,2)))
+
+    def template_method_update_from_iter3(self, set_type):
+        a=set_type([1,2])
+        a.symmetric_difference_update([1]*10000)
+        self.assertEqual(a, set_type([2]))
+
+
+    def template_method_update_from_iter4(self, set_type):
+        a=set_type([1,2])
+        a.symmetric_difference_update(a)
+        self.assertEqual(len(a), 0)
+
+    def template_xor(self, set_type):
+        a=set_type([0,222,3,444,5])
+        b=set_type([222,3,4])
+        a_copy=a.copy()
+        b_copy=b.copy()
+        c=a^b
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, set_type([0,444,5,4]))
+        c=b^a
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, b_copy)
+        self.assertEqual(c, set_type([0,444,5,4]))
+
+    def template_xor2(self, set_type):
+        a=set_type([1,2,3,4])
+        a_copy=a.copy()
+        b=a^a^a^a
+        self.assertEqual(a, a_copy)
+        self.assertEqual(len(b), 0)
+
+    def template_xor3(self, set_type):
+        a=set_type([1,2,3,4])
+        a_copy=a.copy()
+        b=a^a^a^a^a
+        self.assertEqual(a, a_copy)
+        self.assertEqual(b, a)
+
+    def template_ixor(self, set_type):
+        a=set_type([0,222,3,444,5])
+        b=set_type([222,3,4])
+        b_copy=b.copy()
+        a^=b
+        self.assertEqual(b, b_copy)
+        self.assertEqual(a, set_type([0,444,5,4]))
+
+    def template_ixor2(self, set_type):
+        a=set_type([1,2,3,4])
+        a^=a
+        self.assertEqual(a, set_type())
+
+    def template_symmetric_method(self, set_type):
+        a=set_type(range(10))
+        a_copy=a.copy()
+        b=a.symmetric_difference(range(5,15), set_type(range(5,10)), range(1,16))
+        self.assertEqual(b, set_type([0,15]))
+        self.assertEqual(a, a_copy)
 

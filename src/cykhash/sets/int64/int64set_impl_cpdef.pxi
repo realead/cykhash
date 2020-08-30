@@ -186,6 +186,24 @@ cpdef Int64Set difference_int64(Int64Set a, Int64Set b):
             result.add(el)
     return result
 
+cpdef Int64Set symmetric_difference_int64(Int64Set a, Int64Set b):
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef int64_t el
+    cdef Int64Set result = Int64Set()
+    cdef Int64SetIterator it = a.get_iter()
+    while it.has_next():
+          el = it.next()
+          if not b.contains(el):
+                result.add(el)
+    it = b.get_iter()
+    while it.has_next():
+        el = it.next()
+        if not a.contains(el):
+            result.add(el)
+    return result
+
   
    
 

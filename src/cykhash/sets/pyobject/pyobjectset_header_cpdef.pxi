@@ -33,4 +33,6 @@ cpdef PyObjectSet copy_pyobject(PyObjectSet s)
 cpdef void update_pyobject(PyObjectSet s, PyObjectSet other) except *
 cpdef PyObjectSet intersect_pyobject(PyObjectSet a, PyObjectSet b)
 cpdef PyObjectSet difference_pyobject(PyObjectSet a, PyObjectSet b)
+cpdef PyObjectSet symmetric_difference_pyobject(PyObjectSet a, PyObjectSet b)
+
 

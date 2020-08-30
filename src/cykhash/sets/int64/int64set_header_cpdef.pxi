@@ -33,4 +33,6 @@ cpdef Int64Set copy_int64(Int64Set s)
 cpdef void update_int64(Int64Set s, Int64Set other) except *
 cpdef Int64Set intersect_int64(Int64Set a, Int64Set b)
 cpdef Int64Set difference_int64(Int64Set a, Int64Set b)
+cpdef Int64Set symmetric_difference_int64(Int64Set a, Int64Set b)
+
 

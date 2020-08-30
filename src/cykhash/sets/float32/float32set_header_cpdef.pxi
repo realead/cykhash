@@ -33,4 +33,6 @@ cpdef Float32Set copy_float32(Float32Set s)
 cpdef void update_float32(Float32Set s, Float32Set other) except *
 cpdef Float32Set intersect_float32(Float32Set a, Float32Set b)
 cpdef Float32Set difference_float32(Float32Set a, Float32Set b)
+cpdef Float32Set symmetric_difference_float32(Float32Set a, Float32Set b)
+
 

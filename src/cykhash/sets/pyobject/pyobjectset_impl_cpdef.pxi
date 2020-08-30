@@ -186,6 +186,24 @@ cpdef PyObjectSet difference_pyobject(PyObjectSet a, PyObjectSet b):
             result.add(el)
     return result
 
+cpdef PyObjectSet symmetric_difference_pyobject(PyObjectSet a, PyObjectSet b):
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef object el
+    cdef PyObjectSet result = PyObjectSet()
+    cdef PyObjectSetIterator it = a.get_iter()
+    while it.has_next():
+          el = it.next()
+          if not b.contains(el):
+                result.add(el)
+    it = b.get_iter()
+    while it.has_next():
+        el = it.next()
+        if not a.contains(el):
+            result.add(el)
+    return result
+
   
    
 

@@ -90,6 +90,9 @@ cdef class Int32Set:
                 mem.add(el)
         return mem.size()==self.size()
 
+    def __repr__(self):
+        return "{"+','.join(map(str, self))+"}"
+
     def __le__(self, Int32Set other):
         return issubset_int32(other, self)
 
@@ -127,6 +130,14 @@ cdef class Int32Set:
 
     def __isub__(self, Int32Set other):
         cdef Int32Set res = difference_int32(self, other)
+        swap_int32(self, res)
+        return self
+
+    def __xor__(self, Int32Set other):
+        return symmetric_difference_int32(self, other)
+
+    def __ixor__(self, Int32Set other):
+        cdef Int32Set res = symmetric_difference_int32(self, other)
         swap_int32(self, res)
         return self
 
@@ -179,6 +190,26 @@ cdef class Int32Set:
         cdef Int32Set res = copy_int32(self)
         for o in others:
             res.difference_update(o)
+        return res
+
+    def symmetric_difference_update(self, other):
+        cdef Int32Set res 
+        cdef int32_t el
+        if isinstance(other, Int32Set):
+            res = symmetric_difference_int32(self, other)
+        else:
+            res = self.copy()
+            for el in other:
+                if self.contains(el):
+                    res.discard(el)
+                else:
+                    res.add(el)
+        swap_int32(self, res)
+
+    def symmetric_difference(self, *others):
+        cdef Int32Set res = copy_int32(self)
+        for o in others:
+            res.symmetric_difference_update(o)
         return res
         
 

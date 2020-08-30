@@ -186,6 +186,24 @@ cpdef Float32Set difference_float32(Float32Set a, Float32Set b):
             result.add(el)
     return result
 
+cpdef Float32Set symmetric_difference_float32(Float32Set a, Float32Set b):
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef float32_t el
+    cdef Float32Set result = Float32Set()
+    cdef Float32SetIterator it = a.get_iter()
+    while it.has_next():
+          el = it.next()
+          if not b.contains(el):
+                result.add(el)
+    it = b.get_iter()
+    while it.has_next():
+        el = it.next()
+        if not a.contains(el):
+            result.add(el)
+    return result
+
   
    
 

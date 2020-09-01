@@ -30,17 +30,17 @@ cdef class Int32to32Map:
             kh_destroy_int32to32map(self.table)
             self.table = NULL
 
-    def __contains__(self, int32_t key):
+    def __contains__(self, key_int32_t key):
         return self.contains(key)
 
 
-    cdef bint contains(self, int32_t key) except *:
+    cdef bint contains(self, key_int32_t key) except *:
         cdef khint_t k
         k = kh_get_int32to32map(self.table, key)
         return k != self.table.n_buckets
 
 
-    cpdef void put_int32(self, int32_t key, int32_t val) except *:
+    cpdef void put_int32(self, key_int32_t key, int32_t val) except *:
         cdef:
             khint_t k
             int ret = 0
@@ -49,7 +49,7 @@ cdef class Int32to32Map:
         self.table.keys[k] = key
         self.table.vals[k] = val
 
-    cpdef void put_float32(self, int32_t key, float32_t val) except *:
+    cpdef void put_float32(self, key_int32_t key, float32_t val) except *:
         self.put_int32(key, f32_to_i32(val));
 
     
@@ -59,14 +59,14 @@ cdef class Int32to32Map:
         else:
             self.put_float32(key, val)
 
-    cpdef int32_t get_int32(self, int32_t key) except *:
+    cpdef int32_t get_int32(self, key_int32_t key) except *:
         k = kh_get_int32to32map(self.table, key)
         if k != self.table.n_buckets:
             return self.table.vals[k]
         else:
             raise KeyError("No such key: "+str(key))
 
-    cpdef float32_t get_float32(self, int32_t key) except *:
+    cpdef float32_t get_float32(self, key_int32_t key) except *:
         return i32_to_f32(self.get_int32(key))
 
     def __getitem__(self, key):
@@ -76,7 +76,7 @@ cdef class Int32to32Map:
             return self.get_float32(key)
 
     
-    cpdef void discard(self, int32_t key) except *:
+    cpdef void discard(self, key_int32_t key) except *:
         cdef khint_t k
         k = kh_get_int32to32map(self.table, key)
         if k != self.table.n_buckets:
@@ -124,7 +124,7 @@ cdef class Int32to32MapIterator:
 
 ### Utils:
 
-def Int32to32Map_from_int32_buffer(int32_t[:] keys, int32_t[:] vals, double size_hint=0.0):
+def Int32to32Map_from_int32_buffer(key_int32_t[:] keys, int32_t[:] vals, double size_hint=0.0):
     cdef Py_ssize_t n = len(keys)
     cdef Py_ssize_t b = len(vals)
     if b < n:
@@ -136,7 +136,7 @@ def Int32to32Map_from_int32_buffer(int32_t[:] keys, int32_t[:] vals, double size
         res.put_int32(keys[i], vals[i])
     return res
 
-def Int32to32Map_from_float32_buffer(int32_t[:] keys, float32_t[:] vals,double size_hint=0.0):
+def Int32to32Map_from_float32_buffer(key_int32_t[:] keys, float32_t[:] vals,double size_hint=0.0):
     cdef Py_ssize_t n = len(keys)
     cdef Py_ssize_t b = len(vals)
     if b < n:

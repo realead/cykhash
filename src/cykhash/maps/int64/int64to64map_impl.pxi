@@ -30,17 +30,17 @@ cdef class Int64to64Map:
             kh_destroy_int64to64map(self.table)
             self.table = NULL
 
-    def __contains__(self, int64_t key):
+    def __contains__(self, key_int64_t key):
         return self.contains(key)
 
 
-    cdef bint contains(self, int64_t key) except *:
+    cdef bint contains(self, key_int64_t key) except *:
         cdef khint_t k
         k = kh_get_int64to64map(self.table, key)
         return k != self.table.n_buckets
 
 
-    cpdef void put_int64(self, int64_t key, int64_t val) except *:
+    cpdef void put_int64(self, key_int64_t key, int64_t val) except *:
         cdef:
             khint_t k
             int ret = 0
@@ -49,7 +49,7 @@ cdef class Int64to64Map:
         self.table.keys[k] = key
         self.table.vals[k] = val
 
-    cpdef void put_float64(self, int64_t key, float64_t val) except *:
+    cpdef void put_float64(self, key_int64_t key, float64_t val) except *:
         self.put_int64(key, f64_to_i64(val));
 
     
@@ -59,14 +59,14 @@ cdef class Int64to64Map:
         else:
             self.put_float64(key, val)
 
-    cpdef int64_t get_int64(self, int64_t key) except *:
+    cpdef int64_t get_int64(self, key_int64_t key) except *:
         k = kh_get_int64to64map(self.table, key)
         if k != self.table.n_buckets:
             return self.table.vals[k]
         else:
             raise KeyError("No such key: "+str(key))
 
-    cpdef float64_t get_float64(self, int64_t key) except *:
+    cpdef float64_t get_float64(self, key_int64_t key) except *:
         return i64_to_f64(self.get_int64(key))
 
     def __getitem__(self, key):
@@ -76,7 +76,7 @@ cdef class Int64to64Map:
             return self.get_float64(key)
 
     
-    cpdef void discard(self, int64_t key) except *:
+    cpdef void discard(self, key_int64_t key) except *:
         cdef khint_t k
         k = kh_get_int64to64map(self.table, key)
         if k != self.table.n_buckets:
@@ -124,7 +124,7 @@ cdef class Int64to64MapIterator:
 
 ### Utils:
 
-def Int64to64Map_from_int64_buffer(int64_t[:] keys, int64_t[:] vals, double size_hint=0.0):
+def Int64to64Map_from_int64_buffer(key_int64_t[:] keys, int64_t[:] vals, double size_hint=0.0):
     cdef Py_ssize_t n = len(keys)
     cdef Py_ssize_t b = len(vals)
     if b < n:
@@ -136,7 +136,7 @@ def Int64to64Map_from_int64_buffer(int64_t[:] keys, int64_t[:] vals, double size
         res.put_int64(keys[i], vals[i])
     return res
 
-def Int64to64Map_from_float64_buffer(int64_t[:] keys, float64_t[:] vals,double size_hint=0.0):
+def Int64to64Map_from_float64_buffer(key_int64_t[:] keys, float64_t[:] vals,double size_hint=0.0):
     cdef Py_ssize_t n = len(keys)
     cdef Py_ssize_t b = len(vals)
     if b < n:

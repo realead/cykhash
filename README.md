@@ -8,7 +8,7 @@ cython wrapper for khash-sets/maps, efficient implementation of `isin` and `uniq
 
   * Numpy's world is lacking the concept of a (hash-)set. This shortcoming is fixed and efficient (compared to pandas') `unique` and `isin` are implemented.
 
-  * Python-set/dict have big memory-footprint. For some datatypes the overhead can be reduced by using khash.
+  * Python-set/dict have big memory-footprint. For some datatypes the overhead can be reduced by using khash by factor 4-8.
 
 ## Installation:
 
@@ -26,7 +26,7 @@ To install the most recent version of the module:
 
 ## Dependencies:
 
-To build the library from source, Cython>=0.28 is required as well as c-build tool chain.
+To build the library from source, Cython>=0.28 is required as well as a c-build tool chain.
 
 See (https://github.com/realead/cykhash/blob/master/doc/README4DEVELOPER.md) for dependencies needed for development.
 
@@ -81,19 +81,19 @@ Maps and sets handle `nan`-correctly (try it out with Python's dict/set):
 
 ### Hash sets
 
-`Int64Set`, `Int32Set`, `Float64Set`, `Float32Set`, and `PyObjectSet` are implemented. They aren't drop-in replacements of the Python-set and have only a basic interface. However, given the Cython-interface, efficient extensions of functionality are easily done.
+`Int64Set`, `Int32Set`, `Float64Set`, `Float32Set`, and `PyObjectSet` are implemented. They are more or less drop-in replacements for Python's `set`. Furthermore, given the Cython-interface, efficient extensions of functionality are easily done.
 
 
-Biggest advantage of these sets is that they need about 4 times less memory than the usual Python-sets and are somewhat faster for integers or floats.
+The biggest advantage of these sets is that they need about 4-8 times less memory than the usual Python-sets and are somewhat faster for integers or floats.
 
-The most efficient way to create such sets is to use `XXXXSet_from_buffer(...)`, e.g. `Int64Set_from_buffer`, if data container supports buffer protocol (e.g. numpy-arrays, `array.array` or `ctypes`-arrays). Or `XXXXSet_from(...)` for any iterator.
+The most efficient way to create such sets is to use `XXXXSet_from_buffer(...)`, e.g. `Int64Set_from_buffer`, if the data container at hand supports buffer protocol (e.g. numpy-arrays, `array.array` or `ctypes`-arrays). Or `XXXXSet_from(...)` for any iterator.
 
 
 ### Hash maps
 
 `Int64to64Map`, `Int32to32Map`, `Float64to64Map`, `Float32to32Map`, and `PyObjectMap` are implemented. They aren't drop-in replacements of the Python-dictionaries and have only a basic interface. However, given the Cython-interface efficient extensions of functionality are easily done.
 
-Biggest advantage of these sets is that they need about 4 times less memory than the usual Python-dictionaries and are somewhat faster for integers or floats.
+Biggest advantage of these sets is that they need about 4-8 times less memory than the usual Python-dictionaries and are somewhat faster for integers or floats.
 
 
 ### isin
@@ -101,6 +101,16 @@ Biggest advantage of these sets is that they need about 4 times less memory than
   * implemented are `isin_int64`, `isin_int32`, `isin_float64`, `isin_float32`
   * using hash set instead of arrays in `isin` function has the advantage, that the look-up data structure doesn't have to be reconstructed for every call, thus reducing the running time from `O(n+m)`to `O(n)`, where `n` is the number of queries and `m`-number of elements in the look up array.
   * Thus cykash's `isin` can be order of magnitude faster than the numpy's or pandas' versions.
+
+#### all, none, any, and count_if
+
+  * siblings functions of `isin_XXX` are:
+      * `all_XXX`/`all_XXX_from_iterator` which return `True` if all elements of the query array can be found in the set.
+      * `any_XXX`/`any_XXX_from_iterator` which return `True` if at least one element of the query array can be found in the set.
+      * `none_XXX`/`none_XXX_from_iterator` which return `True` if none of  elements from the query array can be found in the set.
+      * `count_if_XXX`/`count_if_XXX_from_iterator` which return the number of elements from the query array can be found in the set.
+  * `all_XXX`, `any_XXX`, `none_XXX` and `count_if_XXX` are faster than using `isin_XXX` and applying numpy's versions of these function on the resulting array.
+  * `from_iterator` version works with any iterable, but the version for buffers are more efficient.
 
 ### unique
 
@@ -153,7 +163,7 @@ Cython: Create a set and put some values into it:
     my_set = Int64Set(number_of_elements_hint=12)  # reserve place for at least 12 integers
     cdef Py_ssize_t i
     for i in range(12):
-       my_set.add(i)    
+       my_set.add(i)
     assert 11 in my_set and 12 not in my_set
 
 #### Hash maps
@@ -237,9 +247,10 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
 
 ## History:
 
-#### Release 1.0.3 (??.??.2020):
+#### Release 1.1.0 (??.??.2020):
 
-  * TODO
+  * Implementation of `any`, `all`, `none` and `count_if`
+  * Hash-sets are now (almost) drop-in replacements of Python's sets.
 
 #### Release 1.0.2 (30.05.2020):
 

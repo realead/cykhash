@@ -8,7 +8,7 @@
 
 cdef class Int32to32Map:
 
-    def __cinit__(self, *, number_of_elements_hint=None, for_int=True):
+    def __cinit__(self, iterable=None, *, number_of_elements_hint=None, for_int=True):
         """
         number_of_elements_hint - number of elements without the need of reallocation.
         for_int  if True, __setitem__/__getitem__ sets/gets a in32-object, otherwise a float32-object
@@ -17,6 +17,16 @@ cdef class Int32to32Map:
         self.table = kh_init_int32to32map()
         if number_of_elements_hint is not None:
             kh_resize_int32to32map(self.table, element_n_to_bucket_n(number_of_elements_hint))
+        cdef key_int32_t key
+        cdef int32_t val_as_int
+        cdef float32_t val_as_float
+        if iterable is not None:
+            if for_int:
+                for key, val_as_int in iterable:
+                    self.put_int32(key, val_as_int)
+            else:
+                for key, val_as_float in iterable:
+                    self.put_float32(key, val_as_float)
 
     def __len__(self):
         return self.size()

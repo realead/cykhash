@@ -8,7 +8,7 @@
 
 cdef class Float64to64Map:
 
-    def __cinit__(self, *, number_of_elements_hint=None, for_int=True):
+    def __cinit__(self, iterable=None, *, number_of_elements_hint=None, for_int=True):
         """
         number_of_elements_hint - number of elements without the need of reallocation.
         for_int  if True, __setitem__/__getitem__ sets/gets a in64-object, otherwise a float64-object
@@ -17,6 +17,16 @@ cdef class Float64to64Map:
         self.table = kh_init_float64to64map()
         if number_of_elements_hint is not None:
             kh_resize_float64to64map(self.table, element_n_to_bucket_n(number_of_elements_hint))
+        cdef key_float64_t key
+        cdef int64_t val_as_int
+        cdef float64_t val_as_float
+        if iterable is not None:
+            if for_int:
+                for key, val_as_int in iterable:
+                    self.put_int64(key, val_as_int)
+            else:
+                for key, val_as_float in iterable:
+                    self.put_float64(key, val_as_float)
 
     def __len__(self):
         return self.size()

@@ -38,7 +38,7 @@ cdef class Int32SetIterator:
               self.it+=1       
 
     cdef bint has_next(self) except *:
-        return self.it != self.parent.table.n_buckets
+        return self.it < self.parent.table.n_buckets
         
     cdef int32_t next(self) except *:
         cdef int32_t result = self.parent.table.keys[self.it]

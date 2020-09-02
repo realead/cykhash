@@ -38,7 +38,7 @@ cdef class Float64SetIterator:
               self.it+=1       
 
     cdef bint has_next(self) except *:
-        return self.it != self.parent.table.n_buckets
+        return self.it < self.parent.table.n_buckets
         
     cdef float64_t next(self) except *:
         cdef float64_t result = self.parent.table.keys[self.it]

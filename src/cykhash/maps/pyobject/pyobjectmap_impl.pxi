@@ -82,6 +82,10 @@ cdef class PyObjectMap:
     def __iter__(self):
         return self.get_iter()
 
+    def clear(self):
+        cdef PyObjectMap tmp=PyObjectMap()
+        swap_pyobjectmap(self, tmp)
+
 
 ### Iterator:
 cdef class PyObjectMapIterator:
@@ -91,7 +95,7 @@ cdef class PyObjectMapIterator:
               self.it+=1       
 
     cdef bint has_next(self) except *:
-        return self.it != self.parent.table.n_buckets
+        return self.it < self.parent.table.n_buckets
         
     cdef pyobject_key_val_pair next(self) except *:
         cdef pyobject_key_val_pair result 
@@ -130,6 +134,15 @@ def PyObjectMap_from_object_buffer(object[:] keys, object[:] vals, double size_h
     for i in range(n):
         res.put_object(keys[i], vals[i])
     return res
+
+cpdef void swap_pyobjectmap(PyObjectMap a, PyObjectMap b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef kh_pyobjectmap_t *tmp=a.table
+    a.table=b.table
+    b.table=tmp
+
 
     
 

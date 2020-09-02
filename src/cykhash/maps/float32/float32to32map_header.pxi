@@ -56,3 +56,6 @@ cdef class Float32to32MapIterator:
     cdef float32to32_key_val_pair next(self) except *
     cdef void __move(self) except *
 
+# other help functions:
+cpdef void swap_float32map(Float32to32Map a, Float32to32Map b) except *
+

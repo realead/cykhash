@@ -56,3 +56,6 @@ cdef class Int64to64MapIterator:
     cdef int64to64_key_val_pair next(self) except *
     cdef void __move(self) except *
 
+# other help functions:
+cpdef void swap_int64map(Int64to64Map a, Int64to64Map b) except *
+

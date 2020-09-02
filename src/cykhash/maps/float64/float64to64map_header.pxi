@@ -56,3 +56,6 @@ cdef class Float64to64MapIterator:
     cdef float64to64_key_val_pair next(self) except *
     cdef void __move(self) except *
 
+# other help functions:
+cpdef void swap_float64map(Float64to64Map a, Float64to64Map b) except *
+

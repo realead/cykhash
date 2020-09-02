@@ -45,3 +45,7 @@ cdef class PyObjectMapIterator:
     cdef pyobject_key_val_pair next(self) except *
     cdef void __move(self) except *
 
+# other help functions:
+cpdef void swap_pyobjectmap(PyObjectMap a, PyObjectMap b) except *
+
+

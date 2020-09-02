@@ -99,6 +99,10 @@ cdef class Int32to32Map:
     def __iter__(self):
         return self.get_iter()
 
+    def clear(self):
+        cdef Int32to32Map tmp=Int32to32Map()
+        swap_int32map(self, tmp)
+
 
 ### Iterator:
 cdef class Int32to32MapIterator:
@@ -108,7 +112,7 @@ cdef class Int32to32MapIterator:
               self.it+=1       
 
     cdef bint has_next(self) except *:
-        return self.it != self.parent.table.n_buckets
+        return self.it < self.parent.table.n_buckets
         
     cdef int32to32_key_val_pair next(self) except *:
         cdef int32to32_key_val_pair result 
@@ -159,4 +163,15 @@ def Int32to32Map_from_float32_buffer(key_int32_t[:] keys, float32_t[:] vals,doub
     return res
     
 
+cpdef void swap_int32map(Int32to32Map a, Int32to32Map b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef kh_int32to32map_t *tmp=a.table
+    a.table=b.table
+    b.table=tmp
+
+    cdef bint tmp_for_int=a.for_int
+    a.for_int=b.for_int
+    b.for_int=tmp_for_int
 

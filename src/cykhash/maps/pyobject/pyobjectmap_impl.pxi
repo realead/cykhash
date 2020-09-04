@@ -144,6 +144,17 @@ cdef class PyObjectMapView:
     def __iter__(self):
         return self.get_iter()
 
+    def __len__(self):
+        return self.parent.size()
+
+    def __contains__(self, x):
+        for y in self:
+            if x==y:
+                return True
+        return False
+
+
+
 ### Utils:
 
 def PyObjectMap_from_object_buffer(object[:] keys, object[:] vals, double size_hint=0.0):

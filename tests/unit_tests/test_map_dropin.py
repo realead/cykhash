@@ -106,8 +106,20 @@ class SwapTester(unittest.TestCase):
 
 @uttemplate.from_templates(all_maps)
 class DictViewTester(unittest.TestCase): 
-    def template_init_int_from_iter(self, set_type):
-        pass
+    def template_len(self, set_type):
+        a=set_type([(1,2),(3,1),(5,3)])
+        self.assertEqual(len(a.keys()), 3)
+        self.assertEqual(len(a.items()), 3)
+        self.assertEqual(len(a.values()), 3)
+
+    def template_in(self, set_type):
+        a=set_type([(1,2),(3,1),(5,3)])
+        self.assertEqual(5 in a.keys(), True)
+        self.assertEqual(6 in a.keys(), False)
+        self.assertEqual(2 in a.values(), True)
+        self.assertEqual(6 in a.values(), False)
+        self.assertEqual((3,1) in a.items(), True)
+        self.assertEqual((5,5) in a.items(), False)
 
    
 

@@ -164,6 +164,15 @@ cdef class Int32to32MapView:
     def __iter__(self):
         return self.get_iter()
 
+    def __len__(self):
+        return self.parent.size()
+
+    def __contains__(self, x):
+        for y in self:
+            if x==y:
+                return True
+        return False
+
 
 
 ### Utils:

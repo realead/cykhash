@@ -24,7 +24,7 @@ cdef class PyObjectMap:
     cdef kh_pyobjectmap_t *table
 
     cdef bint contains(self, object key) except *
-    cdef PyObjectMapIterator get_iter(self)
+    cdef PyObjectMapIterator get_iter(self, int view_type)
     cdef khint_t size(self) 
     cpdef void put_object(self, object key, object value) except *
     cpdef object get_object(self, object key)
@@ -39,11 +39,18 @@ cdef struct pyobject_key_val_pair:
 cdef class PyObjectMapIterator:
     cdef khint_t   it
     cdef khint_t   size
+    cdef int       view_type
     cdef PyObjectMap  parent
 
     cdef bint has_next(self) except *
     cdef pyobject_key_val_pair next(self) except *
     cdef void __move(self) except *
+
+cdef class PyObjectMapView:
+    cdef PyObjectMap  parent
+    cdef int       view_type
+
+    cdef PyObjectMapIterator get_iter(self)
 
 # other help functions:
 cpdef void swap_pyobjectmap(PyObjectMap a, PyObjectMap b) except *

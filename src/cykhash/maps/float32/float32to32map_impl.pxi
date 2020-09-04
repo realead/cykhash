@@ -84,24 +84,28 @@ cdef class Float32to32Map:
             return self.get_int32(key)
         else:
             return self.get_float32(key)
-
-    
+  
     cpdef void discard(self, key_float32_t key) except *:
         cdef khint_t k
         k = kh_get_float32to32map(self.table, key)
         if k != self.table.n_buckets:
             kh_del_float32to32map(self.table, k)
 
-
-    cdef Float32to32MapIterator get_iter(self):
-        return Float32to32MapIterator(self)
-
-    def __iter__(self):
-        return self.get_iter()
+    cdef Float32to32MapIterator get_iter(self, int view_type):
+        return Float32to32MapIterator(self, view_type)
 
     def clear(self):
         cdef Float32to32Map tmp=Float32to32Map()
         swap_float32map(self, tmp)
+
+    def keys(self):
+        return Float32to32MapView(self, 0)
+
+    def values(self):
+        return Float32to32MapView(self, 1)
+
+    def items(self):
+        return Float32to32MapView(self, 2)
 
 
 ### Iterator:
@@ -122,19 +126,46 @@ cdef class Float32to32MapIterator:
         self.__move()
         return result
 
-
-    def __cinit__(self, Float32to32Map parent):
+    def __cinit__(self, Float32to32Map parent, view_type):
         self.parent = parent
         self.size = parent.table.n_buckets
+        self.view_type = view_type
         #search the start:
         self.it = 0
         self.__move()
 
     def __next__(self):
+        cdef float32to32_key_val_pair pair
         if self.has_next():
-            return self.next()
+            pair=self.next()
+            if self.view_type == 0:           # keys
+                return pair.key
+            if self.view_type == 1:           # vals
+                if self.parent.for_int:
+                    return pair.val
+                else:
+                    i32_to_f32(pair.val)
+            else:                        # items
+                if self.parent.for_int:
+                    return (pair.key, pair.val)
+                else:
+                    return (pair.key, i32_to_f32(pair.val))
         else:
             raise StopIteration
+
+
+cdef class Float32to32MapView:
+    cdef Float32to32MapIterator get_iter(self):
+        return Float32to32MapIterator(self.parent, self.view_type)  
+
+    def __cinit__(self, Float32to32Map parent, view_type):
+        self.parent = parent
+        self.view_type = view_type
+
+    def __iter__(self):
+        return self.get_iter()
+
+
 
 ### Utils:
 

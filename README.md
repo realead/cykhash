@@ -250,7 +250,8 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
 #### Release 1.1.0 (??.??.2020):
 
   * Implementation of `any`, `all`, `none` and `count_if`
-  * Hash-sets are now (almost) drop-in replacements of Python's sets.
+  * Hash-sets are now (almost) drop-in replacements of Python's sets
+  * Breaking change: maps are no longer iterable, but return mapviews `keys()`, `values()` and `items()`, which more or less corresponds to dictviews (but for mapsview doesn't hold that "Dictionary order is guaranteed to be insertion order.").
 
 #### Release 1.0.2 (30.05.2020):
 

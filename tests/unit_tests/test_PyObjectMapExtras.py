@@ -31,7 +31,7 @@ class RefCounterTester(unittest.TestCase):
       old_ref_cnt = sys.getrefcount(a)
       s[a] = a
       self.assertEqual(sys.getrefcount(a), old_ref_cnt+2)
-      lst = list(s)
+      lst = list(s.items())
       # now also lst helds two additional references
       self.assertEqual(sys.getrefcount(a), old_ref_cnt+4)
 
@@ -41,9 +41,9 @@ class RefCounterTester(unittest.TestCase):
       s=PyObjectMap()
       s[a] = a
       s[b] = b
-      lst = list(s)
+      lst = list(s.items())
       self.assertEqual(len(lst), 1)
-      self.assertTrue(a is lst[0]['key'])
+      self.assertTrue(a is lst[0][0])
 
    def test_discard_with_equivalent_object(self):
       a,b =float("nan"), float("nan")

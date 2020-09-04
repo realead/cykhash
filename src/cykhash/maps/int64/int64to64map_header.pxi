@@ -33,7 +33,7 @@ cdef class Int64to64Map:
     cdef bint for_int
 
     cdef bint contains(self, key_int64_t key) except *
-    cdef Int64to64MapIterator get_iter(self)
+    cdef Int64to64MapIterator get_iter(self, int view_type)
     cdef khint_t size(self) 
     cpdef void put_int64(self, key_int64_t key, int64_t value) except *
     cpdef int64_t get_int64(self, key_int64_t key) except *
@@ -50,11 +50,19 @@ cdef struct int64to64_key_val_pair:
 cdef class Int64to64MapIterator:
     cdef khint_t   it
     cdef khint_t   size
+    cdef int       view_type
     cdef Int64to64Map  parent
 
     cdef bint has_next(self) except *
     cdef int64to64_key_val_pair next(self) except *
     cdef void __move(self) except *
+
+
+cdef class Int64to64MapView:
+    cdef Int64to64Map  parent
+    cdef int       view_type
+
+    cdef Int64to64MapIterator get_iter(self)
 
 # other help functions:
 cpdef void swap_int64map(Int64to64Map a, Int64to64Map b) except *

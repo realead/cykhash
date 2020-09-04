@@ -76,15 +76,21 @@ cdef class PyObjectMap:
             kh_del_pyobjectmap(self.table, k)
 
 
-    cdef PyObjectMapIterator get_iter(self):
-        return PyObjectMapIterator(self)
-
-    def __iter__(self):
-        return self.get_iter()
+    cdef PyObjectMapIterator get_iter(self, int view_type):
+        return PyObjectMapIterator(self, view_type)
 
     def clear(self):
         cdef PyObjectMap tmp=PyObjectMap()
         swap_pyobjectmap(self, tmp)
+
+    def keys(self):
+        return PyObjectMapView(self, 0)
+
+    def values(self):
+        return PyObjectMapView(self, 1)
+
+    def items(self):
+        return PyObjectMapView(self, 2)
 
 
 ### Iterator:
@@ -106,20 +112,38 @@ cdef class PyObjectMapIterator:
         return result
 
 
-    def __cinit__(self, PyObjectMap parent):
+    def __cinit__(self, PyObjectMap parent, int view_type):
         self.parent = parent
         self.size = parent.table.n_buckets
+        self.view_type = view_type
         #search the start:
         self.it = 0
         self.__move()
 
     def __next__(self):
-        cdef pyobject_key_val_pair p
+        cdef pyobject_key_val_pair pair
         if self.has_next():
-            p = self.next()
-            return {'key' : <object>p.key, 'val' : <object>p.val}
+            pair = self.next()
+            if self.view_type == 0:           # keys
+                return <object>pair.key
+            if self.view_type == 1:           # vals
+                return <object>pair.val
+            else:                            # items
+                return (<object>pair.key, <object>pair.val)
         else:
             raise StopIteration
+
+
+cdef class PyObjectMapView:
+    cdef PyObjectMapIterator get_iter(self):
+        return PyObjectMapIterator(self.parent, self.view_type)  
+
+    def __cinit__(self, PyObjectMap parent, view_type):
+        self.parent = parent
+        self.view_type = view_type
+
+    def __iter__(self):
+        return self.get_iter()
 
 ### Utils:
 

@@ -13,16 +13,16 @@ class MapIteratorTester(unittest.TestCase):
          cy_map[i] = i+1
          py_map[i] = i+1
         clone = dict()
-        for x in cy_map:
-         clone[x['key']] = x['val'] 
+        for x in cy_map.items():
+         clone[x[0]] = x[1] 
         self.assertEqual(py_map, clone)
 
-    def template_iterate_after_clear(self, set_type):
-        cy_set = set_type(zip(range(1000), range(1000)))
-        it = iter(cy_set)
+    def template_iterate_after_clear(self, map_type):
+        cy_map = map_type(zip(range(1000), range(1000)))
+        it = iter(cy_map.items())
         for x in range(1000):
             next(it)
-        cy_set.clear()
+        cy_map.clear()
         with self.assertRaises(StopIteration):
             next(it)
 

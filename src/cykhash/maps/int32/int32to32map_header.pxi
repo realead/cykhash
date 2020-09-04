@@ -33,7 +33,7 @@ cdef class Int32to32Map:
     cdef bint for_int
 
     cdef bint contains(self, key_int32_t key) except *
-    cdef Int32to32MapIterator get_iter(self)
+    cdef Int32to32MapIterator get_iter(self, int view_type)
     cdef khint_t size(self) 
     cpdef void put_int32(self, key_int32_t key, int32_t value) except *
     cpdef int32_t get_int32(self, key_int32_t key) except *
@@ -50,11 +50,19 @@ cdef struct int32to32_key_val_pair:
 cdef class Int32to32MapIterator:
     cdef khint_t   it
     cdef khint_t   size
+    cdef int       view_type
     cdef Int32to32Map  parent
 
     cdef bint has_next(self) except *
     cdef int32to32_key_val_pair next(self) except *
     cdef void __move(self) except *
+
+
+cdef class Int32to32MapView:
+    cdef Int32to32Map  parent
+    cdef int       view_type
+
+    cdef Int32to32MapIterator get_iter(self)
 
 # other help functions:
 cpdef void swap_int32map(Int32to32Map a, Int32to32Map b) except *

@@ -26,7 +26,7 @@ def use_float64(keys, values, query):
 
 
 def as_py_list_int64(Int64to64Map db):
-    cdef Int64to64MapIterator it = db.get_iter()
+    cdef Int64to64MapIterator it = db.get_iter(2)
     cdef int64to64_key_val_pair p
     res=[]
     while it.has_next():
@@ -61,7 +61,7 @@ def use_float32(keys, values, query):
 
 
 def as_py_list_int32(Int32to32Map db):
-    cdef Int32to32MapIterator it = db.get_iter()
+    cdef Int32to32MapIterator it = db.get_iter(2)
     cdef int32to32_key_val_pair p
     res=[]
     while it.has_next():
@@ -96,7 +96,7 @@ def use_float64_float64(keys, values, query):
 
 
 def as_py_list_int64_float64(Float64to64Map db):
-    cdef Float64to64MapIterator it = db.get_iter()
+    cdef Float64to64MapIterator it = db.get_iter(2)
     cdef float64to64_key_val_pair p
     res=[]
     while it.has_next():
@@ -130,7 +130,7 @@ def use_float32_float32(keys, values, query):
 
 
 def as_py_list_int32_float32(Float32to32Map db):
-    cdef Float32to32MapIterator it = db.get_iter()
+    cdef Float32to32MapIterator it = db.get_iter(2)
     cdef float32to32_key_val_pair p
     res=[]
     while it.has_next():
@@ -154,7 +154,7 @@ def use_pyobject(keys, values, query):
     return res
 
 def as_py_list_pyobject(PyObjectMap db):
-    cdef PyObjectMapIterator it = db.get_iter()
+    cdef PyObjectMapIterator it = db.get_iter(2)
     cdef pyobject_key_val_pair p
     res=[]
     while it.has_next():

@@ -84,24 +84,28 @@ cdef class Float64to64Map:
             return self.get_int64(key)
         else:
             return self.get_float64(key)
-
-    
+  
     cpdef void discard(self, key_float64_t key) except *:
         cdef khint_t k
         k = kh_get_float64to64map(self.table, key)
         if k != self.table.n_buckets:
             kh_del_float64to64map(self.table, k)
 
-
-    cdef Float64to64MapIterator get_iter(self):
-        return Float64to64MapIterator(self)
-
-    def __iter__(self):
-        return self.get_iter()
+    cdef Float64to64MapIterator get_iter(self, int view_type):
+        return Float64to64MapIterator(self, view_type)
 
     def clear(self):
         cdef Float64to64Map tmp=Float64to64Map()
         swap_float64map(self, tmp)
+
+    def keys(self):
+        return Float64to64MapView(self, 0)
+
+    def values(self):
+        return Float64to64MapView(self, 1)
+
+    def items(self):
+        return Float64to64MapView(self, 2)
 
 
 ### Iterator:
@@ -122,19 +126,46 @@ cdef class Float64to64MapIterator:
         self.__move()
         return result
 
-
-    def __cinit__(self, Float64to64Map parent):
+    def __cinit__(self, Float64to64Map parent, view_type):
         self.parent = parent
         self.size = parent.table.n_buckets
+        self.view_type = view_type
         #search the start:
         self.it = 0
         self.__move()
 
     def __next__(self):
+        cdef float64to64_key_val_pair pair
         if self.has_next():
-            return self.next()
+            pair=self.next()
+            if self.view_type == 0:           # keys
+                return pair.key
+            if self.view_type == 1:           # vals
+                if self.parent.for_int:
+                    return pair.val
+                else:
+                    i64_to_f64(pair.val)
+            else:                        # items
+                if self.parent.for_int:
+                    return (pair.key, pair.val)
+                else:
+                    return (pair.key, i64_to_f64(pair.val))
         else:
             raise StopIteration
+
+
+cdef class Float64to64MapView:
+    cdef Float64to64MapIterator get_iter(self):
+        return Float64to64MapIterator(self.parent, self.view_type)  
+
+    def __cinit__(self, Float64to64Map parent, view_type):
+        self.parent = parent
+        self.view_type = view_type
+
+    def __iter__(self):
+        return self.get_iter()
+
+
 
 ### Utils:
 

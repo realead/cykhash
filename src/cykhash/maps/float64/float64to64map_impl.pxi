@@ -112,7 +112,7 @@ cdef class Float64to64Map:
 cdef class Float64to64MapIterator:
 
     cdef void __move(self) except *:
-        while self.it<self.size and not kh_exist_float64to64map(self.parent.table, self.it):
+        while self.it<self.parent.table.n_buckets and not kh_exist_float64to64map(self.parent.table, self.it):
               self.it+=1       
 
     cdef bint has_next(self) except *:
@@ -128,7 +128,6 @@ cdef class Float64to64MapIterator:
 
     def __cinit__(self, Float64to64Map parent, view_type):
         self.parent = parent
-        self.size = parent.table.n_buckets
         self.view_type = view_type
         #search the start:
         self.it = 0

@@ -26,3 +26,16 @@ class SetIteratorTester(unittest.TestCase):
         with self.assertRaises(StopIteration):
             next(it)
 
+    def template_iterate_after_growing(self, set_type):
+        cy_set = set_type()
+        it = iter(cy_set)
+        #change bucket size
+        for i in range(1000):
+            cy_set.add(i)
+        #make sure new size is used
+        lst = []
+        with self.assertRaises(StopIteration):
+            for x in range(1001):
+                lst.append(next(it))
+        self.assertEqual(set(lst), set(range(1000)))
+

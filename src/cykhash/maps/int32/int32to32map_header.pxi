@@ -49,7 +49,6 @@ cdef struct int32to32_key_val_pair:
 
 cdef class Int32to32MapIterator:
     cdef khint_t   it
-    cdef khint_t   size
     cdef int       view_type
     cdef Int32to32Map  parent
 

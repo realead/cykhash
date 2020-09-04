@@ -38,7 +38,6 @@ cdef struct pyobject_key_val_pair:
 
 cdef class PyObjectMapIterator:
     cdef khint_t   it
-    cdef khint_t   size
     cdef int       view_type
     cdef PyObjectMap  parent
 

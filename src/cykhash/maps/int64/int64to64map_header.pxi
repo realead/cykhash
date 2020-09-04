@@ -49,7 +49,6 @@ cdef struct int64to64_key_val_pair:
 
 cdef class Int64to64MapIterator:
     cdef khint_t   it
-    cdef khint_t   size
     cdef int       view_type
     cdef Int64to64Map  parent
 

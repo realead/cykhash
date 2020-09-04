@@ -38,7 +38,6 @@ cdef class Float64Set:
 
 cdef class Float64SetIterator:
     cdef khint_t   it
-    cdef khint_t   size
     cdef Float64Set  parent
 
     cdef bint has_next(self) except *

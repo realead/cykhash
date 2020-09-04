@@ -49,7 +49,6 @@ cdef struct float64to64_key_val_pair:
 
 cdef class Float64to64MapIterator:
     cdef khint_t   it
-    cdef khint_t   size
     cdef int       view_type
     cdef Float64to64Map  parent
 

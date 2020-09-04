@@ -38,7 +38,6 @@ cdef class Int64Set:
 
 cdef class Int64SetIterator:
     cdef khint_t   it
-    cdef khint_t   size
     cdef Int64Set  parent
 
     cdef bint has_next(self) except *

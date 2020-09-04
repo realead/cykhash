@@ -97,7 +97,7 @@ cdef class PyObjectMap:
 cdef class PyObjectMapIterator:
 
     cdef void __move(self) except *:
-        while self.it<self.size and not kh_exist_pyobjectmap(self.parent.table, self.it):
+        while self.it<self.parent.table.n_buckets and not kh_exist_pyobjectmap(self.parent.table, self.it):
               self.it+=1       
 
     cdef bint has_next(self) except *:
@@ -114,7 +114,6 @@ cdef class PyObjectMapIterator:
 
     def __cinit__(self, PyObjectMap parent, int view_type):
         self.parent = parent
-        self.size = parent.table.n_buckets
         self.view_type = view_type
         #search the start:
         self.it = 0

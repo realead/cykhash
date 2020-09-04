@@ -26,3 +26,16 @@ class MapIteratorTester(unittest.TestCase):
         with self.assertRaises(StopIteration):
             next(it)
 
+    def template_iterate_after_growing(self, map_type):
+        cy_map = map_type()
+        it = iter(cy_map.keys())
+        #change bucket size
+        for i in range(1000):
+            cy_map[i]=i
+        #make sure new size is used
+        lst = []
+        with self.assertRaises(StopIteration):
+            for x in range(1001):
+                lst.append(next(it))
+        self.assertEqual(set(lst), set(range(1000)))
+

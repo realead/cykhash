@@ -42,7 +42,7 @@ cdef void _discard_pyobject(kh_pyobjectset_t *table, object key) except *:
 cdef class PyObjectSetIterator:
 
     cdef void __move(self) except *:
-        while self.it<self.size and not kh_exist_pyobjectset(self.parent.table, self.it):
+        while self.it<self.parent.table.n_buckets and not kh_exist_pyobjectset(self.parent.table, self.it):
               self.it+=1       
 
     cdef bint has_next(self) except *:
@@ -57,7 +57,6 @@ cdef class PyObjectSetIterator:
 
     def __cinit__(self, PyObjectSet parent):
         self.parent = parent
-        self.size = parent.table.n_buckets
         #search the start:
         self.it = 0
         self.__move()

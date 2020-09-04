@@ -38,7 +38,6 @@ cdef class Float32Set:
 
 cdef class Float32SetIterator:
     cdef khint_t   it
-    cdef khint_t   size
     cdef Float32Set  parent
 
     cdef bint has_next(self) except *

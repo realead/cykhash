@@ -34,7 +34,7 @@ cdef void _discard_int32(kh_int32set_t *table, int32_t key) nogil:
 cdef class Int32SetIterator:
 
     cdef void __move(self) except *:
-        while self.it<self.size and not kh_exist_int32set(self.parent.table, self.it):
+        while self.it<self.parent.table.n_buckets and not kh_exist_int32set(self.parent.table, self.it):
               self.it+=1       
 
     cdef bint has_next(self) except *:
@@ -49,7 +49,6 @@ cdef class Int32SetIterator:
 
     def __cinit__(self, Int32Set parent):
         self.parent = parent
-        self.size = parent.table.n_buckets
         #search the start:
         self.it = 0
         self.__move()

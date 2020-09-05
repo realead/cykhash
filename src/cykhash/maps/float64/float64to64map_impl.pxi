@@ -107,6 +107,9 @@ cdef class Float64to64Map:
     def items(self):
         return Float64to64MapView(self, 2)
 
+    def __iter__(self):
+        return iter(self.keys())
+
 
 ### Iterator:
 cdef class Float64to64MapIterator:

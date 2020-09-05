@@ -49,6 +49,12 @@ class MapDropinTester(unittest.TestCase):
         self.assertEqual(len(a), 0)
 
 
+    def template_iterable(self, set_type):
+        a=set_type([(1,4), (2,3)])      
+        keys = list(a)
+        self.assertEqual(set(keys), {1,2})
+
+
 @uttemplate.from_templates(all_maps)
 class SwapTester(unittest.TestCase): 
     def template_with_none(self, set_type):

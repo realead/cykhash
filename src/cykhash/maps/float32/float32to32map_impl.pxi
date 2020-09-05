@@ -107,6 +107,9 @@ cdef class Float32to32Map:
     def items(self):
         return Float32to32MapView(self, 2)
 
+    def __iter__(self):
+        return iter(self.keys())
+
 
 ### Iterator:
 cdef class Float32to32MapIterator:

@@ -92,6 +92,9 @@ cdef class PyObjectMap:
     def items(self):
         return PyObjectMapView(self, 2)
 
+    def __iter__(self):
+        return iter(self.keys())
+
 
 ### Iterator:
 cdef class PyObjectMapIterator:

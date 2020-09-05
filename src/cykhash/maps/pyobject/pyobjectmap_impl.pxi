@@ -101,14 +101,15 @@ cdef class PyObjectMapIterator:
               self.it+=1       
 
     cdef bint has_next(self) except *:
+        self.__move()
         return self.it < self.parent.table.n_buckets
-        
+      
+    # doesn't work if there was change between last has_next() and next()        
     cdef pyobject_key_val_pair next(self) except *:
         cdef pyobject_key_val_pair result 
         result.key = self.parent.table.keys[self.it]
         result.val = self.parent.table.vals[self.it]
         self.it+=1#ensure at least one move!
-        self.__move()
         return result
 
 

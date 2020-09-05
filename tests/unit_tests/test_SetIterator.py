@@ -39,3 +39,17 @@ class SetIteratorTester(unittest.TestCase):
                 lst.append(next(it))
         self.assertEqual(set(lst), set(range(1000)))
 
+    def template_iterate_after_growing2(self, set_type):
+        cy_set = set_type()
+        cy_set.add(42)
+        it = iter(cy_set)
+        next(it) #iterator shows to end now
+        cy_set.add(11)
+        cy_set.add(15)
+        cy_set.add(13)
+        #old end is no longer an end
+        try:
+            self.assertTrue(next(it) in {42,11,15,13})
+        except StopIteration:
+            pass # stop iteration could be an acceptable outcome
+

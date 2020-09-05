@@ -38,12 +38,13 @@ cdef class Float32SetIterator:
               self.it+=1       
 
     cdef bint has_next(self) except *:
+        self.__move()
         return self.it < self.parent.table.n_buckets
-        
+      
+    # doesn't work if there was change between last has_next() and next()  
     cdef float32_t next(self) except *:
         cdef float32_t result = self.parent.table.keys[self.it]
         self.it+=1#ensure at least one move!
-        self.__move()
         return result
 
 

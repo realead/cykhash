@@ -116,14 +116,15 @@ cdef class Float32to32MapIterator:
               self.it+=1       
 
     cdef bint has_next(self) except *:
+        self.__move()
         return self.it < self.parent.table.n_buckets
-        
+      
+    # doesn't work if there was change between last has_next() and next()       
     cdef float32to32_key_val_pair next(self) except *:
         cdef float32to32_key_val_pair result 
         result.key = self.parent.table.keys[self.it]
         result.val = self.parent.table.vals[self.it]
         self.it+=1#ensure at least one move!
-        self.__move()
         return result
 
     def __cinit__(self, Float32to32Map parent, view_type):

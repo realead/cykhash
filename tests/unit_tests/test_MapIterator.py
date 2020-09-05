@@ -39,3 +39,16 @@ class MapIteratorTester(unittest.TestCase):
                 lst.append(next(it))
         self.assertEqual(set(lst), set(range(1000)))
 
+    def template_iterate_after_growing2(self, map_type):
+        cy_map = map_type()
+        cy_map[42]=42
+        it = iter(cy_map.keys())
+        next(it) #iterator shows to end now
+        cy_map[11]=11
+        cy_map[15]=15
+        cy_map[13]=13
+        #old end is no longer an end
+        try:
+            self.assertTrue(next(it) in {42,11,15,13})
+        except StopIteration:
+            pass # stop iteration could be an acceptable outcome

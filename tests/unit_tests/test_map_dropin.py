@@ -48,11 +48,27 @@ class MapDropinTester(unittest.TestCase):
         a.clear()
         self.assertEqual(len(a), 0)
 
-
     def template_iterable(self, set_type):
         a=set_type([(1,4), (2,3)])      
         keys = list(a)
         self.assertEqual(set(keys), {1,2})
+
+    def template_set_get_delete(self, set_type):
+        a=set_type()      
+        a[5] = 42
+        self.assertEqual(len(a), 1)
+        self.assertTrue(a)
+        self.assertEqual(a[5], 42)
+        del a[5]
+        self.assertEqual(len(a), 0)
+        self.assertFalse(a)
+        with self.assertRaises(KeyError) as context:
+            a[5]
+        self.assertEqual(context.exception.args[0], 5)
+        with self.assertRaises(KeyError) as context:
+            a[5]
+        self.assertEqual(context.exception.args[0], 5)
+        
 
 
 @uttemplate.from_templates(all_maps)

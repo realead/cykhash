@@ -74,16 +74,10 @@ cdef class Int64to64Map:
         if k != self.table.n_buckets:
             return self.table.vals[k]
         else:
-            raise KeyError("No such key: "+str(key))
+            raise KeyError(key)
 
     cpdef float64_t get_float64(self, key_int64_t key) except *:
         return i64_to_f64(self.get_int64(key))
-
-    def __getitem__(self, key):
-        if self.for_int:
-            return self.get_int64(key)
-        else:
-            return self.get_float64(key)
   
     cpdef void discard(self, key_int64_t key) except *:
         cdef khint_t k
@@ -109,6 +103,18 @@ cdef class Int64to64Map:
 
     def __iter__(self):
         return iter(self.keys())
+
+    def __getitem__(self, key):
+        if self.for_int:
+            return self.get_int64(key)
+        else:
+            return self.get_float64(key)
+
+    def __delitem__(self, key):
+        cdef size_t old=self.size()
+        self.discard(key)
+        if old==self.size():
+            raise KeyError(key)
 
 
 ### Iterator:

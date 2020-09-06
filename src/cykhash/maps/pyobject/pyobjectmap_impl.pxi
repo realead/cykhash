@@ -61,12 +61,8 @@ cdef class PyObjectMap:
         if k != self.table.n_buckets:
             return <object>self.table.vals[k]
         else:
-            raise KeyError("No such key: "+str(key))
-
-    def __getitem__(self, key):
-        return self.get_object(key)
-
-    
+            raise KeyError(key)
+ 
     cpdef void discard(self, object key) except *:
         cdef khint_t k
         k = kh_get_pyobjectmap(self.table, <pyobject_t>key)
@@ -74,7 +70,6 @@ cdef class PyObjectMap:
             Py_DECREF(<object>(self.table.keys[k]))
             Py_DECREF(<object>(self.table.vals[k]))
             kh_del_pyobjectmap(self.table, k)
-
 
     cdef PyObjectMapIterator get_iter(self, int view_type):
         return PyObjectMapIterator(self, view_type)
@@ -94,6 +89,15 @@ cdef class PyObjectMap:
 
     def __iter__(self):
         return iter(self.keys())
+
+    def __getitem__(self, key):
+        return self.get_object(key)
+
+    def __delitem__(self, key):
+        cdef size_t old=self.size()
+        self.discard(key)
+        if old==self.size():
+            raise KeyError(key)
 
 
 ### Iterator:

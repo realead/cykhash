@@ -105,7 +105,7 @@ class CommonMapTester(unittest.TestCase):
    def template_no_such_key(self, map_type):
       with self.assertRaises(KeyError) as context:
             map_type(number_of_elements_hint=100)[55]
-      self.assertTrue(context.exception.args[0].startswith("No such key: 55"))
+      self.assertEqual(context.exception.args[0], 55)
 
    def template_zero_hint_ok(self, map_type):
       s = map_type(number_of_elements_hint=0)

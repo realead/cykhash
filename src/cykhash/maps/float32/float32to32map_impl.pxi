@@ -74,16 +74,10 @@ cdef class Float32to32Map:
         if k != self.table.n_buckets:
             return self.table.vals[k]
         else:
-            raise KeyError("No such key: "+str(key))
+            raise KeyError(key)
 
     cpdef float32_t get_float32(self, key_float32_t key) except *:
         return i32_to_f32(self.get_int32(key))
-
-    def __getitem__(self, key):
-        if self.for_int:
-            return self.get_int32(key)
-        else:
-            return self.get_float32(key)
   
     cpdef void discard(self, key_float32_t key) except *:
         cdef khint_t k
@@ -109,6 +103,18 @@ cdef class Float32to32Map:
 
     def __iter__(self):
         return iter(self.keys())
+
+    def __getitem__(self, key):
+        if self.for_int:
+            return self.get_int32(key)
+        else:
+            return self.get_float32(key)
+
+    def __delitem__(self, key):
+        cdef size_t old=self.size()
+        self.discard(key)
+        if old==self.size():
+            raise KeyError(key)
 
 
 ### Iterator:

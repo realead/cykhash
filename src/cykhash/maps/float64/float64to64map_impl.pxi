@@ -92,6 +92,9 @@ cdef class Float64to64Map:
         cdef Float64to64Map tmp=Float64to64Map()
         swap_float64map(self, tmp)
 
+    def copy(self):
+        return copy_float64map(self)
+
     def keys(self):
         return Float64to64MapView(self, 0)
 
@@ -115,6 +118,9 @@ cdef class Float64to64Map:
         self.discard(key)
         if old==self.size():
             raise KeyError(key)
+
+    def __eq__(self, other):
+        return are_equal_float64map(self,other)
 
 
 ### Iterator:
@@ -223,4 +229,33 @@ cpdef void swap_float64map(Float64to64Map a, Float64to64Map b) except *:
     cdef bint tmp_for_int=a.for_int
     a.for_int=b.for_int
     b.for_int=tmp_for_int
+
+
+cpdef Float64to64Map copy_float64map(Float64to64Map s):
+    if s is None:
+        return None
+    cdef Float64to64Map result = Float64to64Map(number_of_elements_hint=s.size(), for_int=s.for_int)
+    cdef Float64to64MapIterator it=s.get_iter(2)
+    cdef float64to64_key_val_pair p
+    while it.has_next():
+        p = it.next()
+        result.put_int64(p.key, p.val)
+    return result
+
+cpdef bint are_equal_float64map(Float64to64Map a, Float64to64Map b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+    if a.for_int!=b.for_int:
+        return False
+    if a.size()!=b.size():
+        return False
+    cdef Float64to64MapIterator it=a.get_iter(2)
+    cdef float64to64_key_val_pair p
+    while it.has_next():
+        p = it.next()
+        if not b.contains(p.key):
+            return False
+    return True
+
+
 

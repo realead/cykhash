@@ -143,6 +143,115 @@ class DictViewTester(unittest.TestCase):
         self.assertEqual((3,1) in a.items(), True)
         self.assertEqual((5,5) in a.items(), False)
 
+
+@uttemplate.from_templates(all_maps)
+class AreEqualTester(unittest.TestCase): 
+
+    def template_with_none(self, map_type):
+        s=map_type([(1,1),(2,2),(3,3),(1,1)])
+        are_equal=pick_fun("are_equal", map_type)
+        with self.assertRaises(TypeError) as context:
+            are_equal(None,s)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            are_equal(s,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            are_equal(None,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+
+    def template_with_empty(self, map_type):
+        a=map_type()
+        b=map_type()
+        are_equal=pick_fun("are_equal", map_type)
+        self.assertEqual(are_equal(a,b), True)
+        self.assertEqual(are_equal(b,a), True)
+        self.assertEqual(a==b, True)
+        self.assertEqual(b==a, True)
+
+    def template_with_one_empty(self, map_type):
+        a=map_type([(1,2)])
+        b=map_type()
+        are_equal=pick_fun("are_equal", map_type)
+        self.assertEqual(are_equal(a,b), False)
+        self.assertEqual(are_equal(b,a), False)
+        self.assertEqual(a==b, False)
+        self.assertEqual(b==a, False)
+
+
+    def template_small_yes(self, map_type):
+        a=map_type([(1,2), (3,4)])
+        b=map_type([(3,4), (1,2)])
+        are_equal=pick_fun("are_equal", map_type)
+        self.assertEqual(are_equal(a,b), True)
+        self.assertEqual(are_equal(b,a), True)
+        self.assertEqual(a==b, True)
+        self.assertEqual(b==a, True)
+
+    def template_small_no(self, map_type):
+        a=map_type([(1,2), (3,4)])
+        b=map_type([(3,4), (2,2)])
+        are_equal=pick_fun("are_equal", map_type)
+        self.assertEqual(are_equal(a,b), False)
+        self.assertEqual(are_equal(b,a), False)
+        self.assertEqual(a==b, False)
+        self.assertEqual(b==a, False)
+
+    def template_small_no_diffsizes(self, map_type):
+        a=map_type([(1,2), (3,4), (3,4)])
+        b=map_type([(3,4), (2,2), (3,3)])
+        are_equal=pick_fun("are_equal", map_type)
+        self.assertEqual(are_equal(a,b), False)
+        self.assertEqual(are_equal(b,a), False)
+        self.assertEqual(a==b, False)
+        self.assertEqual(b==a, False)
+
+    @uttemplate.for_types(nopython_maps)
+    def template_small_no_diff_for_int(self, map_type):
+        a=map_type([], for_int=True)
+        b=map_type([], for_int=False)
+        are_equal=pick_fun("are_equal", map_type)
+        self.assertEqual(are_equal(a,b), False)
+        self.assertEqual(are_equal(b,a), False)
+        self.assertEqual(a==b, False)
+        self.assertEqual(b==a, False)
+
+    def template_large_method(self, map_type):
+        a=map_type(zip(range(33,10000,3), range(33,10000,3)))
+        b=map_type(zip(range(33,10000,3), range(33,10000,3)))
+        are_equal=pick_fun("are_equal", map_type)
+        self.assertEqual(are_equal(a,b), True)
+        self.assertEqual(are_equal(b,a), True)
+        self.assertEqual(a==b, True)
+        self.assertEqual(b==a, True)
+
+
+@uttemplate.from_templates(all_maps)
+class CopyTester(unittest.TestCase): 
+
+    def template_with_none(self, map_type):
+        copy=pick_fun("copy", map_type)
+        self.assertTrue(copy(None) is None)
+
+    def template_with_empty(self, map_type):
+        a=map_type([])
+        copy=pick_fun("copy", map_type)
+        self.assertEqual(len(copy(a)), 0)
+
+    def template_small(self, map_type):
+        a=map_type([(1,1),(2,2),(3,3),(1,1)])
+        copy=pick_fun("copy", map_type)
+        self.assertEqual(copy(a)==a, True)
+
+    def template_large(self, map_type):
+        a=map_type(zip(range(33,10000,3), range(33,10000,3)))
+        copy=pick_fun("copy", map_type)
+        self.assertEqual(copy(a)==a, True)
+
+    def template_large_method(self, map_type):
+        a=map_type(zip(range(33,10000,3), range(33,10000,3)))
+        self.assertEqual(a.copy()==a, True)
+
    
 
 

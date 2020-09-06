@@ -92,6 +92,9 @@ cdef class Int32to32Map:
         cdef Int32to32Map tmp=Int32to32Map()
         swap_int32map(self, tmp)
 
+    def copy(self):
+        return copy_int32map(self)
+
     def keys(self):
         return Int32to32MapView(self, 0)
 
@@ -115,6 +118,9 @@ cdef class Int32to32Map:
         self.discard(key)
         if old==self.size():
             raise KeyError(key)
+
+    def __eq__(self, other):
+        return are_equal_int32map(self,other)
 
 
 ### Iterator:
@@ -223,4 +229,33 @@ cpdef void swap_int32map(Int32to32Map a, Int32to32Map b) except *:
     cdef bint tmp_for_int=a.for_int
     a.for_int=b.for_int
     b.for_int=tmp_for_int
+
+
+cpdef Int32to32Map copy_int32map(Int32to32Map s):
+    if s is None:
+        return None
+    cdef Int32to32Map result = Int32to32Map(number_of_elements_hint=s.size(), for_int=s.for_int)
+    cdef Int32to32MapIterator it=s.get_iter(2)
+    cdef int32to32_key_val_pair p
+    while it.has_next():
+        p = it.next()
+        result.put_int32(p.key, p.val)
+    return result
+
+cpdef bint are_equal_int32map(Int32to32Map a, Int32to32Map b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+    if a.for_int!=b.for_int:
+        return False
+    if a.size()!=b.size():
+        return False
+    cdef Int32to32MapIterator it=a.get_iter(2)
+    cdef int32to32_key_val_pair p
+    while it.has_next():
+        p = it.next()
+        if not b.contains(p.key):
+            return False
+    return True
+
+
 

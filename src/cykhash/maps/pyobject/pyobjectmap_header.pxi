@@ -23,7 +23,7 @@ cdef extern from *:
 cdef class PyObjectMap:
     cdef kh_pyobjectmap_t *table
 
-    cdef bint contains(self, object key) except *
+    cdef bint contains(self, pyobject_t key) except *
     cdef PyObjectMapIterator get_iter(self, int view_type)
     cdef khint_t size(self) 
     cpdef void put_object(self, object key, object value) except *
@@ -53,5 +53,7 @@ cdef class PyObjectMapView:
 
 # other help functions:
 cpdef void swap_pyobjectmap(PyObjectMap a, PyObjectMap b) except *
+cpdef PyObjectMap copy_pyobjectmap(PyObjectMap s)
+cpdef bint are_equal_pyobjectmap(PyObjectMap a, PyObjectMap b) except *
 
 

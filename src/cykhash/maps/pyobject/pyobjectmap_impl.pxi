@@ -31,12 +31,12 @@ cdef class PyObjectMap:
             self.table = NULL
 
     def __contains__(self, object key):
-        return self.contains(key)
+        return self.contains(<pyobject_t>key)
 
 
-    cdef bint contains(self, object key) except *:
+    cdef bint contains(self, pyobject_t key) except *:
         cdef khint_t k
-        k = kh_get_pyobjectmap(self.table, <pyobject_t>key)
+        k = kh_get_pyobjectmap(self.table, key)
         return k != self.table.n_buckets
 
 
@@ -78,6 +78,9 @@ cdef class PyObjectMap:
         cdef PyObjectMap tmp=PyObjectMap()
         swap_pyobjectmap(self, tmp)
 
+    def copy(self):
+        return copy_pyobjectmap(self)
+
     def keys(self):
         return PyObjectMapView(self, 0)
 
@@ -98,6 +101,9 @@ cdef class PyObjectMap:
         self.discard(key)
         if old==self.size():
             raise KeyError(key)
+
+    def __eq__(self, other):
+        return are_equal_pyobjectmap(self,other)
 
 
 ### Iterator:
@@ -185,7 +191,27 @@ cpdef void swap_pyobjectmap(PyObjectMap a, PyObjectMap b) except *:
     a.table=b.table
     b.table=tmp
 
+cpdef PyObjectMap copy_pyobjectmap(PyObjectMap s):
+    if s is None:
+        return None
+    cdef PyObjectMap result = PyObjectMap(number_of_elements_hint=s.size())
+    cdef PyObjectMapIterator it=s.get_iter(2)
+    cdef pyobject_key_val_pair p
+    while it.has_next():
+        p = it.next()
+        result.put_object(<object>p.key, <object>p.val)
+    return result
 
-    
-
+cpdef bint are_equal_pyobjectmap(PyObjectMap a, PyObjectMap b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+    if a.size()!=b.size():
+        return False
+    cdef PyObjectMapIterator it=a.get_iter(2)
+    cdef pyobject_key_val_pair p
+    while it.has_next():
+        p = it.next()
+        if not b.contains(p.key):
+            return False
+    return True
 

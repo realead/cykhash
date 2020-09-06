@@ -95,6 +95,22 @@ cdef class Float32to32Map:
     def copy(self):
         return copy_float32map(self)
 
+    def get(self, *args, **kwargs):
+        if len(args)==0:
+            raise TypeError("get() expected at least 1 arguments, got 0")
+        if len(args)>2:
+            raise TypeError("get() expected at most 2 arguments, got {0}".format(len(args)))
+        if kwargs:
+            raise TypeError("get() takes no keyword arguments")
+        key = args[0]
+        try:
+            return self[key]
+        except KeyError:
+            if len(args)==1:
+                return None
+            return args[1]
+
+
     def keys(self):
         return Float32to32MapView(self, 0)
 

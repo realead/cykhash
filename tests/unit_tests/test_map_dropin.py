@@ -53,7 +53,7 @@ class MapDropinTester(unittest.TestCase):
         keys = list(a)
         self.assertEqual(set(keys), {1,2})
 
-    def template_set_get_delete(self, set_type):
+    def template_setintem_getitem_delitem(self, set_type):
         a=set_type()      
         a[5] = 42
         self.assertEqual(len(a), 1)
@@ -68,6 +68,22 @@ class MapDropinTester(unittest.TestCase):
         with self.assertRaises(KeyError) as context:
             a[5]
         self.assertEqual(context.exception.args[0], 5)
+
+    def template_get(self, set_type):
+        a=set_type([(1,2)])
+        self.assertEqual(a.get(1), 2)
+        self.assertTrue(a.get(2) is None)
+        self.assertEqual(a.get(1, 5), 2)
+        self.assertEqual(a.get(2, 5), 5)      
+        with self.assertRaises(TypeError) as context:
+            a.get(1,2,4)
+        self.assertEqual("get() expected at most 2 arguments, got 3", context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            a.get(1,default=9)
+        self.assertEqual("get() takes no keyword arguments", context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            a.get()
+        self.assertEqual("get() expected at least 1 arguments, got 0", context.exception.args[0])
         
 
 

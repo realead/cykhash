@@ -67,3 +67,4 @@ cdef class Int32to32MapView:
 cpdef void swap_int32map(Int32to32Map a, Int32to32Map b) except *
 cpdef Int32to32Map copy_int32map(Int32to32Map s)
 cpdef bint are_equal_int32map(Int32to32Map a, Int32to32Map b) except *
+cpdef void update_int32map(Int32to32Map a, Int32to32Map b) except *

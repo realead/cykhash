@@ -67,3 +67,4 @@ cdef class Float64to64MapView:
 cpdef void swap_float64map(Float64to64Map a, Float64to64Map b) except *
 cpdef Float64to64Map copy_float64map(Float64to64Map s)
 cpdef bint are_equal_float64map(Float64to64Map a, Float64to64Map b) except *
+cpdef void update_float64map(Float64to64Map a, Float64to64Map b) except *

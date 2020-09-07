@@ -95,6 +95,13 @@ cdef class Int32to32Map:
     def copy(self):
         return copy_int32map(self)
 
+    def update(self, other):
+        if isinstance(other, Int32to32Map):
+            update_int32map(self, other)
+            return
+        for key,val in other:
+            self[key]=val
+
     def setdefault(self, key, default):
         try:
             return self[key]
@@ -302,6 +309,15 @@ cpdef bint are_equal_int32map(Int32to32Map a, Int32to32Map b) except *:
         if not b.contains(p.key):
             return False
     return True
+
+cpdef void update_int32map(Int32to32Map a, Int32to32Map b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+    cdef Int32to32MapIterator it=b.get_iter(2)
+    cdef int32to32_key_val_pair p
+    while it.has_next():
+        p = it.next()
+        a.put_int32(p.key, p.val)
 
 
 

@@ -78,6 +78,13 @@ cdef class PyObjectMap:
         cdef PyObjectMap tmp=PyObjectMap()
         swap_pyobjectmap(self, tmp)
 
+    def update(self, other):
+        if isinstance(other, PyObjectMap):
+            update_pyobjectmap(self, other)
+            return
+        for key,val in other:
+            self[key]=val
+
     def copy(self):
         return copy_pyobjectmap(self)
 
@@ -260,4 +267,13 @@ cpdef bint are_equal_pyobjectmap(PyObjectMap a, PyObjectMap b) except *:
         if not b.contains(p.key):
             return False
     return True
+
+cpdef void update_pyobjectmap(PyObjectMap a, PyObjectMap b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+    cdef PyObjectMapIterator it=b.get_iter(2)
+    cdef pyobject_key_val_pair p
+    while it.has_next():
+        p = it.next()
+        a.put_object(<object>p.key, <object>p.val)
 

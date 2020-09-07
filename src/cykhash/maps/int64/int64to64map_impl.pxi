@@ -95,6 +95,13 @@ cdef class Int64to64Map:
     def copy(self):
         return copy_int64map(self)
 
+    def update(self, other):
+        if isinstance(other, Int64to64Map):
+            update_int64map(self, other)
+            return
+        for key,val in other:
+            self[key]=val
+
     def setdefault(self, key, default):
         try:
             return self[key]
@@ -302,6 +309,15 @@ cpdef bint are_equal_int64map(Int64to64Map a, Int64to64Map b) except *:
         if not b.contains(p.key):
             return False
     return True
+
+cpdef void update_int64map(Int64to64Map a, Int64to64Map b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+    cdef Int64to64MapIterator it=b.get_iter(2)
+    cdef int64to64_key_val_pair p
+    while it.has_next():
+        p = it.next()
+        a.put_int64(p.key, p.val)
 
 
 

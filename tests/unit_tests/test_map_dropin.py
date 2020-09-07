@@ -313,6 +313,75 @@ class CopyTester(unittest.TestCase):
         a=map_type(zip(range(33,10000,3), range(33,10000,3)))
         self.assertEqual(a.copy()==a, True)
 
+
+@uttemplate.from_templates(all_maps)
+class UpdateTester(unittest.TestCase): 
+    def template_with_none(self, map_type):
+        update=pick_fun("update", map_type)
+        a=map_type([(1,2),(3,1)])
+        with self.assertRaises(TypeError) as context:
+            update(None,a)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            update(a,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            update(None,None)
+        self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
+
+
+    def template_update(self, map_type):
+        update=pick_fun("update", map_type)
+        a=map_type([(1,2),(3,1)])
+        b=map_type([(1,3),(4,6)])
+        b_copy=b.copy()
+        update(a,b)
+        self.assertEqual(a, map_type([(1,3), (3,1), (4,6)]))
+        self.assertEqual(b, b_copy)
+
+    def template_update_empty(self, map_type):
+        update=pick_fun("update", map_type)
+        a=map_type([(1,2),(3,1)])
+        a_copy=a.copy()
+        b=map_type([])
+        update(a,b)
+        self.assertEqual(a, a_copy)
+        self.assertEqual(len(b), 0)
+        update(b,a)
+        self.assertEqual(b, a_copy)
+        self.assertEqual(a, a_copy)
+
+    def template_update_large(self, map_type):
+        update=pick_fun("update", map_type)
+        a=map_type(zip(range(1000), range(1,995)))
+        b=map_type(zip(range(2000), range(2000)))
+        update(a,b)
+        self.assertEqual(a, b)
+
+    def template_update_method(self, map_type):
+        a=map_type([(1,2),(3,1)])
+        b=map_type([(1,3),(4,6)])
+        b_copy=b.copy()
+        a.update(b)
+        self.assertEqual(a, map_type([(1,3), (3,1), (4,6)]))
+        self.assertEqual(b, b_copy)
+
+    def template_update_from_iter(self, map_type):
+        a=map_type([(1,2),(3,1)])
+        a.update([(1,3),(4,6)])
+        self.assertEqual(a, map_type([(1,3), (3,1), (4,6)]))
+
+    def template_update_from_wrong_iter(self, map_type):
+        a=map_type([(1,2),(3,1)])
+        with self.assertRaises(ValueError) as context:
+            a.update([(1,3),(4,6,4)])
+        self.assertEqual("too many values to unpack (expected 2)", context.exception.args[0])
+        with self.assertRaises(ValueError) as context:
+            a.update([(1,3),(4,)])
+        self.assertEqual("need more than 1 value to unpack", context.exception.args[0])
+
+
+
    
 
 

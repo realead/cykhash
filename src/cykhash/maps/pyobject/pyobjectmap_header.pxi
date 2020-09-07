@@ -55,5 +55,6 @@ cdef class PyObjectMapView:
 cpdef void swap_pyobjectmap(PyObjectMap a, PyObjectMap b) except *
 cpdef PyObjectMap copy_pyobjectmap(PyObjectMap s)
 cpdef bint are_equal_pyobjectmap(PyObjectMap a, PyObjectMap b) except *
+cpdef void update_pyobjectmap(PyObjectMap a, PyObjectMap b) except *
 
 

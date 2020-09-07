@@ -4,9 +4,9 @@ cython wrapper for khash-sets/maps, efficient implementation of `isin` and `uniq
 
 ## About:
 
-  * Brings functionality of khash (https://github.com/attractivechaos/klib/blob/master/khash.h) to Cython and can be used seamlessly in numpy or pandas.
+  * Brings functionality of khash (https://github.com/attractivechaos/klib/blob/master/khash.h) to Python and Cython and can be used seamlessly in numpy or pandas.
 
-  * Numpy's world is lacking the concept of a (hash-)set. This shortcoming is fixed and efficient (compared to pandas') `unique` and `isin` are implemented.
+  * Numpy's world is lacking the concept of a (hash-)set. This shortcoming is fixed and efficient (memory- and speedwise compared to pandas') `unique` and `isin` are implemented.
 
   * Python-set/dict have big memory-footprint. For some datatypes the overhead can be reduced by using khash by factor 4-8.
 
@@ -91,7 +91,7 @@ The most efficient way to create such sets is to use `XXXXSet_from_buffer(...)`,
 
 ### Hash maps
 
-`Int64to64Map`, `Int32to32Map`, `Float64to64Map`, `Float32to32Map`, and `PyObjectMap` are implemented. They aren't drop-in replacements of the Python-dictionaries and have only a basic interface. However, given the Cython-interface efficient extensions of functionality are easily done.
+`Int64to64Map`, `Int32to32Map`, `Float64to64Map`, `Float32to32Map`, and `PyObjectMap` are implemented. They are more or less drop-in replacements for Python's `dict` (however, not every piece of `dict`'s functionality makes sense, for example `setdefault(x, default)` without `default`-argument, because `None` cannot be inserted, also the khash-maps don't preserve the insertion order, so there is also no `reversed`). Furthermore, given the Cython-interface, efficient extensions of functionality are easily done.
 
 Biggest advantage of these sets is that they need about 4-8 times less memory than the usual Python-dictionaries and are somewhat faster for integers or floats.
 
@@ -252,6 +252,7 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
   * Implementation of `any`, `all`, `none` and `count_if`
   * Hash-sets are now (almost) drop-in replacements of Python's sets
   * Breaking change: iterator from maps doesn't no longer returns items but only keys. However there are following new methods `keys()`, `values()` and `items()`which return so called mapvies, which correspond more or less to dictviews (but for mapsview doesn't hold that "Dictionary order is guaranteed to be insertion order.").
+  * Hash-Maps are now (almpst) drop-in replacements of Python's dicts. Differences: insertion order isn't preserved, thus there is also no `reversed()`-method, `setdefault(key, default)` isn't possible without `default` because `None` cannot be inserted in the map
 
 #### Release 1.0.2 (30.05.2020):
 

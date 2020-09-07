@@ -121,6 +121,16 @@ class MapDropinTester(unittest.TestCase):
         self.assertEqual(len(a), 0)
         self.assertEqual(s, set(zip(range(1000), range(1000))))
 
+    def template_setdefault(self, map_type):
+        a=map_type()
+        self.assertEqual(a.setdefault(2,4), 4)
+        self.assertEqual(a.setdefault(2,5), 4)
+        self.assertEqual(len(a), 1)
+        self.assertEqual(a[2], 4)
+        self.assertEqual(a.setdefault(4,4444), 4444)
+        self.assertEqual(len(a), 2)
+
+
 
 @uttemplate.from_templates(all_maps)
 class SwapTester(unittest.TestCase): 

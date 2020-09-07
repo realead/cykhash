@@ -81,6 +81,13 @@ cdef class PyObjectMap:
     def copy(self):
         return copy_pyobjectmap(self)
 
+    def setdefault(self, key, default):
+        try:
+            return self[key]
+        except KeyError:
+            self[key]=default
+            return default
+
     def get(self, *args, **kwargs):
         if len(args)==0:
             raise TypeError("get() expected at least 1 arguments, got 0")

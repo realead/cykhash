@@ -110,6 +110,23 @@ cdef class Int32to32Map:
                 return None
             return args[1]
 
+    def pop(self, *args, **kwargs):
+        if len(args)==0:
+            raise TypeError("pop() expected at least 1 arguments, got 0")
+        if len(args)>2:
+            raise TypeError("pop() expected at most 2 arguments, got {0}".format(len(args)))
+        if kwargs:
+            raise TypeError("pop() takes no keyword arguments")
+        key = args[0]
+        try:
+            val = self[key]
+        except KeyError as e:
+            if len(args)==1:
+                raise e from None
+            return args[1]
+        del self[key]
+        return val
+
 
     def keys(self):
         return Int32to32MapView(self, 0)

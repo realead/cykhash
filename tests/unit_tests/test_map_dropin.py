@@ -84,6 +84,26 @@ class MapDropinTester(unittest.TestCase):
         with self.assertRaises(TypeError) as context:
             a.get()
         self.assertEqual("get() expected at least 1 arguments, got 0", context.exception.args[0])
+
+    def template_pop(self, set_type):
+        a=set_type([(1,2)])
+        self.assertTrue(a.pop(2, None) is None)
+        self.assertEqual(a.pop(1, 5), 2)
+        self.assertEqual(len(a), 0)
+        self.assertEqual(a.pop(1, 5), 5)
+        self.assertEqual(a.pop(2, 5), 5)
+        with self.assertRaises(KeyError) as context:
+            a.pop(1)
+        self.assertEqual(1, context.exception.args[0])      
+        with self.assertRaises(TypeError) as context:
+            a.pop(1,2,4)
+        self.assertEqual("pop() expected at most 2 arguments, got 3", context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            a.pop(1,default=9)
+        self.assertEqual("pop() takes no keyword arguments", context.exception.args[0])
+        with self.assertRaises(TypeError) as context:
+            a.pop()
+        self.assertEqual("pop() expected at least 1 arguments, got 0", context.exception.args[0])
         
 
 

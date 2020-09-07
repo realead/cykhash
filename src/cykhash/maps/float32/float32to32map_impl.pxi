@@ -127,6 +127,12 @@ cdef class Float32to32Map:
         del self[key]
         return val
 
+    def popitem(self):
+        if self.size()== 0:
+            raise KeyError("popitem(): dictionary is empty")
+        key = next(iter(self))
+        val = self.pop(key)
+        return (key, val)
 
     def keys(self):
         return Float32to32MapView(self, 0)

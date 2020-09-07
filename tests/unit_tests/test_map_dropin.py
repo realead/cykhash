@@ -12,35 +12,35 @@ SUFFIX={Int64to64Map : "int64map",
         Float64to64Map : "float64map",  
         Float32to32Map : "float32map",  
         PyObjectMap : "pyobjectmap"}
-def pick_fun(name, set_type):
-    return getattr(cykhash, name+"_"+SUFFIX[set_type])
+def pick_fun(name, map_type):
+    return getattr(cykhash, name+"_"+SUFFIX[map_type])
 
 
 @uttemplate.from_templates(all_maps)
 class MapDropinTester(unittest.TestCase): 
-    def template_init_int_from_iter(self, set_type):
-        m=set_type([(1,2),(3,1)])
+    def template_init_int_from_iter(self, map_type):
+        m=map_type([(1,2),(3,1)])
         self.assertEqual(len(m), 2)
         self.assertEqual(m[1],2)
         self.assertTrue(m[3],1)
 
     @uttemplate.for_types(nopython_maps)
-    def template_init_float_from_iter(self, set_type):
-        m=set_type([(1,2.2),(3,1.3)], for_int=False)
+    def template_init_float_from_iter(self, map_type):
+        m=map_type([(1,2.2),(3,1.3)], for_int=False)
         self.assertEqual(len(m), 2)
         self.assertAlmostEqual(m[1],2.2, delta=1e-5)
         self.assertAlmostEqual(m[3],1.3, delta=1e-5)
 
     @uttemplate.for_types(nopython_maps)
-    def template_init_int_from_iter_with_floats(self, set_type):
+    def template_init_int_from_iter_with_floats(self, map_type):
         # float implements __int__, thus we use it
-        m=set_type([(1,2),(3,1.3)], for_int=True)
+        m=map_type([(1,2),(3,1.3)], for_int=True)
         self.assertEqual(len(m), 2)
         self.assertEqual(m[1],2)
         self.assertEqual(m[3],1)
 
-    def template_clear(self, set_type):
-        a=set_type([(1,2), (2,3)])      
+    def template_clear(self, map_type):
+        a=map_type([(1,2), (2,3)])      
         a.clear()
         self.assertEqual(len(a), 0)
         a[5]=6
@@ -48,13 +48,13 @@ class MapDropinTester(unittest.TestCase):
         a.clear()
         self.assertEqual(len(a), 0)
 
-    def template_iterable(self, set_type):
-        a=set_type([(1,4), (2,3)])      
+    def template_iterable(self, map_type):
+        a=map_type([(1,4), (2,3)])      
         keys = list(a)
         self.assertEqual(set(keys), {1,2})
 
-    def template_setintem_getitem_delitem(self, set_type):
-        a=set_type()      
+    def template_setintem_getitem_delitem(self, map_type):
+        a=map_type()      
         a[5] = 42
         self.assertEqual(len(a), 1)
         self.assertTrue(a)
@@ -69,8 +69,8 @@ class MapDropinTester(unittest.TestCase):
             a[5]
         self.assertEqual(context.exception.args[0], 5)
 
-    def template_get(self, set_type):
-        a=set_type([(1,2)])
+    def template_get(self, map_type):
+        a=map_type([(1,2)])
         self.assertEqual(a.get(1), 2)
         self.assertTrue(a.get(2) is None)
         self.assertEqual(a.get(1, 5), 2)
@@ -85,8 +85,8 @@ class MapDropinTester(unittest.TestCase):
             a.get()
         self.assertEqual("get() expected at least 1 arguments, got 0", context.exception.args[0])
 
-    def template_pop(self, set_type):
-        a=set_type([(1,2)])
+    def template_pop(self, map_type):
+        a=map_type([(1,2)])
         self.assertTrue(a.pop(2, None) is None)
         self.assertEqual(a.pop(1, 5), 2)
         self.assertEqual(len(a), 0)
@@ -104,14 +104,29 @@ class MapDropinTester(unittest.TestCase):
         with self.assertRaises(TypeError) as context:
             a.pop()
         self.assertEqual("pop() expected at least 1 arguments, got 0", context.exception.args[0])
-        
+
+    def template_popitem(self, map_type):
+        a=map_type([(1,2)])
+        self.assertTrue(a.popitem(), (1,2))
+        self.assertEqual(len(a), 0)
+        with self.assertRaises(KeyError) as context:
+            a.popitem()
+        self.assertEqual("popitem(): dictionary is empty", context.exception.args[0])     
+
+    def template_popitem2(self, map_type):
+        a=map_type(zip(range(1000), range(1000)))
+        s=set()
+        for i in range(1000):
+            s.add(a.popitem())
+        self.assertEqual(len(a), 0)
+        self.assertEqual(s, set(zip(range(1000), range(1000))))
 
 
 @uttemplate.from_templates(all_maps)
 class SwapTester(unittest.TestCase): 
-    def template_with_none(self, set_type):
-        swap=pick_fun("swap", set_type)
-        a=set_type([(1,2),(3,1)])
+    def template_with_none(self, map_type):
+        swap=pick_fun("swap", map_type)
+        a=map_type([(1,2),(3,1)])
         with self.assertRaises(TypeError) as context:
             swap(None,a)
         self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
@@ -123,10 +138,10 @@ class SwapTester(unittest.TestCase):
         self.assertTrue("'NoneType' object is not iterable" in context.exception.args[0])
 
 
-    def template_swap(self, set_type):
-        swap=pick_fun("swap", set_type)
-        a=set_type([(1,2),(3,1),(5,3)])
-        b=set_type([(2,3),(4,6)])
+    def template_swap(self, map_type):
+        swap=pick_fun("swap", map_type)
+        a=map_type([(1,2),(3,1),(5,3)])
+        b=map_type([(2,3),(4,6)])
         swap(a,b)
         self.assertEqual(len(a), 2)
         self.assertEqual(a[2], 3)
@@ -136,10 +151,10 @@ class SwapTester(unittest.TestCase):
         self.assertEqual(b[3], 1)
         self.assertEqual(b[5], 3)
 
-    def template_empty(self, set_type):
-        swap=pick_fun("swap", set_type)
-        a=set_type(zip(range(1000), range(1000)))
-        b=set_type()
+    def template_empty(self, map_type):
+        swap=pick_fun("swap", map_type)
+        a=map_type(zip(range(1000), range(1000)))
+        b=map_type()
         swap(a,b)
         self.assertEqual(len(a), 0)
         self.assertEqual(len(b), 1000)
@@ -150,10 +165,10 @@ class SwapTester(unittest.TestCase):
 
 
     @uttemplate.for_types(nopython_maps)
-    def template_swap_for_int(self, set_type):
-        swap=pick_fun("swap", set_type)
-        a=set_type([(1,2)])
-        b=set_type([(2,3.3)], for_int=False)
+    def template_swap_for_int(self, map_type):
+        swap=pick_fun("swap", map_type)
+        a=map_type([(1,2)])
+        b=map_type([(2,3.3)], for_int=False)
         swap(a,b)
         self.assertEqual(len(a), 1)
         self.assertAlmostEqual(a[2],3.3, delta=1e-5)
@@ -164,14 +179,14 @@ class SwapTester(unittest.TestCase):
 
 @uttemplate.from_templates(all_maps)
 class DictViewTester(unittest.TestCase): 
-    def template_len(self, set_type):
-        a=set_type([(1,2),(3,1),(5,3)])
+    def template_len(self, map_type):
+        a=map_type([(1,2),(3,1),(5,3)])
         self.assertEqual(len(a.keys()), 3)
         self.assertEqual(len(a.items()), 3)
         self.assertEqual(len(a.values()), 3)
 
-    def template_in(self, set_type):
-        a=set_type([(1,2),(3,1),(5,3)])
+    def template_in(self, map_type):
+        a=map_type([(1,2),(3,1),(5,3)])
         self.assertEqual(5 in a.keys(), True)
         self.assertEqual(6 in a.keys(), False)
         self.assertEqual(2 in a.values(), True)

@@ -1,6 +1,9 @@
 from cpython.ref cimport Py_INCREF,Py_DECREF
 
 cdef class PyObjectMap:
+    @classmethod
+    def fromkeys(cls, iterable, value):
+        return Int64to64Map((key, value) for key in iterable)
 
     def __cinit__(self, iterable=None, *, number_of_elements_hint=None):
         """

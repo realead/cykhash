@@ -7,6 +7,9 @@
 #
 
 cdef class Int64to64Map:
+    @classmethod
+    def fromkeys(cls, iterable, value, for_int=True):
+        return Int64to64Map(((key, value) for key in iterable), for_int=for_int)
 
     def __cinit__(self, iterable=None, *, number_of_elements_hint=None, for_int=True):
         """

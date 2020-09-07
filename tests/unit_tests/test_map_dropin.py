@@ -39,6 +39,29 @@ class MapDropinTester(unittest.TestCase):
         self.assertEqual(m[1],2)
         self.assertEqual(m[3],1)
 
+    def template_fromkeys(self, map_type):
+        m=map_type.fromkeys([1,2,3], 55)
+        self.assertEqual(len(m), 3)
+        self.assertEqual(m[1],55)
+        self.assertTrue(m[2],55)
+        self.assertTrue(m[3],55)
+
+    @uttemplate.for_types(nopython_maps)
+    def template_fromkeys_floats(self, map_type):
+        m=map_type.fromkeys([1,2,3], 5.5, for_int=False)
+        self.assertEqual(len(m), 3)
+        self.assertAlmostEqual(m[1],5.5, delta=1e-5)
+        self.assertAlmostEqual(m[2],5.5, delta=1e-5)
+        self.assertAlmostEqual(m[3],5.5, delta=1e-5)
+
+    @uttemplate.for_types(nopython_maps)
+    def template_init_int_from_iter_with_floats(self, map_type):
+        # float implements __int__, thus we use it
+        m=map_type([(1,2),(3,1.3)], for_int=True)
+        self.assertEqual(len(m), 2)
+        self.assertEqual(m[1],2)
+        self.assertEqual(m[3],1)
+
     def template_clear(self, map_type):
         a=map_type([(1,2), (2,3)])      
         a.clear()

@@ -133,7 +133,7 @@ cpdef unique_stable_int64(int64_t[:] vals, double size_hint=0.0):
     for i in range(n):
         element = vals[i]
         res.add(element)
-        if current != len(res):
+        if current != res.size():
             mem[current] = element
             current += 1
     
@@ -177,7 +177,7 @@ cpdef unique_stable_int32(int32_t[:] vals, double size_hint=0.0):
     for i in range(n):
         element = vals[i]
         res.add(element)
-        if current != len(res):
+        if current != res.size():
             mem[current] = element
             current += 1
     
@@ -221,7 +221,7 @@ cpdef unique_stable_float64(float64_t[:] vals, double size_hint=0.0):
     for i in range(n):
         element = vals[i]
         res.add(element)
-        if current != len(res):
+        if current != res.size():
             mem[current] = element
             current += 1
     
@@ -264,7 +264,7 @@ cpdef unique_stable_float32(float32_t[:] vals, double size_hint=0.0):
     for i in range(n):
         element = vals[i]
         res.add(element)
-        if current != len(res):
+        if current != res.size():
             mem[current] = element
             current += 1
     

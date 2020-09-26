@@ -38,14 +38,17 @@ cdef extern from *:
     //      in the first stet we add needed functionality
     typedef float64_t khfloat64_t;
 
+    #define ZERO_HASH 0
+    #define NAN_HASH  323123
+
     //right for all but not -0.0 and NAN
     #define kh_float64_hash_func(key) (khint32_t)((f64_to_i64(key))>>33^(f64_to_i64(key))^(f64_to_i64(key))<<11)
 
     //right for all except NAN
-    #define kh_float64_hash_func_0(key) ((key)==0.0 ? kh_float64_hash_func(0.0) : kh_float64_hash_func(key))
+    #define kh_float64_hash_func_0(key) ((key)==0.0 ? ZERO_HASH : kh_float64_hash_func(key))
 
     //right for all, also 0.0 and NAN
-    #define kh_float64_hash_func_0_NAN(key) ((key) != (key) ? kh_float64_hash_func_0(NAN) : kh_float64_hash_func(key))
+    #define kh_float64_hash_func_0_NAN(key) ((key) != (key) ? NAN_HASH : kh_float64_hash_func_0(key))
 
     //                                                       take care of nans:
     #define kh_float64_hash_equal(a, b) ((a) == (b) || ((b) != (b) && (a) != (a)))
@@ -59,10 +62,10 @@ cdef extern from *:
     #define kh_float32_hash_func(key) (khint32_t)(f32_to_i32(key))
 
     //right for all except NAN
-    #define kh_float32_hash_func_0(key) ((key)==0.0f ? kh_float32_hash_func(0.0f) : kh_float32_hash_func(key))
+    #define kh_float32_hash_func_0(key) ((key)==0.0f ? ZERO_HASH : kh_float32_hash_func(key))
 
     //right for all, also 0.0 and NAN
-    #define kh_float32_hash_func_0_NAN(key) ((key) != (key) ? kh_float32_hash_func_0(NANF) : kh_float32_hash_func(key))
+    #define kh_float32_hash_func_0_NAN(key) ((key) != (key) ? NAN_HASH : kh_float32_hash_func_0(key))
 
     //                                                       take care of nans:
     #define kh_float32_hash_equal(a, b) ((a) == (b) || ((b) != (b) && (a) != (a)))

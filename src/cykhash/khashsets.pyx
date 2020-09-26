@@ -12,6 +12,13 @@ cdef extern from *:
     khint_t kh_float64_hash_func_0_NAN(double val)
     khint_t kh_float32_hash_func_0_NAN(float val)
 
+cdef extern from *:
+    """
+    //others
+    """
+    khint_t kh_int64_hash_func(int64_t val)
+    khint_t kh_int_hash_func(int32_t val)
+
 # different implementations:
 include "sets/int64/int64set_impl.pxi"
 include "sets/int32/int32set_impl.pxi"
@@ -27,3 +34,11 @@ def float64_hash(double val):
 
 def float32_hash(float val):
     return kh_float32_hash_func_0_NAN(val)
+
+def int64_hash(int64_t val):
+    return kh_int64_hash_func(val)
+
+def int32_hash(int32_t val):
+    return kh_int_hash_func(val)
+
+

@@ -13,6 +13,7 @@ Additional dependencies for testing:
   * `virtualenv`
   * `uttemplate`>=0.2.0 (https://github.com/realead/uttemplate)
   * `numpy`, `pandas`, `perfplot` for performance tests
+  * `asv` for asv_bench testing (performance tests)
 
 
 
@@ -36,4 +37,9 @@ To install and running tests in currently active environment:
 
     sh test_in_active_env.sh
 
+For comparing performance of the HEAD with upstream/master:
+
+    sh run_asv_bench.sh
+
+you might want to reduce the number of tests - see examples in `run_asv_bench.sh`
 

@@ -113,20 +113,6 @@ class SetTester(unittest.TestCase):
       self.assertTrue("upper_bound" in info)
 
 
-@uttemplate.from_templates([Float64Set, PyObjectSet])
-class Float64NANTester(unittest.TestCase): 
-    def test_nan_right(self):
-        NAN1=struct.unpack("d", struct.pack("=Q", 9221120237041090560))[0]
-        NAN2=struct.unpack("d", struct.pack("=Q", 9221120237041090561))[0]
-        NAN3=struct.unpack("d", struct.pack("=Q", 9221120237041090562))[0]
-        s=Float64Set()
-        s.add(NAN1)
-        s.add(NAN2)
-        s.add(NAN3)
-        self.assertEqual(len(s), 1)
-
-
-
 
 @uttemplate.from_templates([Float64Set, Float32Set, PyObjectSet])
 class FloatTester(unittest.TestCase): 
@@ -136,6 +122,32 @@ class FloatTester(unittest.TestCase):
         self.assertFalse(NAN in s)
         s.add(NAN)
         self.assertTrue(NAN in s)
+
+    def template_all_nans_the_same(self, set_type):
+        NAN1=struct.unpack("d", struct.pack("=Q", 9221120237041090560))[0]
+        NAN2=struct.unpack("d", struct.pack("=Q", 9221120237061090562))[0]
+        NAN3=struct.unpack("d", struct.pack("=Q", 9221120237042090562))[0]
+        s=set_type()
+        s.add(NAN1)
+        s.add(NAN2)
+        s.add(NAN3)
+        for nan_id in range(9221120237041090560, 9221120237061090562, 1111):
+            nan = struct.unpack("d", struct.pack("=Q", nan_id))[0]
+            s.add(nan)
+        self.assertEqual(len(s), 1)
+        for nan_id in range(9221120237041090560, 9221120237061090562, 1111):
+            nan = struct.unpack("d", struct.pack("=Q", nan_id))[0]
+            self.assertTrue(nan in s)
+
+    def test_all_nans_the_same_float32(self):
+        s=Float32Set()
+        for nan_id in range(2143299343, 2143499343):
+            nan = struct.unpack("f", struct.pack("=I", nan_id))[0]
+            s.add(nan)
+        self.assertEqual(len(s), 1)
+        for nan_id in range(2143299343, 2143499343):
+            nan = struct.unpack("f", struct.pack("=I", nan_id))[0]
+            self.assertTrue(nan in s)
  
 #+0.0/-0.0 will break when there are more than 2**32 elements in the map
 # bacause then hash-function will put them in different buckets 

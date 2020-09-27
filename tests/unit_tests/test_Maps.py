@@ -181,6 +181,32 @@ class FloatTester(unittest.TestCase):
         self.assertFalse(NAN in s)
         s[NAN] = 1
         self.assertTrue(NAN in s)
+
+    def template_all_nans_the_same(self, map_type):
+        NAN1=struct.unpack("d", struct.pack("=Q", 9221120237041090560))[0]
+        NAN2=struct.unpack("d", struct.pack("=Q", 9221120237061090562))[0]
+        NAN3=struct.unpack("d", struct.pack("=Q", 9221120237042090562))[0]
+        s=map_type()
+        s[NAN1]=1
+        s[NAN2]=1
+        s[NAN3]=1
+        for nan_id in range(9221120237041090560, 9221120237061090562, 1111):
+            nan = struct.unpack("d", struct.pack("=Q", nan_id))[0]
+            s[nan] = 1
+        self.assertEqual(len(s), 1)
+        for nan in range(2143299343, 2143499343):
+            nan = struct.unpack("d", struct.pack("=Q", nan_id))[0]
+            s[nan] = 1
+
+    def test_all_nans_the_same_float32(self):
+        s=Float32to32Map()
+        for nan_id in range(2143299343, 2143499343):
+            nan = struct.unpack("f", struct.pack("=I", nan_id))[0]
+            s[nan] = 1
+        self.assertEqual(len(s), 1)
+        for nan_id in range(2143299343, 2143499343):
+            nan = struct.unpack("f", struct.pack("=I", nan_id))[0]
+            s[nan] = 1
  
 #+0.0/-0.0 will break when there are more than 2**32 elements in the map
 # bacause then hash-function will put them in different buckets 

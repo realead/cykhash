@@ -11,6 +11,8 @@ cdef extern from *:
     float32_t i32_to_f32(int32_t   val)
     khint_t kh_float64_hash_func(double val)
     khint_t kh_float32_hash_func(float val)
+    khint_t murmur2_32to32(int32_t val)
+    khint_t murmur2_64to32(int64_t val)
 
 cdef extern from *:
     """
@@ -36,9 +38,9 @@ def float32_hash(float val):
     return kh_float32_hash_func(val)
 
 def int64_hash(int64_t val):
-    return kh_int64_hash_func(val)
+    return murmur2_64to32(val)
 
 def int32_hash(int32_t val):
-    return kh_int_hash_func(val)
+    return murmur2_32to32(val)
 
 

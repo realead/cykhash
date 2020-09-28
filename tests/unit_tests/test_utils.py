@@ -22,19 +22,19 @@ class UtilsTester(unittest.TestCase):
 
 
     def test_hash_int64_zero(self):
-        self.assertEqual(int64_hash(0), 0)
+        self.assertEqual(int64_hash(0), 4178429809)
 
 
     def test_hash_int32_zero(self):
-        self.assertEqual(int32_hash(0), 0)
+        self.assertEqual(int32_hash(0), 649440278)
 
 
     def test_hash_int64_one(self):
-        self.assertEqual(int64_hash(1), 2049)
+        self.assertEqual(int64_hash(1), 1574219535)
 
 
     def test_hash_int32_one(self):
-        self.assertEqual(int32_hash(1), 1)
+        self.assertEqual(int32_hash(1), 1753268367)
 
 
 

@@ -5,7 +5,7 @@ cdef extern from *:
     //preprocessor creates needed struct-type and all function definitions
 
     //set with keys of type int64 -> resulting typename: kh_int64set_t;
-    KHASH_INIT(int64set, int64_t, char, 0, kh_int64_hash_func, kh_int64_hash_equal)
+    KHASH_INIT(int64set, int64_t, char, 0, murmur2_64to32, kh_int64_hash_equal)
 
     //Generated code:
     /*

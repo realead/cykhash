@@ -48,8 +48,8 @@ cdef extern from *:
           if(val!=val){
            return NAN_HASH;
           }
-          Py_hash_t hash = _Py_HashDouble(val);
-          return (khint32_t)((hash)>>33^(hash)^(hash)<<11);
+          int64_t as_int = f64_to_i64(val);
+          return murmur2_64to32(as_int);
     }
 
     //                                                       take care of nans:
@@ -60,8 +60,15 @@ cdef extern from *:
     typedef float32_t khfloat32_t;
 
 
-    inline khint32_t kh_float32_hash_func(float32_t val){
-          return kh_float64_hash_func(val);
+    inline khint32_t kh_float32_hash_func(float32_t val){ 
+          if(val==0.0){
+            return ZERO_HASH;
+          }
+          if(val!=val){
+           return NAN_HASH;
+          }    
+          int32_t as_int = f32_to_i32(val);
+          return murmur2_32to32(as_int);
     }
 
 

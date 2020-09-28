@@ -8,7 +8,7 @@ from .floatdef cimport float64_t, float32_t
 ctypedef PyObject* pyobject_t
 
 include "khash.pxi"
-
+include "murmurhash.pxi"
 
 #utilities for int<->float
 include "float_utils.pxi"

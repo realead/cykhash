@@ -39,16 +39,18 @@ cdef extern from *:
     typedef float64_t khfloat64_t;
 
     #define ZERO_HASH 0
-    #define NAN_HASH  323123
+    #define NAN_HASH  0
 
-    //right for all but not -0.0 and NAN
-    #define kh_float64_hash_func(key) (khint32_t)((f64_to_i64(key))>>33^(f64_to_i64(key))^(f64_to_i64(key))<<11)
-
-    //right for all except NAN
-    #define kh_float64_hash_func_0(key) ((key)==0.0 ? ZERO_HASH : kh_float64_hash_func(key))
-
-    //right for all, also 0.0 and NAN
-    #define kh_float64_hash_func_0_NAN(key) ((key) != (key) ? NAN_HASH : kh_float64_hash_func_0(key))
+    inline khint32_t kh_float64_hash_func(float64_t val){
+          if(val==0.0){
+            return ZERO_HASH;
+          }
+          if(val!=val){
+           return NAN_HASH;
+          }
+          Py_hash_t hash = _Py_HashDouble(val);
+          return (khint32_t)((hash)>>33^(hash)^(hash)<<11);
+    }
 
     //                                                       take care of nans:
     #define kh_float64_hash_equal(a, b) ((a) == (b) || ((b) != (b) && (a) != (a)))
@@ -58,14 +60,10 @@ cdef extern from *:
     typedef float32_t khfloat32_t;
 
 
-    //right for all but not -0.0 and NAN
-    #define kh_float32_hash_func(key) (khint32_t)(f32_to_i32(key))
+    inline khint32_t kh_float32_hash_func(float32_t val){
+          return kh_float64_hash_func(val);
+    }
 
-    //right for all except NAN
-    #define kh_float32_hash_func_0(key) ((key)==0.0f ? ZERO_HASH : kh_float32_hash_func(key))
-
-    //right for all, also 0.0 and NAN
-    #define kh_float32_hash_func_0_NAN(key) ((key) != (key) ? NAN_HASH : kh_float32_hash_func_0(key))
 
     //                                                       take care of nans:
     #define kh_float32_hash_equal(a, b) ((a) == (b) || ((b) != (b) && (a) != (a)))

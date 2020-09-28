@@ -9,14 +9,16 @@ from cykhash import count_if_pyobject, count_if_pyobject_from_iter,  PyObjectSet
 
 CREATE_SET={
             np.float64 : Float64Set_from_buffer,
-            np.float32 : Float32Set_from_buffer
+            np.float32 : Float32Set_from_buffer,
+            np.int64 :   Int64Set_from_buffer,
+            np.int32 :   Int32Set_from_buffer,
            }
 
 
 class CreateArange:
 
     params = [ 
-        [np.float64, np.float32],  #
+        [np.float64, np.float32, np.int64, np.int32],  #
         [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000], #problem when quadratic behavior is triggered: [10, 100, 1000, 2_000, 8_000, 10_000, 100_000, 256_000, 1_000_000, 10_000_000],
     ]
     param_names = ["dtype", "M"]
@@ -47,7 +49,7 @@ class CreateRandom:
 class CreateRandomScaled:
 
     params = [ 
-        [np.float64, np.float32],  #
+        [np.float64, np.float32, np.int64, np.int32],  #
         [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000], #problem when quadratic behavior is triggered: [10, 100, 1000, 2_000, 8_000, 10_000, 100_000, 256_000, 1_000_000, 10_000_000],
     ]
     param_names = ["dtype", "M"]

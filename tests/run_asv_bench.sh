@@ -12,4 +12,4 @@ cd asv_bench
 # python -m asv continuous -f 1.01 upstream/master HEAD -b ^count_if.CountIf -b ^set_methods.CreateArange
 
 
-python -m asv continuous -f 1.01 upstream/master HEAD
+python -m asv continuous -f 1.01 HEAD~1 HEAD

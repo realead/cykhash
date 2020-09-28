@@ -14,11 +14,11 @@ class UtilsTester(unittest.TestCase):
 
 
     def test_hash_float64_one(self):
-        self.assertEqual(float64_hash(1.0), 2049)
+        self.assertEqual(float64_hash(1.0), 1954243739)
 
 
     def test_hash_float32_one(self):
-        self.assertEqual(float32_hash(1.0), 2049)
+        self.assertEqual(float32_hash(1.0), 1648074928)
 
 
     def test_hash_int64_zero(self):

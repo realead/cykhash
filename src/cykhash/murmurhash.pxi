@@ -1,6 +1,4 @@
 
-# khash.pxi needs to be included already!
-
 cdef extern from *:
     """
     #include <stdint.h>
@@ -27,7 +25,7 @@ cdef extern from *:
 
         // Do a few final mixes of the hash to ensure the "last few
         // bytes" are well-incorporated.
-        // TODO: really needed, we have no "last few bytes"
+        // TODO: really needed, we have no "last few bytes"?
         h ^= h >> 13;
         h *= M_32;
         h ^= h >> 15;
@@ -36,12 +34,13 @@ cdef extern from *:
 
 
     
-    /* #if INTPTR_MAX == INT64_MAX
+    #if INTPTR_MAX == INT64_MAX
        // 64-bit
-        const uint64_t M_64= 0xc6a4a7935bd1e995ULL;
+        const uint64_t SEED_64 = 0xc70f6907b8107a18ULL;
+        const uint64_t M_64=     0xc6a4a7935bd1e995ULL;
         const int R_64 = 47;
         inline uint32_t murmur2_64to32(uint64_t k){
-              uint64_t h = SEED ^ (8 * M_64);
+              uint64_t h = SEED_64 ^ (8 * M_64);
 
               k *= M_64; 
               k ^= k >> R_64; 
@@ -59,7 +58,6 @@ cdef extern from *:
               return (uint32_t)((h>>32)^h);
         }
     #elif INTPTR_MAX == INT32_MAX
-    */
         // 32-bit
         // uint64_t mult is slow for 32 bit, so falling back to murmur2_32to32 algorithm
         inline uint32_t murmur2_32_32to32(uint32_t k1, uint32_t k2){
@@ -84,7 +82,7 @@ cdef extern from *:
 
             // Do a few final mixes of the hash to ensure the "last few
             // bytes" are well-incorporated.
-            // TODO: really needed, we have no "last few bytes"
+            // TODO: really needed, we have no "last few bytes"?
             h ^= h >> 13;
             h *= M_32;
             h ^= h >> 15;
@@ -97,8 +95,8 @@ cdef extern from *:
 
               return murmur2_32_32to32(k1, k2);
         }
-    //#else
-    //#error Unknown pointer size or missing size macros!
-    //#endif
+    #else
+    #error Unknown pointer size or missing size macros!
+    #endif
     """
     pass

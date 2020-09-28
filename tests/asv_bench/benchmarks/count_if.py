@@ -20,8 +20,8 @@ COUNT_IF = {
 
 class CountIfArange:
     params = [ 
-        [np.float64],  #
-        [1_000, 2_000,], #problem when quadratic behavior is triggered: [10, 100, 1000, 2_000, 8_000, 10_000, 100_000, 256_000, 1_000_000, 10_000_000],
+        [np.float64, np.float32],  #
+        [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000], #problem when quadratic behavior is triggered: [10, 100, 1000, 2_000, 8_000, 10_000, 100_000, 256_000, 1_000_000, 10_000_000],
         [-2, 0, 2]
     ]
     param_names = ["dtype", "M", "offset_factor"]
@@ -39,8 +39,8 @@ class CountIfArange:
 
 class CountIfRandom:
     params = [ 
-        [np.float64],  #
-        [1_000, 2_000,], #problem when quadratic behavior is triggered: [10, 100, 1000, 2_000, 8_000, 10_000, 100_000, 256_000, 1_000_000, 10_000_000],
+        [np.float64, np.float32],  #
+        [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000], #problem when quadratic behavior is triggered: [10, 100, 1000, 2_000, 8_000, 10_000, 100_000, 256_000, 1_000_000, 10_000_000],
     ]
     param_names = ["dtype", "M"]
 

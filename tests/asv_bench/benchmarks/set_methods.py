@@ -16,8 +16,8 @@ CREATE_SET={
 class CreateArange:
 
     params = [ 
-        [np.float64],  #
-        [1_000, 2_000,], #problem when quadratic behavior is triggered: [10, 100, 1000, 2_000, 8_000, 10_000, 100_000, 256_000, 1_000_000, 10_000_000],
+        [np.float64, np.float32],  #
+        [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000], #problem when quadratic behavior is triggered: [10, 100, 1000, 2_000, 8_000, 10_000, 100_000, 256_000, 1_000_000, 10_000_000],
     ]
     param_names = ["dtype", "M"]
 
@@ -31,8 +31,8 @@ class CreateArange:
 class CreateRandom:
 
     params = [ 
-        [np.float64],  #
-        [1_000, 2_000,], #problem when quadratic behavior is triggered: [10, 100, 1000, 2_000, 8_000, 10_000, 100_000, 256_000, 1_000_000, 10_000_000],
+        [np.float64, np.float32],  #
+        [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000], #problem when quadratic behavior is triggered: [10, 100, 1000, 2_000, 8_000, 10_000, 100_000, 256_000, 1_000_000, 10_000_000],
     ]
     param_names = ["dtype", "M"]
 
@@ -47,8 +47,8 @@ class CreateRandom:
 class CreateRandomScaled:
 
     params = [ 
-        [np.float64],  #
-        [1_000, 2_000,], #problem when quadratic behavior is triggered: [10, 100, 1000, 2_000, 8_000, 10_000, 100_000, 256_000, 1_000_000, 10_000_000],
+        [np.float64, np.float32],  #
+        [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000], #problem when quadratic behavior is triggered: [10, 100, 1000, 2_000, 8_000, 10_000, 100_000, 256_000, 1_000_000, 10_000_000],
     ]
     param_names = ["dtype", "M"]
 

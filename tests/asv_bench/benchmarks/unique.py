@@ -21,7 +21,7 @@ UNIQUE_STABLE = {
 class  UniqueArange:
     params = [ 
         [np.float64, np.float32, np.int64, np.int32],
-        [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000],
+        [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000, 10_000_000, 100_000_000],
     ]
     param_names = ["dtype", "M"]
 
@@ -44,7 +44,7 @@ class  UniqueArange:
 class  UniqueRandomDivFactor10:
     params = [ 
         [np.float64, np.float32, np.int64, np.int32],
-        [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000],
+        [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000, 10_000_000, 100_000_000],
     ]
     param_names = ["dtype", "M"]
 
@@ -58,11 +58,17 @@ class  UniqueRandomDivFactor10:
     def time_unique_stable(self, dtype, M):
         UNIQUE_STABLE[dtype](self.array)
 
+    def peakmem_unique(self, dtype, M):
+        UNIQUE[dtype](self.array)
+
+    def peakmem_unique_stable(self, dtype, M):
+        UNIQUE_STABLE[dtype](self.array)
+
 
 class  UniqueRandomDivFactor10Add220:
     params = [ 
         [np.float64, np.float32, np.int64, np.int32],
-        [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000],
+        [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000, 10_000_000, 100_000_000],
     ]
     param_names = ["dtype", "M"]
 
@@ -80,7 +86,7 @@ class  UniqueRandomDivFactor10Add220:
 class  UniqueRandomMulFactor10:
     params = [ 
         [np.float64, np.float32, np.int64, np.int32],
-        [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000],
+        [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000, 10_000_000, 100_000_000],
     ]
     param_names = ["dtype", "M"]
 
@@ -92,6 +98,23 @@ class  UniqueRandomMulFactor10:
         UNIQUE[dtype](self.array)
 
     def time_unique_stable(self, dtype, M):
+        UNIQUE_STABLE[dtype](self.array)
+
+
+class  UniqueSingle:
+    params = [ 
+        [np.float64, np.float32, np.int64, np.int32],
+        [10_000_000, 100_000_000],
+    ]
+    param_names = ["dtype", "M"]
+
+    def setup(self, dtype, M):
+        self.array = np.ones(M, dtype=dtype)
+
+    def peakmem_unique(self, dtype, M):
+        UNIQUE[dtype](self.array)
+
+    def peakmem_unique_stable(self, dtype, M):
         UNIQUE_STABLE[dtype](self.array)
 
 

@@ -22,9 +22,21 @@ COUNT_IF = {
            }
 
 
+class CountIfObject:
+
+    def setup(self):
+        N=100_000
+        self.set = PyObjectSet_from(x<<32 for x in range(N))
+        np.random.seed(42)
+        self.query = np.random.randint(0,N,N).astype(np.object)
+
+    def time_countif(self):
+        count_if_pyobject(self.query, self.set)
+
+
 class CountIfArange:
     params = [ 
-        [np.float64, np.float32, np.int64, np.int32],  #
+        [np.float64, np.float32, np.int64, np.int32],
         [1_000, 2_000, 8_000, 10_000, 100_000, 1_000_000, 10_000_000, 100_000_000],
         [-2, 0, 2]
     ]

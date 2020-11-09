@@ -239,6 +239,29 @@ cpdef PyObjectMap PyObjectMap_from_object_buffer(object[:] keys, object[:] vals,
         res.put_object(keys[i], vals[i])
     return res
 
+
+cpdef size_t PyObjectMap_to_object(PyObjectMap map, object[:] keys, object[:] vals, bint stop_at_unknown=True, object default_value=None) except *:
+    if map is None:
+        raise TypeError("'NoneType' is not a map")
+    cdef size_t n = len(keys)
+    if n != len(vals):
+        raise ValueError("Different lengths of keys and vals arrays")
+    cdef size_t i
+    cdef khint_t k
+    cdef size_t res = 0
+    for i in range(n):
+        k = kh_get_pyobjectmap(map.table, <pyobject_t>keys[i])
+        if k != map.table.n_buckets:
+            vals[i] = <object>map.table.vals[k]
+            res += 1
+        else:
+            vals[i] = default_value
+            if stop_at_unknown:
+                return res
+    return res
+
+
+
 cpdef void swap_pyobjectmap(PyObjectMap a, PyObjectMap b) except *:
     if a is None or b is None:
         raise TypeError("'NoneType' object is not iterable")

@@ -67,6 +67,9 @@ cdef class Float32to32MapView:
 cpdef Float32to32Map Float32to32Map_from_int32_buffer(key_float32_t[:] keys, int32_t[:] vals, double size_hint=*)
 cpdef Float32to32Map Float32to32Map_from_float32_buffer(key_float32_t[:] keys, float32_t[:] vals,double size_hint=*)
 
+cpdef size_t Float32to32Map_to_int32(Float32to32Map map, key_float32_t[:] keys, int32_t[:] vals, bint stop_at_unknown=*, int32_t default_value=*) except *
+cpdef size_t Float32to32Map_to_float32(Float32to32Map map, key_float32_t[:] keys, float32_t[:] vals, bint stop_at_unknown=*, float32_t default_value=*) except *
+
 
 # other help functions:
 cpdef void swap_float32map(Float32to32Map a, Float32to32Map b) except *

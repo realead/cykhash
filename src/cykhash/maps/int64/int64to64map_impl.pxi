@@ -272,7 +272,55 @@ cpdef Int64to64Map Int64to64Map_from_float64_buffer(key_int64_t[:] keys, float64
     for i in range(n):
         res.put_float64(keys[i], vals[i])
     return res
-    
+
+
+cpdef size_t Int64to64Map_to_int64(Int64to64Map map, key_int64_t[:] keys, int64_t[:] vals, bint stop_at_unknown=True, int64_t default_value=0) except *:
+    """returns number of found keys"""
+    if map is None:
+        raise TypeError("'NoneType' is not a map")
+    if not map.for_int:
+        raise TypeError("Map is not for ints")
+    cdef size_t n = len(keys)
+    if n != len(vals):
+        raise ValueError("Different lengths of keys and vals arrays")
+    cdef size_t i
+    cdef khint_t k
+    cdef size_t res = 0
+    for i in range(n):
+        k = kh_get_int64to64map(map.table, keys[i])
+        if k != map.table.n_buckets:
+            vals[i] = map.table.vals[k]
+            res += 1
+        else:
+            vals[i] = default_value
+            if stop_at_unknown:
+                return res
+    return res
+
+
+cpdef size_t Int64to64Map_to_float64(Int64to64Map map, key_int64_t[:] keys, float64_t[:] vals, bint stop_at_unknown=True, float64_t default_value=float("nan")) except *:
+    """returns number of found keys"""
+    if map is None:
+        raise TypeError("'NoneType' is not a map")
+    if map.for_int:
+        raise TypeError("Map is not for floats")
+    cdef size_t n = len(keys)
+    if n != len(vals):
+        raise ValueError("Different lengths of keys and vals arrays")
+    cdef size_t i
+    cdef khint_t k
+    cdef size_t res = 0
+    for i in range(n):
+        k = kh_get_int64to64map(map.table, keys[i])
+        if k != map.table.n_buckets:
+            vals[i] = i64_to_f64(map.table.vals[k])
+            res += 1
+        else:
+            vals[i] = default_value
+            if stop_at_unknown:
+                return res
+    return res
+   
 
 cpdef void swap_int64map(Int64to64Map a, Int64to64Map b) except *:
     if a is None or b is None:

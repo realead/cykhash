@@ -53,6 +53,8 @@ cdef class PyObjectMapView:
 
 cpdef PyObjectMap PyObjectMap_from_object_buffer(object[:] keys, object[:] vals, double size_hint=*)
 
+cpdef size_t PyObjectMap_to_object(PyObjectMap map, object[:] keys, object[:] vals, bint stop_at_unknown=*, object default_value=*) except *
+
 # other help functions:
 cpdef void swap_pyobjectmap(PyObjectMap a, PyObjectMap b) except *
 cpdef PyObjectMap copy_pyobjectmap(PyObjectMap s)

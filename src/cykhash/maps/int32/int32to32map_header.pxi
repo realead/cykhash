@@ -63,6 +63,11 @@ cdef class Int32to32MapView:
 
     cdef Int32to32MapIterator get_iter(self)
 
+
+cpdef Int32to32Map Int32to32Map_from_int32_buffer(key_int32_t[:] keys, int32_t[:] vals, double size_hint=*)
+cpdef Int32to32Map Int32to32Map_from_float32_buffer(key_int32_t[:] keys, float32_t[:] vals,double size_hint=*)
+
+
 # other help functions:
 cpdef void swap_int32map(Int32to32Map a, Int32to32Map b) except *
 cpdef Int32to32Map copy_int32map(Int32to32Map s)

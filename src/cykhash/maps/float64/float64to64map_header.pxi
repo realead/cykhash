@@ -63,6 +63,11 @@ cdef class Float64to64MapView:
 
     cdef Float64to64MapIterator get_iter(self)
 
+
+cpdef Float64to64Map Float64to64Map_from_int64_buffer(key_float64_t[:] keys, int64_t[:] vals, double size_hint=*)
+cpdef Float64to64Map Float64to64Map_from_float64_buffer(key_float64_t[:] keys, float64_t[:] vals,double size_hint=*)
+
+
 # other help functions:
 cpdef void swap_float64map(Float64to64Map a, Float64to64Map b) except *
 cpdef Float64to64Map copy_float64map(Float64to64Map s)

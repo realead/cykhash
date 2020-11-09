@@ -249,7 +249,7 @@ cdef class Int64to64MapView:
 
 ### Utils:
 
-def Int64to64Map_from_int64_buffer(key_int64_t[:] keys, int64_t[:] vals, double size_hint=0.0):
+cpdef Int64to64Map Int64to64Map_from_int64_buffer(key_int64_t[:] keys, int64_t[:] vals, double size_hint=0.0):
     cdef Py_ssize_t n = len(keys)
     cdef Py_ssize_t b = len(vals)
     if b < n:
@@ -261,7 +261,7 @@ def Int64to64Map_from_int64_buffer(key_int64_t[:] keys, int64_t[:] vals, double 
         res.put_int64(keys[i], vals[i])
     return res
 
-def Int64to64Map_from_float64_buffer(key_int64_t[:] keys, float64_t[:] vals,double size_hint=0.0):
+cpdef Int64to64Map Int64to64Map_from_float64_buffer(key_int64_t[:] keys, float64_t[:] vals,double size_hint=0.0):
     cdef Py_ssize_t n = len(keys)
     cdef Py_ssize_t b = len(vals)
     if b < n:

@@ -227,7 +227,7 @@ cdef class PyObjectMapView:
 
 ### Utils:
 
-def PyObjectMap_from_object_buffer(object[:] keys, object[:] vals, double size_hint=0.0):
+cpdef PyObjectMap PyObjectMap_from_object_buffer(object[:] keys, object[:] vals, double size_hint=0.0):
     cdef Py_ssize_t n = len(keys)
     cdef Py_ssize_t b = len(vals)
     if b < n:

@@ -294,12 +294,3 @@ cpdef bint are_equal_pyobjectmap(PyObjectMap a, PyObjectMap b) except *:
             return False
     return True
 
-cpdef void update_pyobjectmap(PyObjectMap a, PyObjectMap b) except *:
-    if a is None or b is None:
-        raise TypeError("'NoneType' object is not iterable")
-    cdef PyObjectMapIterator it=b.get_iter(2)
-    cdef pyobject_key_val_pair p
-    while it.has_next():
-        p = it.next()
-        a.put_object(<object>p.key, <object>p.val)
-

@@ -25,7 +25,8 @@ extensions = [Extension(
              ]
 
 
-template_files = []
+template_files = ["src/cykhash/maps/map_impl.pxi.in",
+]
 
 def render_templates(pxifiles):
         for pxifile in pxifiles:

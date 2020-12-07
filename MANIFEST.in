@@ -1,2 +1,2 @@
-recursive-include src *.pxi *.pxd *.pyx
+recursive-include src *.pxi *.pxd *.pyx *.pxi.in
 recursive-exclude src *.c

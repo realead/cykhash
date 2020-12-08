@@ -15,6 +15,7 @@ include "float_utils.pxi"
 include "pyobject_utils.pxi"
 
 # different implementation
+include "maps/map_init.pxi"
 include "maps/int64/int64to64map_header.pxi"
 include "maps/int32/int32to32map_header.pxi"
 include "maps/float64/float64to64map_header.pxi"

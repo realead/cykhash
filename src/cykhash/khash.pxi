@@ -349,6 +349,7 @@ cdef extern from *:
       @abstract     Integer comparison function
      */
     #define kh_int_hash_equal(a, b) ((a) == (b))
+    #define kh_int32_hash_equal kh_int_hash_equal
     /*! @function
       @abstract     64-bit integer hash function
       @param  key   The integer [khint64_t]

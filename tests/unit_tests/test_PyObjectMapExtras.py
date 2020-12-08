@@ -3,6 +3,14 @@ import unittest
 
 from cykhash import PyObjectMap
 
+class PyObjectMapMiscTester(unittest.TestCase): 
+
+   def test_from_keys_works(self):
+      s=PyObjectMap.fromkeys(["a", "b", "c"], "kkk")
+      self.assertEqual(len(s), 3)
+      self.assertEqual(s["a"],"kkk") 
+
+
 class RefCounterTester(unittest.TestCase): 
 
    def test_map_put_discard_right_refcnts(self):

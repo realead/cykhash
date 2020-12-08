@@ -2,6 +2,9 @@
 tests/asv_bench/results
 tests/asv_bench/env
 
+# created pxi from template
+src/cykhash/maps/*.pxi
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

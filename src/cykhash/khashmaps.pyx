@@ -10,9 +10,4 @@ cdef extern from *:
     float32_t i32_to_f32(int32_t   val)
 
 # different implementations:
-include "maps/int64/int64to64map_impl.pxi"
-include "maps/int32/int32to32map_impl.pxi"
-include "maps/float64/float64to64map_impl.pxi"
-include "maps/float32/float32to32map_impl.pxi"
-include "maps/pyobject/pyobjectmap_impl.pxi"
 include "maps/map_impl.pxi"

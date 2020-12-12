@@ -18,12 +18,10 @@ all_bits       = ['64', '32']
 cdef extern from *:
     """
     // preprocessor creates needed struct-type and all function definitions
-
-    // map with keys of type int{{bits}} -> und result int{{bits}}
-    // resulting typename: kh_int{{bits}}to{{bits}}map_t;
-    KHASH_INIT(int{{bits}}to{{bits}}map, int{{bits}}_t, int{{bits}}_t, 1, murmur2_{{bits}}to32, kh_int{{bits}}_hash_equal)
+    #define KHASH_MAP_INIT_INT{{bits}}(name, khval_t)		\
+        KHASH_INIT(name, int{{bits}}_t, khval_t, 1, murmur2_{{bits}}to32, kh_int{{bits}}_hash_equal)
   
-
+    KHASH_MAP_INIT_INT{{bits}}(int{{bits}}to{{bits}}map, int{{bits}}_t)
     """
     pass
 
@@ -48,9 +46,6 @@ all_bits       = ['64', '32']
 cdef extern from *:
     """
     // preprocessor creates needed struct-type and all function definitions
-
-    // map with keys of type float{{bits}} -> und result int{{bits}}
-
     #define KHASH_MAP_INIT_FLOAT{{bits}}(name, khval_t)								\
 	    KHASH_INIT(name, khfloat{{bits}}_t, khval_t, 1, kh_float{{bits}}_hash_func, kh_float{{bits}}_hash_equal)
 

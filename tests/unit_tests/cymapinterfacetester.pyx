@@ -2,7 +2,7 @@
 
 ############# int64 - test
 
-from cykhash.khashmaps cimport Int64to64Map, Int64to64MapIterator, int64to64_key_val_pair
+from cykhash.khashmaps cimport Int64to64Map, Int64to64MapIterator, int64toint64_key_val_pair
 
 def use_int64(keys, values, query):
     s=Int64to64Map()
@@ -27,7 +27,7 @@ def use_float64(keys, values, query):
 
 def as_py_list_int64(Int64to64Map db):
     cdef Int64to64MapIterator it = db.get_iter(2)
-    cdef int64to64_key_val_pair p
+    cdef int64toint64_key_val_pair p
     res=[]
     while it.has_next():
         p = it.next()
@@ -37,7 +37,7 @@ def as_py_list_int64(Int64to64Map db):
 ############# int32 - test
 
 
-from cykhash.khashmaps cimport Int32to32Map, Int32to32MapIterator, int32to32_key_val_pair
+from cykhash.khashmaps cimport Int32to32Map, Int32to32MapIterator, int32toint32_key_val_pair
 
 def use_int32(keys, values, query):
     s=Int32to32Map()
@@ -62,7 +62,7 @@ def use_float32(keys, values, query):
 
 def as_py_list_int32(Int32to32Map db):
     cdef Int32to32MapIterator it = db.get_iter(2)
-    cdef int32to32_key_val_pair p
+    cdef int32toint32_key_val_pair p
     res=[]
     while it.has_next():
         p = it.next()
@@ -72,7 +72,7 @@ def as_py_list_int32(Int32to32Map db):
 
 ############# float64 - test
 
-from cykhash.khashmaps cimport Float64to64Map, Float64to64MapIterator, float64to64_key_val_pair
+from cykhash.khashmaps cimport Float64to64Map, Float64to64MapIterator, float64toint64_key_val_pair
 
 def use_int64_float64(keys, values, query):
     s=Float64to64Map()
@@ -97,7 +97,7 @@ def use_float64_float64(keys, values, query):
 
 def as_py_list_int64_float64(Float64to64Map db):
     cdef Float64to64MapIterator it = db.get_iter(2)
-    cdef float64to64_key_val_pair p
+    cdef float64toint64_key_val_pair p
     res=[]
     while it.has_next():
         p = it.next()
@@ -106,7 +106,7 @@ def as_py_list_int64_float64(Float64to64Map db):
 
 ############# float32 - test
 
-from cykhash.khashmaps cimport Float32to32Map, Float32to32MapIterator, float32to32_key_val_pair
+from cykhash.khashmaps cimport Float32to32Map, Float32to32MapIterator, float32toint32_key_val_pair
 
 def use_int32_float32(keys, values, query):
     s=Float32to32Map()
@@ -131,7 +131,7 @@ def use_float32_float32(keys, values, query):
 
 def as_py_list_int32_float32(Float32to32Map db):
     cdef Float32to32MapIterator it = db.get_iter(2)
-    cdef float32to32_key_val_pair p
+    cdef float32toint32_key_val_pair p
     res=[]
     while it.has_next():
         p = it.next()

@@ -18,10 +18,10 @@ all_bits       = ['64', '32']
 cdef extern from *:
     """
     // preprocessor creates needed struct-type and all function definitions
-    #define KHASH_MAP_INIT_INT{{bits}}(name, khval_t)		\
+    #define CYKHASH_MAP_INIT_INT{{bits}}(name, khval_t)		\
         KHASH_INIT(name, int{{bits}}_t, khval_t, 1, murmur2_{{bits}}to32, kh_int{{bits}}_hash_equal)
   
-    KHASH_MAP_INIT_INT{{bits}}(int{{bits}}to{{bits}}map, int{{bits}}_t)
+    CYKHASH_MAP_INIT_INT{{bits}}(int{{bits}}toint{{bits}}map, int{{bits}}_t)
     """
     pass
 
@@ -46,10 +46,10 @@ all_bits       = ['64', '32']
 cdef extern from *:
     """
     // preprocessor creates needed struct-type and all function definitions
-    #define KHASH_MAP_INIT_FLOAT{{bits}}(name, khval_t)								\
+    #define CYKHASH_MAP_INIT_FLOAT{{bits}}(name, khval_t)								\
 	    KHASH_INIT(name, khfloat{{bits}}_t, khval_t, 1, kh_float{{bits}}_hash_func, kh_float{{bits}}_hash_equal)
 
-    KHASH_MAP_INIT_FLOAT{{bits}}(float{{bits}}to{{bits}}map, int{{bits}}_t)
+    CYKHASH_MAP_INIT_FLOAT{{bits}}(float{{bits}}toint{{bits}}map, int{{bits}}_t)
 
     """
     pass
@@ -64,12 +64,12 @@ cdef extern from *:
     // preprocessor creates needed struct-type and all function definitions
 
     // map with keys of type pyobject -> result pyobject
-    #define KHASH_MAP_INIT_PYOBJECT(name, khval_t)										\
+    #define CYKHASH_MAP_INIT_PYOBJECT(name, khval_t)										\
 	    KHASH_INIT(name, khpyobject_t, khval_t, 1, kh_pyobject_hash_func, kh_pyobject_hash_equal)
 
     //preprocessor creates needed struct-type and all function definitions 
     //set with keys of type pyobject -> resulting typename: kh_pyobjectmap_t;
-    KHASH_MAP_INIT_PYOBJECT(pyobjectmap, pyobject_t)
+    CYKHASH_MAP_INIT_PYOBJECT(pyobjectmap, pyobject_t)
 
     """
     pass

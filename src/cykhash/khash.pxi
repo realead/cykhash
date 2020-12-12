@@ -355,7 +355,7 @@ cdef extern from *:
       @param  key   The integer [khint64_t]
       @return       The hash value [khint_t]
      */
-    #define kh_int64_hash_func(key) (khint32_t)((key)>>33^(key)^(key)<<11)
+    #define kh_int64_hash_func(key) (khint32_t)(((khint64_t)(key))>>33^((khint64_t)(key))^((khint64_t)(key))<<11)
     /*! @function
       @abstract     64-bit integer comparison function
      */

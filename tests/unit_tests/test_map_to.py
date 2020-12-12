@@ -3,17 +3,17 @@ import uttemplate
 import numpy as np
 
 
-from cykhash import Int64to64Map_to_int64, Int64to64Map_to_float64, Int64to64Map_from_int64_buffer, Int64to64Map_from_float64_buffer
-from cykhash import Float64to64Map_to_int64, Float64to64Map_to_float64, Float64to64Map_from_int64_buffer, Float64to64Map_from_float64_buffer
-from cykhash import Int32to32Map_to_int32, Int32to32Map_to_float32, Int32to32Map_from_int32_buffer, Int32to32Map_from_float32_buffer
-from cykhash import Float32to32Map_to_int32, Float32to32Map_to_float32, Float32to32Map_from_int32_buffer, Float32to32Map_from_float32_buffer
+from cykhash import Int64toInt64Map_to_int64, Int64toInt64Map_to_float64, Int64toInt64Map_from_int64_buffer, Int64toInt64Map_from_float64_buffer
+from cykhash import Float64toInt64Map_to_int64, Float64toInt64Map_to_float64, Float64toInt64Map_from_int64_buffer, Float64toInt64Map_from_float64_buffer
+from cykhash import Int32toInt32Map_to_int32, Int32toInt32Map_to_float32, Int32toInt32Map_from_int32_buffer, Int32toInt32Map_from_float32_buffer
+from cykhash import Float32toInt32Map_to_int32, Float32toInt32Map_to_float32, Float32toInt32Map_from_int32_buffer, Float32toInt32Map_from_float32_buffer
 from cykhash import PyObjectMap_to_object, PyObjectMap_from_object_buffer
 
 
-MAP_TO_INT            = {'int32': Int32to32Map_to_int32, 'int64': Int64to64Map_to_int64, 'float64' : Float64to64Map_to_int64, 'float32' : Float32to32Map_to_int32}
-MAP_TO_FLOAT          = {'int32': Int32to32Map_to_float32, 'int64': Int64to64Map_to_float64, 'float64' : Float64to64Map_to_float64, 'float32' : Float32to32Map_to_float32}
-CREATOR_FROM_INT      = {'int32': Int32to32Map_from_int32_buffer, 'int64': Int64to64Map_from_int64_buffer, 'float64' : Float64to64Map_from_int64_buffer, 'float32' : Float32to32Map_from_int32_buffer}
-CREATOR_FROM_FLOAT    = {'int32': Int32to32Map_from_float32_buffer, 'int64': Int64to64Map_from_float64_buffer, 'float64' : Float64to64Map_from_float64_buffer, 'float32' : Float32to32Map_from_float32_buffer}
+MAP_TO_INT            = {'int32': Int32toInt32Map_to_int32, 'int64': Int64toInt64Map_to_int64, 'float64' : Float64toInt64Map_to_int64, 'float32' : Float32toInt32Map_to_int32}
+MAP_TO_FLOAT          = {'int32': Int32toInt32Map_to_float32, 'int64': Int64toInt64Map_to_float64, 'float64' : Float64toInt64Map_to_float64, 'float32' : Float32toInt32Map_to_float32}
+CREATOR_FROM_INT      = {'int32': Int32toInt32Map_from_int32_buffer, 'int64': Int64toInt64Map_from_int64_buffer, 'float64' : Float64toInt64Map_from_int64_buffer, 'float32' : Float32toInt32Map_from_int32_buffer}
+CREATOR_FROM_FLOAT    = {'int32': Int32toInt32Map_from_float32_buffer, 'int64': Int64toInt64Map_from_float64_buffer, 'float64' : Float64toInt64Map_from_float64_buffer, 'float32' : Float32toInt32Map_from_float32_buffer}
 
 DTYPE        =  {'int32': np.int32, 'int64': np.int64, 'float64' : np.float64, 'float32' : np.float32}
 INT_DTYPE    =  {'int32': np.int32, 'int64': np.int64, 'float64' : np.int64, 'float32' : np.int32}

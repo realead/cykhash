@@ -58,10 +58,10 @@ class DocTester(unittest.TestCase):
 
     def test_int64map_from_buffer(self):
         import numpy as np
-        from cykhash import Int64to64Map_from_float64_buffer
+        from cykhash import Int64toInt64Map_from_float64_buffer
         keys = np.array([1, 2, 3, 4], dtype=np.int64)
         vals = np.array([5, 6, 7, 8], dtype=np.float64)
-        my_map = Int64to64Map_from_float64_buffer(keys, vals) # there will be no reallocation
+        my_map = Int64toInt64Map_from_float64_buffer(keys, vals) # there will be no reallocation
         assert my_map[4] == 8.0
 
         self.assertTrue(True)
@@ -69,10 +69,10 @@ class DocTester(unittest.TestCase):
 
     def test_int64map_from_scrarch(self):
         import numpy as np
-        from cykhash import Int64to64Map
+        from cykhash import Int64toInt64Map
         # my_map will not need reallocation for at least 12 elements and
         # values are int64 (another possibility is for_int=False, meas for float64
-        my_map = Int64to64Map(number_of_elements_hint=12, for_int=True)
+        my_map = Int64toInt64Map(number_of_elements_hint=12, for_int=True)
         for i in range(12):
             my_map[i] = i+1
         assert my_map[5] == 6
@@ -112,8 +112,8 @@ class DocTester(unittest.TestCase):
 
    
     def test_quick_tutorial_3(self):
-        from cykhash import Float64to64Map
-        my_map = Float64to64Map(for_int=True) # values are 64bit integers
+        from cykhash import Float64toInt64Map
+        my_map = Float64toInt64Map(for_int=True) # values are 64bit integers
         my_map[float("nan")] = 1
         assert my_map[float("nan")] == 1
         

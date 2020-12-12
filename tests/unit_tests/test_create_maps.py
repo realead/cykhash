@@ -2,20 +2,20 @@ import unittest
 import uttemplate
 import array
 
-from cykhash import Int64to64Map_from_int64_buffer, Int64to64Map_from_float64_buffer
-from cykhash import Int32to32Map_from_int32_buffer, Int32to32Map_from_float32_buffer
-from cykhash import Float64to64Map_from_int64_buffer, Float64to64Map_from_float64_buffer
-from cykhash import Float32to32Map_from_int32_buffer, Float32to32Map_from_float32_buffer
+from cykhash import Int64toInt64Map_from_int64_buffer, Int64toInt64Map_from_float64_buffer
+from cykhash import Int32toInt32Map_from_int32_buffer, Int32toInt32Map_from_float32_buffer
+from cykhash import Float64toInt64Map_from_int64_buffer, Float64toInt64Map_from_float64_buffer
+from cykhash import Float32toInt32Map_from_int32_buffer, Float32toInt32Map_from_float32_buffer
 from cykhash import PyObjectMap_from_object_buffer
 
-FUNCTION = {'int64_int64':   Int64to64Map_from_int64_buffer,
-            'int64_float64': Int64to64Map_from_float64_buffer,
-            'int32_int32':   Int32to32Map_from_int32_buffer,
-            'int32_float32': Int32to32Map_from_float32_buffer,
-            'float64_int64':   Float64to64Map_from_int64_buffer,
-            'float64_float64': Float64to64Map_from_float64_buffer,
-            'float32_int32':   Float32to32Map_from_int32_buffer,
-            'float32_float32': Float32to32Map_from_float32_buffer,
+FUNCTION = {'int64_int64':   Int64toInt64Map_from_int64_buffer,
+            'int64_float64': Int64toInt64Map_from_float64_buffer,
+            'int32_int32':   Int32toInt32Map_from_int32_buffer,
+            'int32_float32': Int32toInt32Map_from_float32_buffer,
+            'float64_int64':   Float64toInt64Map_from_int64_buffer,
+            'float64_float64': Float64toInt64Map_from_float64_buffer,
+            'float32_int32':   Float32toInt32Map_from_int32_buffer,
+            'float32_float32': Float32toInt32Map_from_float32_buffer,
            }
 KEY_FORMAT = {'int64_int64':   'q',
               'int64_float64': 'q',

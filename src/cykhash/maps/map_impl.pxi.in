@@ -13,10 +13,10 @@ from cpython.ref cimport Py_INCREF,Py_DECREF
 {{py:
 
 # map_name, name, pair_prefix, int_suffix, float_suffix
-map_types       = [('Int64to64', 'int64', 'int64toint64', 'int64', 'float64'),
-                   ('Float64to64', 'float64', 'float64toint64', 'int64', 'float64'),
-                   ('Int32to32', 'int32', 'int32toint32', 'int32', 'float32'),
-                   ('Float32to32', 'float32', 'float32toint32', 'int32', 'float32'),
+map_types       = [('Int64toInt64', 'int64', 'int64toint64', 'int64', 'float64'),
+                   ('Float64toInt64', 'float64', 'float64toint64', 'int64', 'float64'),
+                   ('Int32toInt32', 'int32', 'int32toint32', 'int32', 'float32'),
+                   ('Float32toInt32', 'float32', 'float32toint32', 'int32', 'float32'),
                    ('PyObject', 'pyobject', 'pyobject', 'object', 'object'),
                   ]
 }}

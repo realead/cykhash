@@ -70,8 +70,8 @@ Finding `unique` in `O(n)` (compared to numpy's  `np.unique` - `O(n*logn)`) and 
 
 Maps and sets handle `nan`-correctly (try it out with Python's dict/set):
 
-    from cykhash import Float64to64Map
-    my_map = Float64to64Map(for_int=True) # values are 64bit integers
+    from cykhash import Float64toInt64Map
+    my_map = Float64toInt64Map(for_int=True) # values are 64bit integers
     my_map[float("nan")] = 1
     assert my_map[float("nan")] == 1
 
@@ -91,7 +91,7 @@ The most efficient way to create such sets is to use `XXXXSet_from_buffer(...)`,
 
 ### Hash maps
 
-`Int64to64Map`, `Int32to32Map`, `Float64to64Map`, `Float32to32Map`, and `PyObjectMap` are implemented. They are more or less drop-in replacements for Python's `dict` (however, not every piece of `dict`'s functionality makes sense, for example `setdefault(x, default)` without `default`-argument, because `None` cannot be inserted, also the khash-maps don't preserve the insertion order, so there is also no `reversed`). Furthermore, given the Cython-interface, efficient extensions of functionality are easily done.
+`Int64toInt64Map`, `Int32toInt32Map`, `Float64toInt64Map`, `Float32toInt32Map`, and `PyObjectMap` are implemented. They are more or less drop-in replacements for Python's `dict` (however, not every piece of `dict`'s functionality makes sense, for example `setdefault(x, default)` without `default`-argument, because `None` cannot be inserted, also the khash-maps don't preserve the insertion order, so there is also no `reversed`). Furthermore, given the Cython-interface, efficient extensions of functionality are easily done.
 
 Biggest advantage of these sets is that they need about 4-8 times less memory than the usual Python-dictionaries and are somewhat faster for integers or floats.
 
@@ -124,7 +124,7 @@ As pandas uses maps instead of sets internally for `unique`, it needs about 4 ti
 
 ### Floating-point numbers as keys
 
-There is a problem with floating-point sets or maps, i.e. `Float64Set`, `Float32Set`, `Float64to64Map` and `Float32to32Map`: The standard definition of "equal" and hash-function based on the bit representation don't define a meaningful or desired behavior for the hash set:
+There is a problem with floating-point sets or maps, i.e. `Float64Set`, `Float32Set`, `Float64toInt64Map` and `Float32toInt32Map`: The standard definition of "equal" and hash-function based on the bit representation don't define a meaningful or desired behavior for the hash set:
 
    * `NAN != NAN` and thus it is not equivalence relation
    * `-0.0 == 0.0` but `hash(-0.0)!=hash(0.0)`, but `x==y => hash(x)==hash(y)` is neccessary for set to work properly.
@@ -168,22 +168,22 @@ Cython: Create a set and put some values into it:
 
 #### Hash maps
 
-Python: Creating `int64->float64` map using `Int64to64Map_from_float64_buffer`:
+Python: Creating `int64->float64` map using `Int64toInt64Map_from_float64_buffer`:
 
     import numpy as np
-    from cykhash import Int64to64Map_from_float64_buffer
+    from cykhash import Int64toInt64Map_from_float64_buffer
     keys = np.array([1, 2, 3, 4], dtype=np.int64)
     vals = np.array([5, 6, 7, 8], dtype=np.float64)
-    my_map = Int64to64Map_from_float64_buffer(keys, vals) # there will be no reallocation
+    my_map = Int64toInt64Map_from_float64_buffer(keys, vals) # there will be no reallocation
     assert my_map[4] == 8.0
 
 Python: Creating `int64->int64` map from scratch:
 
     import numpy as np
-    from cykhash import Int64to64Map
+    from cykhash import Int64toInt64Map
     # my_map will not need reallocation for at least 12 elements and
     # values are int64 (another possibility is for_int=False, meas for float64
-    my_map = Int64to64Map(number_of_elements_hint=12, for_int=True)
+    my_map = Int64toInt64Map(number_of_elements_hint=12, for_int=True)
     for i in range(12):
         my_map[i] = i+1
     assert my_map[5] == 6
@@ -254,6 +254,7 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
   * Breaking change: iterator from maps doesn't no longer returns items but only keys. However there are following new methods `keys()`, `values()` and `items()`which return so called mapvies, which correspond more or less to dictviews (but for mapsview doesn't hold that "Dictionary order is guaranteed to be insertion order.").
   * Hash-Maps are now (almost) drop-in replacements of Python's dicts. Differences: insertion order isn't preserved, thus there is also no `reversed()`-method, `setdefault(key, default)` isn't possible without `default` because `None` cannot be inserted in the map
   * Better hash-functions for float64, float32, int64 and int32 (gh-issue #4).
+  * Breaking change: different names/signatures for maps
 
 #### Release 1.0.2 (30.05.2020):
 

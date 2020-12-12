@@ -1,23 +1,23 @@
 import numpy as np
 
-from cykhash import Int64to64Map_to_int64, Int64to64Map_to_float64, Int64to64Map_from_int64_buffer, Int64to64Map_from_float64_buffer
-from cykhash import Float64to64Map_to_int64, Float64to64Map_to_float64, Float64to64Map_from_int64_buffer, Float64to64Map_from_float64_buffer
-from cykhash import Int32to32Map_to_int32, Int32to32Map_to_float32, Int32to32Map_from_int32_buffer, Int32to32Map_from_float32_buffer
-from cykhash import Float32to32Map_to_int32, Float32to32Map_to_float32, Float32to32Map_from_int32_buffer, Float32to32Map_from_float32_buffer
+from cykhash import Int64toInt64Map_to_int64, Int64toInt64Map_to_float64, Int64toInt64Map_from_int64_buffer, Int64toInt64Map_from_float64_buffer
+from cykhash import Float64toInt64Map_to_int64, Float64toInt64Map_to_float64, Float64toInt64Map_from_int64_buffer, Float64toInt64Map_from_float64_buffer
+from cykhash import Int32toInt32Map_to_int32, Int32toInt32Map_to_float32, Int32toInt32Map_from_int32_buffer, Int32toInt32Map_from_float32_buffer
+from cykhash import Float32toInt32Map_to_int32, Float32toInt32Map_to_float32, Float32toInt32Map_from_int32_buffer, Float32toInt32Map_from_float32_buffer
 from cykhash import PyObjectMap_to_object, PyObjectMap_from_object_buffer
 
 
-MAP_TO_INT            = {np.int32: Int32to32Map_to_int32,
-                         np.int64: Int64to64Map_to_int64,
-                         np.float64 : Float64to64Map_to_int64,
-                         np.float32 : Float32to32Map_to_int32,
+MAP_TO_INT            = {np.int32: Int32toInt32Map_to_int32,
+                         np.int64: Int64toInt64Map_to_int64,
+                         np.float64 : Float64toInt64Map_to_int64,
+                         np.float32 : Float32toInt32Map_to_int32,
                          np.object : PyObjectMap_to_object,
 }
 
-CREATOR_FROM_INT      = {np.int32: Int32to32Map_from_int32_buffer,
-                         np.int64: Int64to64Map_from_int64_buffer,
-                         np.float64 : Float64to64Map_from_int64_buffer,
-                         np.float32 : Float32to32Map_from_int32_buffer,
+CREATOR_FROM_INT      = {np.int32: Int32toInt32Map_from_int32_buffer,
+                         np.int64: Int64toInt64Map_from_int64_buffer,
+                         np.float64 : Float64toInt64Map_from_int64_buffer,
+                         np.float32 : Float32toInt32Map_from_int32_buffer,
                          np.object : PyObjectMap_from_object_buffer,
 }
 

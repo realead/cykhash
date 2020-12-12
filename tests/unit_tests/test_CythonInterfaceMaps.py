@@ -5,7 +5,7 @@ pyximport.install(setup_args = {"script_args" : ["--force"]},
 import unittest
 import uttemplate
 import cymapinterfacetester as cyt
-from cykhash import Int64to64Map, Int32to32Map, Float64to64Map, Float32to32Map, PyObjectMap
+from cykhash import Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map, PyObjectMap
 
 AS_LIST   = {'int64'   : cyt.as_py_list_int64, 
              'int32'   : cyt.as_py_list_int32, 
@@ -25,10 +25,10 @@ USE_FLOAT = {'int64'   : cyt.use_float64,
              'float32' : cyt.use_float32_float32,
              'object'  : cyt.use_pyobject,
             } 
-MAP       = {'int64'   : Int64to64Map,
-             'int32'   : Int32to32Map,
-             'float64' : Float64to64Map,
-             'float32' : Float32to32Map,
+MAP       = {'int64'   : Int64toInt64Map,
+             'int32'   : Int32toInt32Map,
+             'float64' : Float64toInt64Map,
+             'float32' : Float32toInt32Map,
              'object' :  PyObjectMap,
             }
 #just making sure the interface can be accessed:

@@ -1,9 +1,9 @@
 import unittest
 import uttemplate
 
-from cykhash import Int64to64Map, Int32to32Map, Float64to64Map, Float32to32Map, PyObjectMap
+from cykhash import Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map, PyObjectMap
 
-@uttemplate.from_templates([Int64to64Map, Int32to32Map, Float64to64Map, Float32to32Map, PyObjectMap])
+@uttemplate.from_templates([Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map, PyObjectMap])
 class MapIteratorTester(unittest.TestCase): 
 
     def template_iterate(self, map_type):

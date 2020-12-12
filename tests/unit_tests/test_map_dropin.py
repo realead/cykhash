@@ -1,16 +1,16 @@
 import unittest
 import uttemplate
 
-from cykhash import Int64to64Map, Int32to32Map, Float64to64Map, Float32to32Map, PyObjectMap
+from cykhash import Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map, PyObjectMap
 import cykhash
 
-nopython_maps = [Int64to64Map, Int32to32Map, Float64to64Map, Float32to32Map]
+nopython_maps = [Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map]
 all_maps = nopython_maps + [PyObjectMap]
 
-SUFFIX={Int64to64Map : "int64map",  
-        Int32to32Map : "int32map",  
-        Float64to64Map : "float64map",  
-        Float32to32Map : "float32map",  
+SUFFIX={Int64toInt64Map : "int64map",  
+        Int32toInt32Map : "int32map",  
+        Float64toInt64Map : "float64map",  
+        Float32toInt32Map : "float32map",  
         PyObjectMap : "pyobjectmap"}
 def pick_fun(name, map_type):
     return getattr(cykhash, name+"_"+SUFFIX[map_type])

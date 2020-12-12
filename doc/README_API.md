@@ -55,10 +55,10 @@ The following functions are available:
 
 Following classes are defined: 
          
-  * `Int64to64Map` for mapping  64 bit integers to 64bit integer/floats
-  * `Int32to32Map` for mapping 32 bit integers to 32bit integer/floats
-  * `Float64to64Map`for mapping 64 bit floats to 64bit integer/floats
-  * `Float32to32Map`for mapping 32 bit floats to 32bit integer/floats
+  * `Int64toInt64Map` for mapping  64 bit integers to 64bit integer/floats
+  * `Int32toInt32Map` for mapping 32 bit integers to 32bit integer/floats
+  * `Float64toInt64Map`for mapping 64 bit floats to 64bit integer/floats
+  * `Float32toInt32Map`for mapping 32 bit floats to 32bit integer/floats
   * `PyObjectMap`for arbitrary Python-objects as key/values
 
 with Python interface:

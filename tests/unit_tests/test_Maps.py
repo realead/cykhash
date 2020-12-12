@@ -2,9 +2,9 @@ import unittest
 import uttemplate
 import struct
 
-from cykhash import Int64to64Map, Int32to32Map, Float64to64Map, Float32to32Map, PyObjectMap
+from cykhash import Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map, PyObjectMap
 
-@uttemplate.from_templates([Int64to64Map, Int32to32Map, Float64to64Map, Float32to32Map])
+@uttemplate.from_templates([Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map])
 class CommonMapTester(unittest.TestCase): 
 
    def template_created_empty(self, map_type):
@@ -132,7 +132,7 @@ class CommonMapTester(unittest.TestCase):
 
 ###### special testers
 
-@uttemplate.from_templates([Int64to64Map, Float64to64Map])
+@uttemplate.from_templates([Int64toInt64Map, Float64toInt64Map])
 class Map64Tester(unittest.TestCase): 
    def template_put_get_int(self, map_type):
       s = map_type()
@@ -152,7 +152,7 @@ class Map64Tester(unittest.TestCase):
       s.put_float64(4, 0.5)
       self.assertTrue(s.get_float64(4), 0.5)
 
-@uttemplate.from_templates([Int32to32Map, Float32to32Map])
+@uttemplate.from_templates([Int32toInt32Map, Float32toInt32Map])
 class Int32MapTester(unittest.TestCase): 
    def template_put_get_int(self, map_type):
       s = map_type()
@@ -173,7 +173,7 @@ class Int32MapTester(unittest.TestCase):
       self.assertTrue(s.get_float32(4), 0.5)
 
 
-@uttemplate.from_templates([Float64to64Map, Float32to32Map, PyObjectMap])
+@uttemplate.from_templates([Float64toInt64Map, Float32toInt32Map, PyObjectMap])
 class FloatTester(unittest.TestCase): 
     def template_nan_right(self, set_type):
         NAN=float("nan")
@@ -199,7 +199,7 @@ class FloatTester(unittest.TestCase):
             s[nan] = 1
 
     def test_all_nans_the_same_float32(self):
-        s=Float32to32Map()
+        s=Float32toInt32Map()
         for nan_id in range(2143299343, 2143499343):
             nan = struct.unpack("f", struct.pack("=I", nan_id))[0]
             s[nan] = 1

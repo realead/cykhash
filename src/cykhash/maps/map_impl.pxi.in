@@ -12,64 +12,57 @@ from cpython.ref cimport Py_INCREF,Py_DECREF
 
 {{py:
 
-# map_name, name, pair_prefix, int_suffix, float_suffix, key_type,
-map_types       = [('Int64toInt64', 'int64toint64', 'int64toint64', 'int64', 'float64', 'int64'),
-                   ('Int64toFloat64', 'int64tofloat64', 'int64tofloat64', 'int64', 'float64', 'int64'),
-                   ('Float64toInt64', 'float64toint64', 'float64toint64', 'int64', 'float64', 'float64'),
-                   ('Float64toFloat64', 'float64tofloat64', 'float64tofloat64', 'int64', 'float64', 'float64'),
-                   ('Int32toInt32', 'int32toint32', 'int32toint32', 'int32', 'float32', 'int32'),
-                   ('Int32toFloat32', 'int32tofloat32', 'int32tofloat32', 'int32', 'float32', 'int32'),
-                   ('Float32toInt32', 'float32toint32', 'float32toint32', 'int32', 'float32', 'float32'),
-                   ('Float32toFloat32', 'float32tofloat32', 'float32toint32', 'int32', 'float32', 'float32'),
-                   ('PyObject', 'pyobject', 'pyobject', 'object', 'object', 'object'),
+# map_name, name, key_type, val_type
+map_types       = [('Int64toInt64', 'int64toint64', 'int64', 'int64'),
+                   ('Int64toFloat64', 'int64tofloat64', 'int64', 'float64'),
+                   ('Float64toInt64', 'float64toint64', 'float64', 'int64'),
+                   ('Float64toFloat64', 'float64tofloat64', 'float64', 'float64'),
+                   ('Int32toInt32', 'int32toint32', 'int32', 'int32'),
+                   ('Int32toFloat32', 'int32tofloat32', 'int32', 'float32'),
+                   ('Float32toInt32', 'float32toint32', 'float32', 'int32'),
+                   ('Float32toFloat32', 'float32tofloat32', 'float32', 'float32'),
+                   ('PyObject', 'pyobject', 'object', 'object'),
                   ]
 }}
 
 
-{{for map_name, name, pair_prefix, int_suffix, float_suffix, key_type in map_types}}
+{{for map_name, name, key_type, val_type in map_types}}
 
 
 cdef class {{map_name}}Map:
 
     {{if map_name != 'PyObject'}}
     @classmethod
-    def fromkeys(cls, iterable, value, for_int=True):
-        return {{map_name}}Map(((key, value) for key in iterable), for_int=for_int)
+    def fromkeys(cls, iterable, value):
+        return {{map_name}}Map(((key, value) for key in iterable))
 
-    def __cinit__(self, iterable=None, *, number_of_elements_hint=None, for_int=True):
+    def __cinit__(self, iterable=None, *, number_of_elements_hint=None):
         """
         number_of_elements_hint - number of elements without the need of reallocation.
-        for_int  if True, __setitem__/__getitem__ sets/gets a in64-object, otherwise a float64-object
         """
-        self.for_int = for_int
-        self.table = kh_init_{{pair_prefix}}map()
+        self.table = kh_init_{{name}}map()
         if number_of_elements_hint is not None:
-            kh_resize_{{pair_prefix}}map(self.table, element_n_to_bucket_n(number_of_elements_hint))
+            kh_resize_{{name}}map(self.table, element_n_to_bucket_n(number_of_elements_hint))
         cdef key_{{name}}_t key
-        cdef {{int_suffix}}_t val_as_int
-        cdef {{float_suffix}}_t val_as_float
+        cdef {{val_type}}_t val
         if iterable is not None:
-            if for_int:
-                for key, val_as_int in iterable:
-                    self.put_{{int_suffix}}(key, val_as_int)
-            else:
-                for key, val_as_float in iterable:
-                    self.put_{{float_suffix}}(key, val_as_float)
+            for key, val in iterable:
+                    self.cput(key, val)
 
     def __dealloc__(self):
         if self.table is not NULL:
-            kh_destroy_{{pair_prefix}}map(self.table)
+            kh_destroy_{{name}}map(self.table)
             self.table = NULL
 
     cpdef void discard(self, key_{{name}}_t key) except *:
         cdef khint_t k
-        k = kh_get_{{pair_prefix}}map(self.table, key)
+        k = kh_get_{{name}}map(self.table, key)
         if k != self.table.n_buckets:
-            kh_del_{{pair_prefix}}map(self.table, k)
+            kh_del_{{name}}map(self.table, k)
 
     cdef bint contains(self, key_{{name}}_t key) except *:
         cdef khint_t k
-        k = kh_get_{{pair_prefix}}map(self.table, key)
+        k = kh_get_{{name}}map(self.table, key)
         return k != self.table.n_buckets
 
     def __contains__(self, key_{{name}}_t key):
@@ -89,7 +82,7 @@ cdef class {{map_name}}Map:
             kh_resize_pyobjectmap(self.table, element_n_to_bucket_n(number_of_elements_hint))
         if iterable is not None:
             for key, val in iterable:
-                    self.put_object(key, val)
+                    self.cput(key, val)
 
  
     cpdef void discard(self, object key) except *:
@@ -127,51 +120,31 @@ cdef class {{map_name}}Map:
         return self.table.size
 
     {{if map_name != 'PyObject'}}
-    cpdef void put_{{int_suffix}}(self, key_{{name}}_t key, {{int_suffix}}_t val) except *:
+    cpdef void cput(self, key_{{name}}_t key, {{val_type}}_t val) except *:
         cdef:
             khint_t k
             int ret = 0
 
-        k = kh_put_{{pair_prefix}}map(self.table, key, &ret)
+        k = kh_put_{{name}}map(self.table, key, &ret)
         self.table.keys[k] = key
         self.table.vals[k] = val
 
-    cpdef void put_{{float_suffix}}(self, key_{{name}}_t key, {{float_suffix}}_t val) except *:
-        {{if int_suffix=='int64'}}
-        self.put_{{int_suffix}}(key, f64_to_i64(val));
-        {{else}}
-        self.put_{{int_suffix}}(key, f32_to_i32(val));
-        {{endif}}
-
     def __setitem__(self, key, val):
-        if self.for_int:
-            self.put_{{int_suffix}}(key, val)
-        else:
-            self.put_{{float_suffix}}(key, val)
+        self.cput(key, val)
 
-    cpdef {{int_suffix}}_t get_{{int_suffix}}(self, key_{{name}}_t key) except *:
-        k = kh_get_{{pair_prefix}}map(self.table, key)
+    cpdef {{val_type}}_t cget(self, key_{{name}}_t key) except *:
+        k = kh_get_{{name}}map(self.table, key)
         if k != self.table.n_buckets:
             return self.table.vals[k]
         else:
             raise KeyError(key)
 
-    cpdef {{float_suffix}}_t get_{{float_suffix}}(self, key_{{name}}_t key) except *:
-        {{if int_suffix=='int64'}}
-        return i64_to_f64(self.get_{{int_suffix}}(key));
-        {{else}}
-        return i32_to_f32(self.get_{{int_suffix}}(key))
-        {{endif}}
-
     def __getitem__(self, key):
-        if self.for_int:
-            return self.get_{{int_suffix}}(key)
-        else:
-            return self.get_{{float_suffix}}(key)
+        return self.cget(key)
         
 
     {{else}}
-    cpdef void put_object(self, object key, object val) except *:
+    cpdef void cput(self, object key, object val) except *:
         cdef:
             khint_t k
             int ret = 0
@@ -184,9 +157,9 @@ cdef class {{map_name}}Map:
         self.table.vals[k] = <pyobject_t> val
  
     def __setitem__(self, key, val):
-        self.put_object(key, val)
+        self.cput(key, val)
 
-    cpdef object get_object(self, object key):
+    cpdef object cget(self, object key):
         k = kh_get_pyobjectmap(self.table, <pyobject_t>key)
         if k != self.table.n_buckets:
             return <object>self.table.vals[k]
@@ -194,7 +167,7 @@ cdef class {{map_name}}Map:
             raise KeyError(key)
 
     def __getitem__(self, key):
-        return self.get_object(key)
+        return self.cget(key)
     {{endif}}
 
     cdef {{map_name}}MapIterator get_iter(self, int view_type):
@@ -286,7 +259,7 @@ cdef class {{map_name}}Map:
 cdef class {{map_name}}MapIterator:
 
     cdef void __move(self) except *:
-        while self.it<self.parent.table.n_buckets and not kh_exist_{{pair_prefix}}map(self.parent.table, self.it):
+        while self.it<self.parent.table.n_buckets and not kh_exist_{{name}}map(self.parent.table, self.it):
               self.it+=1       
 
     cdef bint has_next(self) except *:
@@ -294,8 +267,8 @@ cdef class {{map_name}}MapIterator:
         return self.it < self.parent.table.n_buckets
       
     # doesn't work if there was change between last has_next() and next()       
-    cdef {{pair_prefix}}_key_val_pair next(self) except *:
-        cdef {{pair_prefix}}_key_val_pair result 
+    cdef {{name}}_key_val_pair next(self) except *:
+        cdef {{name}}_key_val_pair result 
         result.key = self.parent.table.keys[self.it]
         result.val = self.parent.table.vals[self.it]
         self.it+=1#ensure at least one move!
@@ -309,7 +282,7 @@ cdef class {{map_name}}MapIterator:
         self.__move()
 
     def __next__(self):
-        cdef {{pair_prefix}}_key_val_pair pair
+        cdef {{name}}_key_val_pair pair
         if self.has_next():
             pair=self.next()
 
@@ -325,23 +298,9 @@ cdef class {{map_name}}MapIterator:
             if self.view_type == 0:           # keys
                 return pair.key
             if self.view_type == 1:           # vals
-                if self.parent.for_int:
-                    return pair.val
-                else:
-                    {{if int_suffix=='int64'}}
-                    return i64_to_f64(pair.val)
-                    {{else}}
-                    return i32_to_f32(pair.val)
-                    {{endif}}
+                return pair.val
             else:                        # items
-                if self.parent.for_int:
-                    return (pair.key, pair.val)
-                else:
-                    {{if int_suffix=='int64'}}
-                    return (pair.key, i64_to_f64(pair.val))
-                    {{else}}
-                    return (pair.key, i32_to_f32(pair.val))
-                    {{endif}}
+                return (pair.key, pair.val)
            {{endif}}
         else:
             raise StopIteration
@@ -370,79 +329,38 @@ cdef class {{map_name}}MapView:
 ##########################      Utils:
 
 {{if map_name != 'PyObject'}}
-cpdef {{map_name}}Map {{map_name}}Map_from_{{int_suffix}}_buffer(key_{{name}}_t[:] keys, {{int_suffix}}_t[:] vals, double size_hint=0.0):
-    cdef Py_ssize_t n = len(keys)
-    cdef Py_ssize_t b = len(vals)
-    if b < n:
-        n = b
-    cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
-    res={{map_name}}Map(number_of_elements_hint=at_least_needed, for_int=True)
-    cdef Py_ssize_t i
-    for i in range(n):
-        res.put_{{int_suffix}}(keys[i], vals[i])
-    return res
-{{endif}}
-
-
-{{if map_name != 'PyObject'}}
-cpdef {{map_name}}Map {{map_name}}Map_from_{{float_suffix}}_buffer(key_{{name}}_t[:] keys, {{float_suffix}}_t[:] vals, double size_hint=0.0):
+cpdef {{map_name}}Map {{map_name}}Map_from_buffers(key_{{name}}_t[:] keys, {{val_type}}_t[:] vals, double size_hint=0.0):
 {{else}}
-cpdef PyObjectMap PyObjectMap_from_object_buffer(object[:] keys, object[:] vals, double size_hint=0.0):
+cpdef PyObjectMap PyObjectMap_from_buffers(object[:] keys, object[:] vals, double size_hint=0.0):
 {{endif}}
     cdef Py_ssize_t n = len(keys)
     cdef Py_ssize_t b = len(vals)
     if b < n:
         n = b
     cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
-    {{if map_name != 'PyObject'}}
-    res={{map_name}}Map(number_of_elements_hint=at_least_needed, for_int=False)
-    {{else}}
-    res=PyObjectMap(number_of_elements_hint=at_least_needed)
-    {{endif}}
+    res={{map_name}}Map(number_of_elements_hint=at_least_needed)
     cdef Py_ssize_t i
     for i in range(n):
-        res.put_{{float_suffix}}(keys[i], vals[i])
+        res.cput(keys[i], vals[i])
     return res
 
 
-{{if map_name != 'PyObject'}}
-cpdef size_t {{map_name}}Map_to_{{int_suffix}}({{map_name}}Map map, key_{{name}}_t[:] keys, {{int_suffix}}_t[:] vals, bint stop_at_unknown=True, {{int_suffix}}_t default_value=0) except *:
-    """returns number of found keys"""
-    if map is None:
-        raise TypeError("'NoneType' is not a map")
-    if not map.for_int:
-        raise TypeError("Map is not for ints")
-    cdef size_t n = len(keys)
-    if n != len(vals):
-        raise ValueError("Different lengths of keys and vals arrays")
-    cdef size_t i
-    cdef khint_t k
-    cdef size_t res = 0
-    for i in range(n):
-        k = kh_get_{{pair_prefix}}map(map.table, keys[i])
-        if k != map.table.n_buckets:
-            vals[i] = map.table.vals[k]
-            res += 1
-        else:
-            vals[i] = default_value
-            if stop_at_unknown:
-                return res
-    return res
-{{endif}}
-
-
-{{if map_name != 'PyObject'}}
-cpdef size_t {{map_name}}Map_to_{{float_suffix}}({{map_name}}Map map, key_{{name}}_t[:] keys, {{float_suffix}}_t[:] vals, bint stop_at_unknown=True, {{float_suffix}}_t default_value=float("nan")) except *:
+{{if val_type == 'object'}}
+cdef object DEFAULT_VALUE_{{name}} = None
+{{elif val_type.startswith('float')}}
+cdef {{val_type}}_t DEFAULT_VALUE_{{name}} = float("nan")
 {{else}}
-cpdef size_t PyObjectMap_to_object(PyObjectMap map, object[:] keys, object[:] vals, bint stop_at_unknown=True, object default_value=None) except *:
+cdef {{val_type}}_t DEFAULT_VALUE_{{name}} = 0
+{{endif}}
+
+{{if map_name != 'PyObject'}}
+cpdef size_t {{map_name}}Map_to({{map_name}}Map map, key_{{name}}_t[:] keys, {{val_type}}_t[:] vals, bint stop_at_unknown=True, {{val_type}}_t default_value=DEFAULT_VALUE_{{name}}) except *:
+{{else}}
+cpdef size_t PyObjectMap_to(PyObjectMap map, object[:] keys, object[:] vals, bint stop_at_unknown=True, object default_value=None) except *:
 {{endif}}
     """returns number of found keys"""
     if map is None:
         raise TypeError("'NoneType' is not a map")
-    {{if map_name != 'PyObject'}}
-    if map.for_int:
-        raise TypeError("Map is not for floats")
-    {{endif}}
     cdef size_t n = len(keys)
     if n != len(vals):
         raise ValueError("Different lengths of keys and vals arrays")
@@ -451,15 +369,13 @@ cpdef size_t PyObjectMap_to_object(PyObjectMap map, object[:] keys, object[:] va
     cdef size_t res = 0
     for i in range(n):
         {{if map_name != 'PyObject'}}
-        k = kh_get_{{pair_prefix}}map(map.table, keys[i])
+        k = kh_get_{{name}}map(map.table, keys[i])
         {{else}}
-        k = kh_get_{{pair_prefix}}map(map.table,<pyobject_t> keys[i])
+        k = kh_get_{{name}}map(map.table,<pyobject_t> keys[i])
         {{endif}}
         if k != map.table.n_buckets:
-            {{if int_suffix == 'int64'}}
-            vals[i] = i64_to_f64(map.table.vals[k])
-            {{elif int_suffix == 'int32'}}
-            vals[i] = i32_to_f32(map.table.vals[k])
+            {{if map_name != 'PyObject'}}
+            vals[i] = map.table.vals[k]
             {{else}}
             vals[i] = <object>map.table.vals[k]
             {{endif}}
@@ -474,33 +390,23 @@ cpdef void swap_{{name}}map({{map_name}}Map a, {{map_name}}Map b) except *:
     if a is None or b is None:
         raise TypeError("'NoneType' object is not iterable")
 
-    cdef kh_{{pair_prefix}}map_t *tmp=a.table
+    cdef kh_{{name}}map_t *tmp=a.table
     a.table=b.table
     b.table=tmp
-
-    {{if map_name != 'PyObject'}}
-    cdef bint tmp_for_int=a.for_int
-    a.for_int=b.for_int
-    b.for_int=tmp_for_int
-    {{endif}}
 
 
 cpdef {{map_name}}Map copy_{{name}}map({{map_name}}Map s):
     if s is None:
         return None
-    {{if map_name != 'PyObject'}}
-    cdef {{map_name}}Map result = {{map_name}}Map(number_of_elements_hint=s.size(), for_int=s.for_int)
-    {{else}}
     cdef {{map_name}}Map result = {{map_name}}Map(number_of_elements_hint=s.size())
-    {{endif}}
     cdef {{map_name}}MapIterator it=s.get_iter(2)
-    cdef {{pair_prefix}}_key_val_pair p
+    cdef {{name}}_key_val_pair p
     while it.has_next():
         p = it.next()
         {{if map_name == 'PyObject'}}
-        result.put_{{int_suffix}}(<object>p.key, <object>p.val)
+        result.cput(<object>p.key, <object>p.val)
         {{else}}
-        result.put_{{int_suffix}}(p.key, p.val)
+        result.cput(p.key, p.val)
         {{endif}}
     return result
 
@@ -508,14 +414,10 @@ cpdef {{map_name}}Map copy_{{name}}map({{map_name}}Map s):
 cpdef bint are_equal_{{name}}map({{map_name}}Map a, {{map_name}}Map b) except *:
     if a is None or b is None:
         raise TypeError("'NoneType' object is not iterable")
-    {{if map_name != 'PyObject'}}
-    if a.for_int!=b.for_int:
-        return False
-    {{endif}}
     if a.size()!=b.size():
         return False
     cdef {{map_name}}MapIterator it=a.get_iter(2)
-    cdef {{pair_prefix}}_key_val_pair p
+    cdef {{name}}_key_val_pair p
     while it.has_next():
         p = it.next()
         if not b.contains(p.key):
@@ -527,13 +429,13 @@ cpdef void update_{{name}}map({{map_name}}Map a, {{map_name}}Map b) except *:
     if a is None or b is None:
         raise TypeError("'NoneType' object is not iterable")
     cdef {{map_name}}MapIterator it=b.get_iter(2)
-    cdef {{pair_prefix}}_key_val_pair p
+    cdef {{name}}_key_val_pair p
     while it.has_next():
         p = it.next()
         {{if map_name == 'PyObject'}}
-        a.put_{{int_suffix}}(<object>p.key, <object>p.val)
+        a.cput(<object>p.key, <object>p.val)
         {{else}}
-        a.put_{{int_suffix}}(p.key, p.val)
+        a.cput(p.key, p.val)
         {{endif}}
 
 {{endfor}}

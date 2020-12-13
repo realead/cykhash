@@ -2,26 +2,26 @@
 
 ############# int64 - test
 
-from cykhash.khashmaps cimport Int64toInt64Map, Int64toInt64MapIterator, int64toint64_key_val_pair
+from cykhash.khashmaps cimport Int64toInt64Map, Int64toFloat64Map, Int64toInt64MapIterator, int64toint64_key_val_pair
 
 def use_int64(keys, values, query):
     s=Int64toInt64Map()
     for x,y in zip(keys, values):
-        s.put_int64(x,y)
+        s.cput(x,y)
     assert s.size() == len(s) #to check size() exists
     res=[]
     for i in query:
-        res.append(s.get_int64(i))
+        res.append(s.cget(i))
     return res
 
 def use_float64(keys, values, query):
-    s=Int64toInt64Map()
+    s=Int64toFloat64Map()
     for x,y in zip(keys, values):
-        s.put_float64(x,y)
+        s.cput(x,y)
     assert s.size() == len(s) #to check size() exists
     res=[]
     for i in query:
-        res.append(s.get_float64(i))
+        res.append(s.cget(i))
     return res
 
 
@@ -37,26 +37,26 @@ def as_py_list_int64(Int64toInt64Map db):
 ############# int32 - test
 
 
-from cykhash.khashmaps cimport Int32toInt32Map, Int32toInt32MapIterator, int32toint32_key_val_pair
+from cykhash.khashmaps cimport Int32toInt32Map, Int32toFloat32Map, Int32toInt32MapIterator, int32toint32_key_val_pair
 
 def use_int32(keys, values, query):
     s=Int32toInt32Map()
     for x,y in zip(keys, values):
-        s.put_int32(x,y)
+        s.cput(x,y)
     assert s.size() == len(s) #to check size() exists
     res=[]
     for i in query:
-        res.append(s.get_int32(i))
+        res.append(s.cget(i))
     return res
 
 def use_float32(keys, values, query):
-    s=Int32toInt32Map()
+    s=Int32toFloat32Map()
     for x,y in zip(keys, values):
-        s.put_float32(x,y)
+        s.cput(x,y)
     assert s.size() == len(s) #to check size() exists
     res=[]
     for i in query:
-        res.append(s.get_float32(i))
+        res.append(s.cget(i))
     return res
 
 
@@ -72,26 +72,26 @@ def as_py_list_int32(Int32toInt32Map db):
 
 ############# float64 - test
 
-from cykhash.khashmaps cimport Float64toInt64Map, Float64toInt64MapIterator, float64toint64_key_val_pair
+from cykhash.khashmaps cimport Float64toInt64Map, Float64toFloat64Map, Float64toInt64MapIterator, float64toint64_key_val_pair
 
 def use_int64_float64(keys, values, query):
     s=Float64toInt64Map()
     for x,y in zip(keys, values):
-        s.put_int64(x,y)
+        s.cput(x,y)
     assert s.size() == len(s) #to check size() exists
     res=[]
     for i in query:
-        res.append(s.get_int64(i))
+        res.append(s.cget(i))
     return res
 
 def use_float64_float64(keys, values, query):
-    s=Float64toInt64Map()
+    s=Float64toFloat64Map()
     for x,y in zip(keys, values):
-        s.put_float64(x,y)
+        s.cput(x,y)
     assert s.size() == len(s) #to check size() exists
     res=[]
     for i in query:
-        res.append(s.get_float64(i))
+        res.append(s.cget(i))
     return res
 
 
@@ -106,26 +106,26 @@ def as_py_list_int64_float64(Float64toInt64Map db):
 
 ############# float32 - test
 
-from cykhash.khashmaps cimport Float32toInt32Map, Float32toInt32MapIterator, float32toint32_key_val_pair
+from cykhash.khashmaps cimport Float32toInt32Map, Float32toFloat32Map, Float32toInt32MapIterator, float32toint32_key_val_pair
 
 def use_int32_float32(keys, values, query):
     s=Float32toInt32Map()
     for x,y in zip(keys, values):
-        s.put_int32(x,y)
+        s.cput(x,y)
     assert s.size() == len(s) #to check size() exists
     res=[]
     for i in query:
-        res.append(s.get_int32(i))
+        res.append(s.cget(i))
     return res
 
 def use_float32_float32(keys, values, query):
-    s=Float32toInt32Map()
+    s=Float32toFloat32Map()
     for x,y in zip(keys, values):
-        s.put_float32(x,y)
+        s.cput(x,y)
     assert s.size() == len(s) #to check size() exists
     res=[]
     for i in query:
-        res.append(s.get_float32(i))
+        res.append(s.cget(i))
     return res
 
 
@@ -146,11 +146,11 @@ from cykhash.khashmaps cimport PyObjectMap, PyObjectMapIterator, pyobject_key_va
 def use_pyobject(keys, values, query):
     s=PyObjectMap()
     for x,y in zip(keys, values):
-        s.put_object(x,y)
+        s.cput(x,y)
     assert s.size() == len(s) #to check size() exists
     res=[]
     for i in query:
-        res.append(s.get_object(i))
+        res.append(s.cget(i))
     return res
 
 def as_py_list_pyobject(PyObjectMap db):

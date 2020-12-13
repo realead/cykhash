@@ -116,63 +116,26 @@ class CommonMapTester(unittest.TestCase):
       self.assertTrue(4 in s)
       self.assertTrue(5 in s)
 
-
-   def template_as_int64_a_float(self, map_type):
-      s = map_type(number_of_elements_hint=20, for_int=True)
-      s[4] = 5.4
-      self.assertEqual(s[4], 5)
-
-   def template_as_int64_put_get(self, map_type):
-      s = map_type(number_of_elements_hint=20, for_int=True)
+   def template_as_put_get_int(self, map_type):
+      s = map_type(number_of_elements_hint=20)
       s[4] = 5
       self.assertEqual(s[4], 5)
 
-   def template_as_float64_put_get(self, map_type):
-      s = map_type(number_of_elements_hint=20, for_int=False)
-      s[4] = 5
-      self.assertEqual(s[4], 5)
+   def template_cput_cget_int(self, map_type):
+      s = map_type()
+      s.cput(1, 43)
+      self.assertEqual(len(s), 1)
+      self.assertEqual(s.cget(1), 43)
+
 
 ###### special testers
 
-@uttemplate.from_templates([Int64toInt64Map, Float64toInt64Map])
-class Map64Tester(unittest.TestCase): 
-   def template_put_get_int(self, map_type):
-      s = map_type()
-      s.put_int64(1, 43)
-      self.assertEqual(len(s), 1)
-      self.assertEqual(s.get_int64(1), 43)
-
-   def template_int_to_float_to_int(self, map_type):
-      s = map_type()
-      s.put_int64(4, 7)
-      s.put_float64(5, s.get_float64(4))
-      self.assertTrue(s.get_int64(4), 7)
-
-   def template_same_key_float_int(self, map_type):
-      s = map_type()
-      s.put_int64(4, 7)
-      s.put_float64(4, 0.5)
-      self.assertTrue(s.get_float64(4), 0.5)
-
-@uttemplate.from_templates([Int32toInt32Map, Float32toInt32Map])
-class Int32MapTester(unittest.TestCase): 
-   def template_put_get_int(self, map_type):
-      s = map_type()
-      s.put_int32(1, 43)
-      self.assertEqual(len(s), 1)
-      self.assertEqual(s.get_int32(1), 43)
-
-   def template_int_to_float_to_int(self, map_type):
-      s = map_type()
-      s.put_int32(4, 7)
-      s.put_float32(5, s.get_float32(4))
-      self.assertTrue(s.get_int32(4), 7)
-
-   def template_same_key_float_int(self, map_type):
-      s = map_type()
-      s.put_int32(4, 7)
-      s.put_float32(4, 0.5)
-      self.assertTrue(s.get_float32(4), 0.5)
+@uttemplate.from_templates([Float64toFloat64Map, Float32toFloat32Map, Int64toFloat64Map, Int32toFloat32Map, PyObjectMap])
+class FloatValTester(unittest.TestCase): 
+   def template_as_put_get_float(self, map_type):
+      s = map_type(number_of_elements_hint=20)
+      s[4] = 5.4
+      self.assertTrue(abs(s[4]-5.4)<1e-5)
 
 
 @uttemplate.from_templates([Float64toFloat64Map, Float32toFloat32Map, Float64toInt64Map, Float32toInt32Map, PyObjectMap])

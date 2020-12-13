@@ -38,7 +38,7 @@ MAP       = {'int64'   : Int64toInt64Map,
                             'float64',
                             'float32',
                            ])
-class CyMypInterfaceTester(unittest.TestCase): 
+class CyMapInterfaceTester(unittest.TestCase): 
 
    def template_cimport_use_int(self, map_type):
       received=USE_INT[map_type]([1,2,3,4], [5,6,7,8], [2,3])

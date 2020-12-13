@@ -22,7 +22,7 @@ cdef extern from *:
         KHASH_INIT(name, int{{bits}}_t, khval_t, 1, murmur2_{{bits}}to32, kh_int{{bits}}_hash_equal)
   
     CYKHASH_MAP_INIT_INT{{bits}}(int{{bits}}toint{{bits}}map, int{{bits}}_t)
-    CYKHASH_MAP_INIT_INT{{bits}}(int{{bits}}tofloat{{bits}}map, int{{bits}}_t)
+    CYKHASH_MAP_INIT_INT{{bits}}(int{{bits}}tofloat{{bits}}map, float{{bits}}_t)
     """
     pass
 
@@ -51,7 +51,7 @@ cdef extern from *:
 	    KHASH_INIT(name, khfloat{{bits}}_t, khval_t, 1, kh_float{{bits}}_hash_func, kh_float{{bits}}_hash_equal)
 
     CYKHASH_MAP_INIT_FLOAT{{bits}}(float{{bits}}toint{{bits}}map, int{{bits}}_t)
-    CYKHASH_MAP_INIT_FLOAT{{bits}}(float{{bits}}tofloat{{bits}}map, int{{bits}}_t)
+    CYKHASH_MAP_INIT_FLOAT{{bits}}(float{{bits}}tofloat{{bits}}map, float{{bits}}_t)
 
     """
     pass

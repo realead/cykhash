@@ -71,7 +71,7 @@ Finding `unique` in `O(n)` (compared to numpy's  `np.unique` - `O(n*logn)`) and 
 Maps and sets handle `nan`-correctly (try it out with Python's dict/set):
 
     from cykhash import Float64toInt64Map
-    my_map = Float64toInt64Map(for_int=True) # values are 64bit integers
+    my_map = Float64toInt64Map() # values are 64bit integers
     my_map[float("nan")] = 1
     assert my_map[float("nan")] == 1
 
@@ -168,22 +168,21 @@ Cython: Create a set and put some values into it:
 
 #### Hash maps
 
-Python: Creating `int64->float64` map using `Int64toInt64Map_from_float64_buffer`:
+Python: Creating `int64->float64` map using `Int64toFloat64Map_from_buffers`:
 
     import numpy as np
-    from cykhash import Int64toInt64Map_from_float64_buffer
+    from cykhash import Int64toFloat64Map_from_buffers
     keys = np.array([1, 2, 3, 4], dtype=np.int64)
     vals = np.array([5, 6, 7, 8], dtype=np.float64)
-    my_map = Int64toInt64Map_from_float64_buffer(keys, vals) # there will be no reallocation
+    my_map = Int64toFloat64Map_from_buffers(keys, vals) # there will be no reallocation
     assert my_map[4] == 8.0
 
 Python: Creating `int64->int64` map from scratch:
 
     import numpy as np
     from cykhash import Int64toInt64Map
-    # my_map will not need reallocation for at least 12 elements and
-    # values are int64 (another possibility is for_int=False, meas for float64
-    my_map = Int64toInt64Map(number_of_elements_hint=12, for_int=True)
+    # my_map will not need reallocation for at least 12 elements
+    my_map = Int64toInt64Map(number_of_elements_hint=12)
     for i in range(12):
         my_map[i] = i+1
     assert my_map[5] == 6

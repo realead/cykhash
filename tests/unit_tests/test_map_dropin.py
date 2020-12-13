@@ -30,43 +30,12 @@ class MapDropinTester(unittest.TestCase):
         self.assertEqual(m[1],2)
         self.assertTrue(m[3],1)
 
-    @uttemplate.for_types(nopython_maps)
-    def template_init_float_from_iter(self, map_type):
-        m=map_type([(1,2.2),(3,1.3)], for_int=False)
-        self.assertEqual(len(m), 2)
-        self.assertAlmostEqual(m[1],2.2, delta=1e-5)
-        self.assertAlmostEqual(m[3],1.3, delta=1e-5)
-
-    @uttemplate.for_types(nopython_maps)
-    def template_init_int_from_iter_with_floats(self, map_type):
-        # float implements __int__, thus we use it
-        m=map_type([(1,2),(3,1.3)], for_int=True)
-        self.assertEqual(len(m), 2)
-        self.assertEqual(m[1],2)
-        self.assertEqual(m[3],1)
-
     def template_fromkeys(self, map_type):
         m=map_type.fromkeys([1,2,3], 55)
         self.assertEqual(len(m), 3)
         self.assertEqual(m[1],55)
         self.assertTrue(m[2],55)
         self.assertTrue(m[3],55)
-
-    @uttemplate.for_types(nopython_maps)
-    def template_fromkeys_floats(self, map_type):
-        m=map_type.fromkeys([1,2,3], 5.5, for_int=False)
-        self.assertEqual(len(m), 3)
-        self.assertAlmostEqual(m[1],5.5, delta=1e-5)
-        self.assertAlmostEqual(m[2],5.5, delta=1e-5)
-        self.assertAlmostEqual(m[3],5.5, delta=1e-5)
-
-    @uttemplate.for_types(nopython_maps)
-    def template_init_int_from_iter_with_floats(self, map_type):
-        # float implements __int__, thus we use it
-        m=map_type([(1,2),(3,1.3)], for_int=True)
-        self.assertEqual(len(m), 2)
-        self.assertEqual(m[1],2)
-        self.assertEqual(m[3],1)
 
     def template_clear(self, map_type):
         a=map_type([(1,2), (2,3)])      
@@ -203,18 +172,6 @@ class SwapTester(unittest.TestCase):
         self.assertEqual(len(b), 1001)
 
 
-    @uttemplate.for_types(nopython_maps)
-    def template_swap_for_int(self, map_type):
-        swap=pick_fun("swap", map_type)
-        a=map_type([(1,2)])
-        b=map_type([(2,3.3)], for_int=False)
-        swap(a,b)
-        self.assertEqual(len(a), 1)
-        self.assertAlmostEqual(a[2],3.3, delta=1e-5)
-        self.assertEqual(len(b), 1)
-        self.assertEqual(b[1], 2)
-
-
 
 @uttemplate.from_templates(all_maps)
 class DictViewTester(unittest.TestCase): 
@@ -290,16 +247,6 @@ class AreEqualTester(unittest.TestCase):
     def template_small_no_diffsizes(self, map_type):
         a=map_type([(1,2), (3,4), (3,4)])
         b=map_type([(3,4), (2,2), (3,3)])
-        are_equal=pick_fun("are_equal", map_type)
-        self.assertEqual(are_equal(a,b), False)
-        self.assertEqual(are_equal(b,a), False)
-        self.assertEqual(a==b, False)
-        self.assertEqual(b==a, False)
-
-    @uttemplate.for_types(nopython_maps)
-    def template_small_no_diff_for_int(self, map_type):
-        a=map_type([], for_int=True)
-        b=map_type([], for_int=False)
         are_equal=pick_fun("are_equal", map_type)
         self.assertEqual(are_equal(a,b), False)
         self.assertEqual(are_equal(b,a), False)

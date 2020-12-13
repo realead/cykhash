@@ -2,8 +2,11 @@ import unittest
 import uttemplate
 
 from cykhash import Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map, PyObjectMap
+from cykhash import Int64toFloat64Map, Int32toFloat32Map, Float64toFloat64Map, Float32toFloat32Map
 
-@uttemplate.from_templates([Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map, PyObjectMap])
+@uttemplate.from_templates([Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map,
+                            Int64toFloat64Map, Int32toFloat32Map, Float64toFloat64Map, Float32toFloat32Map,
+                            PyObjectMap])
 class MapIteratorTester(unittest.TestCase): 
 
     def template_iterate(self, map_type):

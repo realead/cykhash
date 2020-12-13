@@ -2,15 +2,21 @@ import unittest
 import uttemplate
 
 from cykhash import Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map, PyObjectMap
+from cykhash import Int64toFloat64Map, Int32toFloat32Map, Float64toFloat64Map, Float32toFloat32Map
 import cykhash
 
-nopython_maps = [Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map]
+nopython_maps = [Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map,
+                 Int64toFloat64Map, Int32toFloat32Map, Float64toFloat64Map, Float32toFloat32Map]
 all_maps = nopython_maps + [PyObjectMap]
 
-SUFFIX={Int64toInt64Map : "int64map",  
-        Int32toInt32Map : "int32map",  
-        Float64toInt64Map : "float64map",  
-        Float32toInt32Map : "float32map",  
+SUFFIX={Int64toInt64Map : "int64toint64map",  
+        Int32toInt32Map : "int32toint32map",  
+        Float64toInt64Map : "float64toint64map",  
+        Float32toInt32Map : "float32toint32map", 
+        Int64toFloat64Map : "int64tofloat64map",  
+        Int32toFloat32Map : "int32tofloat32map",  
+        Float64toFloat64Map : "float64tofloat64map",  
+        Float32toFloat32Map : "float32tofloat32map",  
         PyObjectMap : "pyobjectmap"}
 def pick_fun(name, map_type):
     return getattr(cykhash, name+"_"+SUFFIX[map_type])

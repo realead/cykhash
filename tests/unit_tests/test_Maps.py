@@ -3,8 +3,10 @@ import uttemplate
 import struct
 
 from cykhash import Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map, PyObjectMap
+from cykhash import Int64toFloat64Map, Int32toFloat32Map, Float64toFloat64Map, Float32toFloat32Map
 
-@uttemplate.from_templates([Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map])
+@uttemplate.from_templates([Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map,
+                            Int64toFloat64Map, Int32toFloat32Map, Float64toFloat64Map, Float32toFloat32Map,])
 class CommonMapTester(unittest.TestCase): 
 
    def template_created_empty(self, map_type):
@@ -173,7 +175,7 @@ class Int32MapTester(unittest.TestCase):
       self.assertTrue(s.get_float32(4), 0.5)
 
 
-@uttemplate.from_templates([Float64toInt64Map, Float32toInt32Map, PyObjectMap])
+@uttemplate.from_templates([Float64toFloat64Map, Float32toFloat32Map, Float64toInt64Map, Float32toInt32Map, PyObjectMap])
 class FloatTester(unittest.TestCase): 
     def template_nan_right(self, set_type):
         NAN=float("nan")

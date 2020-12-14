@@ -10,14 +10,14 @@ include "map_init.pxi"
 {{py:
 
 # map_name, name, key_type, val_type
-map_types       = [('Int64toInt64', 'int64toint64', 'int64_t', 'int64'),
-                   ('Int64toFloat64', 'int64tofloat64', 'int64_t', 'float64'),
-                   ('Float64toInt64', 'float64toint64', 'float64_t', 'int64'),
-                   ('Float64toFloat64', 'float64tofloat64', 'float64_t', 'float64'),
-                   ('Int32toInt32', 'int32toint32', 'int32_t', 'int32'),
-                   ('Int32toFloat32', 'int32tofloat32', 'int32_t', 'float32'),
-                   ('Float32toInt32', 'float32toint32', 'float32_t', 'int32'),
-                   ('Float32toFloat32', 'float32tofloat32', 'float32_t', 'float32'),
+map_types       = [('Int64toInt64', 'int64toint64', 'int64_t', 'int64_t'),
+                   ('Int64toFloat64', 'int64tofloat64', 'int64_t', 'float64_t'),
+                   ('Float64toInt64', 'float64toint64', 'float64_t', 'int64_t'),
+                   ('Float64toFloat64', 'float64tofloat64', 'float64_t', 'float64_t'),
+                   ('Int32toInt32', 'int32toint32', 'int32_t', 'int32_t'),
+                   ('Int32toFloat32', 'int32tofloat32', 'int32_t', 'float32_t'),
+                   ('Float32toInt32', 'float32toint32', 'float32_t', 'int32_t'),
+                   ('Float32toFloat32', 'float32tofloat32', 'float32_t', 'float32_t'),
                   ]
 }}
 
@@ -30,7 +30,7 @@ cdef extern from *:
         khint_t n_buckets, size, n_occupied, upper_bound
         uint32_t *flags
         {{key_type}} *keys
-        {{val_type}}_t *vals  
+        {{val_type}} *vals  
 
     kh_{{name}}map_t* kh_init_{{name}}map() nogil
     void kh_destroy_{{name}}map(kh_{{name}}map_t*) nogil
@@ -50,14 +50,14 @@ cdef class {{map_name}}Map:
     cdef bint contains(self, {{key_type}} key) except *
     cdef {{map_name}}MapIterator get_iter(self, int view_type)
     cdef khint_t size(self) 
-    cpdef void cput(self, {{key_type}} key, {{val_type}}_t value) except *
-    cpdef {{val_type}}_t cget(self, {{key_type}} key) except *
+    cpdef void cput(self, {{key_type}} key, {{val_type}} value) except *
+    cpdef {{val_type}} cget(self, {{key_type}} key) except *
     cpdef void discard(self, {{key_type}} key) except *
     
 
 cdef struct {{name}}_key_val_pair:
     {{key_type}} key
-    {{val_type}}_t val
+    {{val_type}} val
 
 
 cdef class {{map_name}}MapIterator:
@@ -77,9 +77,9 @@ cdef class {{map_name}}MapView:
     cdef {{map_name}}MapIterator get_iter(self)
 
 
-cpdef {{map_name}}Map {{map_name}}Map_from_buffers({{key_type}}[:] keys, {{val_type}}_t[:] vals, double size_hint=*)
+cpdef {{map_name}}Map {{map_name}}Map_from_buffers({{key_type}}[:] keys, {{val_type}}[:] vals, double size_hint=*)
 
-cpdef size_t {{map_name}}Map_to({{map_name}}Map map, {{key_type}}[:] keys, {{val_type}}_t[:] vals, bint stop_at_unknown=*, {{val_type}}_t default_value=*) except *
+cpdef size_t {{map_name}}Map_to({{map_name}}Map map, {{key_type}}[:] keys, {{val_type}}[:] vals, bint stop_at_unknown=*, {{val_type}} default_value=*) except *
 
 
 

@@ -13,14 +13,14 @@ from cpython.ref cimport Py_INCREF,Py_DECREF
 {{py:
 
 # map_name, name, key_type, val_type
-map_types       = [('Int64toInt64', 'int64toint64', 'int64', 'int64'),
-                   ('Int64toFloat64', 'int64tofloat64', 'int64', 'float64'),
-                   ('Float64toInt64', 'float64toint64', 'float64', 'int64'),
-                   ('Float64toFloat64', 'float64tofloat64', 'float64', 'float64'),
-                   ('Int32toInt32', 'int32toint32', 'int32', 'int32'),
-                   ('Int32toFloat32', 'int32tofloat32', 'int32', 'float32'),
-                   ('Float32toInt32', 'float32toint32', 'float32', 'int32'),
-                   ('Float32toFloat32', 'float32tofloat32', 'float32', 'float32'),
+map_types       = [('Int64toInt64', 'int64toint64', 'int64_t', 'int64'),
+                   ('Int64toFloat64', 'int64tofloat64', 'int64_t', 'float64'),
+                   ('Float64toInt64', 'float64toint64', 'float64_t', 'int64'),
+                   ('Float64toFloat64', 'float64tofloat64', 'float64_t', 'float64'),
+                   ('Int32toInt32', 'int32toint32', 'int32_t', 'int32'),
+                   ('Int32toFloat32', 'int32tofloat32', 'int32_t', 'float32'),
+                   ('Float32toInt32', 'float32toint32', 'float32_t', 'int32'),
+                   ('Float32toFloat32', 'float32tofloat32', 'float32_t', 'float32'),
                    ('PyObject', 'pyobject', 'object', 'object'),
                   ]
 }}
@@ -43,7 +43,7 @@ cdef class {{map_name}}Map:
         self.table = kh_init_{{name}}map()
         if number_of_elements_hint is not None:
             kh_resize_{{name}}map(self.table, element_n_to_bucket_n(number_of_elements_hint))
-        cdef key_{{name}}_t key
+        cdef {{key_type}} key
         cdef {{val_type}}_t val
         if iterable is not None:
             for key, val in iterable:
@@ -54,18 +54,18 @@ cdef class {{map_name}}Map:
             kh_destroy_{{name}}map(self.table)
             self.table = NULL
 
-    cpdef void discard(self, key_{{name}}_t key) except *:
+    cpdef void discard(self, {{key_type}} key) except *:
         cdef khint_t k
         k = kh_get_{{name}}map(self.table, key)
         if k != self.table.n_buckets:
             kh_del_{{name}}map(self.table, k)
 
-    cdef bint contains(self, key_{{name}}_t key) except *:
+    cdef bint contains(self, {{key_type}} key) except *:
         cdef khint_t k
         k = kh_get_{{name}}map(self.table, key)
         return k != self.table.n_buckets
 
-    def __contains__(self, key_{{name}}_t key):
+    def __contains__(self, {{key_type}} key):
         return self.contains(key)
 
     {{else}}
@@ -120,7 +120,7 @@ cdef class {{map_name}}Map:
         return self.table.size
 
     {{if map_name != 'PyObject'}}
-    cpdef void cput(self, key_{{name}}_t key, {{val_type}}_t val) except *:
+    cpdef void cput(self, {{key_type}} key, {{val_type}}_t val) except *:
         cdef:
             khint_t k
             int ret = 0
@@ -132,7 +132,7 @@ cdef class {{map_name}}Map:
     def __setitem__(self, key, val):
         self.cput(key, val)
 
-    cpdef {{val_type}}_t cget(self, key_{{name}}_t key) except *:
+    cpdef {{val_type}}_t cget(self, {{key_type}} key) except *:
         k = kh_get_{{name}}map(self.table, key)
         if k != self.table.n_buckets:
             return self.table.vals[k]
@@ -329,7 +329,7 @@ cdef class {{map_name}}MapView:
 ##########################      Utils:
 
 {{if map_name != 'PyObject'}}
-cpdef {{map_name}}Map {{map_name}}Map_from_buffers(key_{{name}}_t[:] keys, {{val_type}}_t[:] vals, double size_hint=0.0):
+cpdef {{map_name}}Map {{map_name}}Map_from_buffers({{key_type}}[:] keys, {{val_type}}_t[:] vals, double size_hint=0.0):
 {{else}}
 cpdef PyObjectMap PyObjectMap_from_buffers(object[:] keys, object[:] vals, double size_hint=0.0):
 {{endif}}
@@ -354,7 +354,7 @@ cdef {{val_type}}_t DEFAULT_VALUE_{{name}} = 0
 {{endif}}
 
 {{if map_name != 'PyObject'}}
-cpdef size_t {{map_name}}Map_to({{map_name}}Map map, key_{{name}}_t[:] keys, {{val_type}}_t[:] vals, bint stop_at_unknown=True, {{val_type}}_t default_value=DEFAULT_VALUE_{{name}}) except *:
+cpdef size_t {{map_name}}Map_to({{map_name}}Map map, {{key_type}}[:] keys, {{val_type}}_t[:] vals, bint stop_at_unknown=True, {{val_type}}_t default_value=DEFAULT_VALUE_{{name}}) except *:
 {{else}}
 cpdef size_t PyObjectMap_to(PyObjectMap map, object[:] keys, object[:] vals, bint stop_at_unknown=True, object default_value=None) except *:
 {{endif}}

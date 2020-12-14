@@ -14,11 +14,6 @@ include "murmurhash.pxi"
 include "float_utils.pxi"
 include "pyobject_utils.pxi"
 
-# different implementation
-include "sets/int64/int64set_header.pxi"
-include "sets/int32/int32set_header.pxi"
-include "sets/float64/float64set_header.pxi"
-include "sets/float32/float32set_header.pxi"
-include "sets/pyobject/pyobjectset_header.pxi"
+# different implementations
 include "sets/set_header.pxi"
 

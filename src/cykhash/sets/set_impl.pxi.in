@@ -26,6 +26,239 @@ set_types       = [('Int64', 'int64', 'int64_t'),
 {{for set_name, name, key_type in set_types}}
 
 
+cdef class {{set_name}}Set:
+
+    def __cinit__(self, iterable=None, *, number_of_elements_hint=None):
+        """
+        iterable - initial elements in the set
+        number_of_elements_hint - number of elements without the need of reallocation.
+        """
+        self.table = kh_init_{{name}}set()
+        if number_of_elements_hint is not None:    
+            kh_resize_{{name}}set(self.table, element_n_to_bucket_n(number_of_elements_hint))
+        cdef {{key_type}} el
+        if iterable is not None:
+            for el in iterable:
+                self.add(el)
+
+    def __len__(self):
+        return self.size()
+  
+    cdef khint_t size(self):
+        return self.table.size
+        
+
+    def __dealloc__(self):
+        _dealloc_{{name}}(self.table)
+        self.table = NULL
+
+    def __contains__(self, {{key_type}} key):
+        return self.contains(key)
+
+
+    cdef bint contains(self, {{key_type}} key) except *:
+        return _contains_{{name}}(self.table, key)
+
+
+    cpdef void add(self, {{key_type}} key) except *:
+        _add_{{name}}(self.table, key)
+
+    
+    cpdef void discard(self, {{key_type}} key) except *:
+        _discard_{{name}}(self.table, key)
+
+
+    cdef {{set_name}}SetIterator get_iter(self):
+        return {{set_name}}SetIterator(self)
+
+    def __iter__(self):
+        return self.get_iter()
+
+    def get_state_info(self):
+        return {"n_buckets" : self.table.n_buckets, 
+                "n_occupied" : self.table.n_occupied, 
+                "upper_bound" : self.table.upper_bound}
+
+    ### drop-in for set:
+    def isdisjoint(self, other):
+        if isinstance(other, {{set_name}}Set):
+            return aredisjoint_{{name}}(self, other)
+        cdef {{key_type}} el
+        for el in other:
+            if self.contains(el):
+                return False
+        return True
+
+    def issuperset(self, other):
+        if isinstance(other, {{set_name}}Set):
+            return issubset_{{name}}(self, other)
+        cdef {{key_type}} el
+        for el in other:
+            if not self.contains(el):
+                return False
+        return True
+
+    def issubset(self, other):
+        if isinstance(other, {{set_name}}Set):
+            return issubset_{{name}}(other, self)
+        cdef {{key_type}} el
+        cdef {{set_name}}Set mem={{set_name}}Set()
+        for el in other:
+            if self.contains(el):
+                mem.add(el)
+        return mem.size()==self.size()
+
+    def __repr__(self):
+        return "{"+','.join(map(str, self))+"}"
+
+    def __le__(self, {{set_name}}Set other):
+        return issubset_{{name}}(other, self)
+
+    def __lt__(self, {{set_name}}Set other):
+        return issubset_{{name}}(other, self) and self.size()<other.size()
+
+    def __ge__(self, {{set_name}}Set other):
+        return issubset_{{name}}(self,  other)
+
+    def __gt__(self, {{set_name}}Set other):
+        return issubset_{{name}}(self, other) and self.size()>other.size()
+
+    def __eq__(self, {{set_name}}Set other):
+        return issubset_{{name}}(self, other) and self.size()==other.size()
+
+    def __or__(self, {{set_name}}Set other):
+        cdef {{set_name}}Set res = copy_{{name}}(self)
+        update_{{name}}(res, other)
+        return res
+
+    def __ior__(self, {{set_name}}Set other):
+        update_{{name}}(self, other)
+        return self
+
+    def __and__(self, {{set_name}}Set other):
+        return intersect_{{name}}(self, other)
+
+    def __iand__(self, {{set_name}}Set other):
+        cdef {{set_name}}Set res = intersect_{{name}}(self, other)
+        swap_{{name}}(self, res)
+        return self
+
+    def __sub__(self, {{set_name}}Set other):
+        return difference_{{name}}(self, other)
+
+    def __isub__(self, {{set_name}}Set other):
+        cdef {{set_name}}Set res = difference_{{name}}(self, other)
+        swap_{{name}}(self, res)
+        return self
+
+    def __xor__(self, {{set_name}}Set other):
+        return symmetric_difference_{{name}}(self, other)
+
+    def __ixor__(self, {{set_name}}Set other):
+        cdef {{set_name}}Set res = symmetric_difference_{{name}}(self, other)
+        swap_{{name}}(self, res)
+        return self
+
+    def copy(self):
+        return copy_{{name}}(self)
+
+    def union(self, *others):
+        cdef {{set_name}}Set res = copy_{{name}}(self)
+        for o in others:
+            res.update(o)
+        return res
+
+    def update(self, other):
+        if isinstance(other, {{set_name}}Set):
+            update_{{name}}(self, other)
+            return
+        cdef {{key_type}} el
+        for el in other:
+            self.add(el)
+
+    def intersection(self, *others):
+        cdef {{set_name}}Set res = copy_{{name}}(self)
+        for o in others:
+            res.intersection_update(o)
+        return res
+
+    def intersection_update(self, other):
+        cdef {{set_name}}Set res 
+        cdef {{key_type}} el
+        if isinstance(other, {{set_name}}Set):
+            res = intersect_{{name}}(self, other)
+        else:
+            res = {{set_name}}Set()
+            for el in other:
+                if self.contains(el):
+                    res.add(el)
+        swap_{{name}}(self, res)
+
+    def difference_update(self, other):
+        cdef {{set_name}}Set res 
+        cdef {{key_type}} el
+        if isinstance(other, {{set_name}}Set):
+            res = difference_{{name}}(self, other)
+            swap_{{name}}(self, res)
+        else:
+            for el in other:
+                self.discard(el)
+
+    def difference(self, *others):
+        cdef {{set_name}}Set res = copy_{{name}}(self)
+        for o in others:
+            res.difference_update(o)
+        return res
+
+    def symmetric_difference_update(self, other):
+        cdef {{set_name}}Set res 
+        cdef {{key_type}} el
+        if isinstance(other, {{set_name}}Set):
+            res = symmetric_difference_{{name}}(self, other)
+        else:
+            res = self.copy()
+            for el in other:
+                if self.contains(el):
+                    res.discard(el)
+                else:
+                    res.add(el)
+        swap_{{name}}(self, res)
+
+    def symmetric_difference(self, *others):
+        cdef {{set_name}}Set res = copy_{{name}}(self)
+        for o in others:
+            res.symmetric_difference_update(o)
+        return res
+
+    def clear(self):
+        cdef {{set_name}}Set res = {{set_name}}Set()
+        swap_{{name}}(self, res)
+
+    def remove(self, key):
+        cdef size_t old=self.size()
+        self.discard(key)
+        if old==self.size():
+            raise KeyError(key)
+
+    def pop(self):
+        if self.size()== 0:
+            raise KeyError("pop from empty set")
+        cdef {{set_name}}SetIterator it = self.get_iter()
+        cdef {{key_type}} el = it.next()
+        self.discard(el)
+        return el
+        
+
+
+
+### Utils:
+
+def {{set_name}}Set_from(it):
+    res={{set_name}}Set()
+    for i in it:
+        res.add(i)
+    return res
+
 cpdef {{set_name}}Set {{set_name}}Set_from_buffer({{key_type}}[:] buf, double size_hint=0.0):
     cdef Py_ssize_t n = len(buf)
     cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)

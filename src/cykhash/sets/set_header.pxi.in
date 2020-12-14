@@ -1,0 +1,59 @@
+
+"""
+Template for sets
+
+WARNING: DO NOT edit .pxi FILE directly, .pxi is generated from .pxi.in
+"""
+
+
+from cpython.ref cimport Py_INCREF,Py_DECREF
+
+
+
+
+{{py:
+
+# set_name, name, key_type
+set_types       = [('Int64', 'int64', 'int64_t'),
+                   ('Float64', 'float64', 'float64_t'),
+                   ('Int32', 'int32', 'int32_t'),
+                   ('Float32', 'float32', 'float32_t'),
+                   ('PyObject', 'pyobject', 'object'),
+                  ]
+}}
+
+
+{{for set_name, name, key_type in set_types}}
+
+
+cpdef {{set_name}}Set {{set_name}}Set_from_buffer({{key_type}}[:] buf, double size_hint=*)
+
+
+from libc.stdint cimport  uint8_t
+cpdef void isin_{{name}}({{key_type}}[:] query, {{set_name}}Set db, uint8_t[:] result) except *
+
+cpdef bint all_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *
+cpdef bint all_{{name}}_from_iter(object query, {{set_name}}Set db) except *
+
+cpdef bint none_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *
+cpdef bint none_{{name}}_from_iter(object query, {{set_name}}Set db) except *
+
+cpdef bint any_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *
+cpdef bint any_{{name}}_from_iter(object query, {{set_name}}Set db) except *
+
+cpdef size_t count_if_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *
+cpdef size_t count_if_{{name}}_from_iter(object query, {{set_name}}Set db) except *
+
+cpdef void swap_{{name}}({{set_name}}Set a, {{set_name}}Set b) except *
+
+# for drop-in replacements:
+cpdef bint aredisjoint_{{name}}({{set_name}}Set a, {{set_name}}Set b) except *
+cpdef bint issubset_{{name}}({{set_name}}Set s, {{set_name}}Set sub) except *
+cpdef {{set_name}}Set copy_{{name}}({{set_name}}Set s)
+cpdef void update_{{name}}({{set_name}}Set s, {{set_name}}Set other) except *
+cpdef {{set_name}}Set intersect_{{name}}({{set_name}}Set a, {{set_name}}Set b)
+cpdef {{set_name}}Set difference_{{name}}({{set_name}}Set a, {{set_name}}Set b)
+cpdef {{set_name}}Set symmetric_difference_{{name}}({{set_name}}Set a, {{set_name}}Set b)
+
+
+{{endfor}}

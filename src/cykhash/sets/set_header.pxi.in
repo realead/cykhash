@@ -26,6 +26,95 @@ set_types       = [('Int64', 'int64', 'int64_t'),
 {{for set_name, name, key_type in set_types}}
 
 
+### special for PyObject:
+
+{{if set_name == 'PyObject'}}
+
+cdef extern from *:
+    ctypedef struct kh_pyobjectset_t:
+        khint_t n_buckets, size, n_occupied, upper_bound
+        uint32_t *flags
+        pyobject_t *keys
+        #size_t *vals  //dummy
+
+    kh_pyobjectset_t* kh_init_pyobjectset() nogil
+    void kh_destroy_pyobjectset(kh_pyobjectset_t*) nogil
+    void kh_clear_pyobjectset(kh_pyobjectset_t*) nogil
+    khint_t kh_get_pyobjectset(kh_pyobjectset_t*, pyobject_t) nogil
+    void kh_resize_pyobjectset(kh_pyobjectset_t*, khint_t) nogil
+    khint_t kh_put_pyobjectset(kh_pyobjectset_t*, pyobject_t, int*) nogil
+    void kh_del_pyobjectset(kh_pyobjectset_t*, khint_t) nogil
+
+    #specializing "kh_exist"-macro 
+    bint kh_exist_pyobjectset "kh_exist" (kh_pyobjectset_t*, khint_t) nogil
+
+
+cdef class PyObjectSet:
+    cdef kh_pyobjectset_t *table
+
+    cdef bint contains(self, object key) except *
+    cdef PyObjectSetIterator get_iter(self)
+    cdef khint_t size(self) 
+    cpdef void add(self, object key) except *
+    cpdef void discard(self, object key) except *
+    
+
+
+cdef class PyObjectSetIterator:
+    cdef khint_t   it
+    cdef khint_t   size
+    cdef PyObjectSet  parent
+
+    cdef bint has_next(self) except *
+    cdef object next(self)
+    cdef void __move(self) except *
+
+{{else}}
+
+cdef extern from *:
+
+    ctypedef struct kh_{{name}}set_t:
+        khint_t n_buckets, size, n_occupied, upper_bound
+        uint32_t *flags
+        {{key_type}} *keys
+        #size_t *vals  //dummy
+
+    kh_{{name}}set_t* kh_init_{{name}}set() nogil
+    void kh_destroy_{{name}}set(kh_{{name}}set_t*) nogil
+    void kh_clear_{{name}}set(kh_{{name}}set_t*) nogil
+    khint_t kh_get_{{name}}set(kh_{{name}}set_t*, {{key_type}}) nogil
+    void kh_resize_{{name}}set(kh_{{name}}set_t*, khint_t) nogil
+    khint_t kh_put_{{name}}set(kh_{{name}}set_t*, {{key_type}}, int*) nogil
+    void kh_del_{{name}}set(kh_{{name}}set_t*, khint_t) nogil
+
+    #specializing "kh_exist"-macro 
+    bint kh_exist_{{name}}set "kh_exist" (kh_{{name}}set_t*, khint_t) nogil
+
+
+cdef class {{set_name}}Set:
+    cdef kh_{{name}}set_t *table
+
+    cdef bint contains(self, {{key_type}} key) except *
+    cdef {{set_name}}SetIterator get_iter(self)
+    cdef khint_t size(self) 
+    cpdef void add(self, {{key_type}} key) except *
+    cpdef void discard(self, {{key_type}} key) except *
+    
+
+
+cdef class {{set_name}}SetIterator:
+    cdef khint_t   it
+    cdef {{set_name}}Set  parent
+
+    cdef bint has_next(self) except *
+    cdef {{key_type}} next(self) except *
+    cdef void __move(self) except *
+
+{{endif}}
+
+############ common
+
+
 cpdef {{set_name}}Set {{set_name}}Set_from_buffer({{key_type}}[:] buf, double size_hint=*)
 
 

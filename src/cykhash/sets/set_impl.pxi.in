@@ -1,0 +1,229 @@
+
+"""
+Template for sets
+
+WARNING: DO NOT edit .pxi FILE directly, .pxi is generated from .pxi.in
+"""
+
+
+from cpython.ref cimport Py_INCREF,Py_DECREF
+
+
+
+
+{{py:
+
+# set_name, name, key_type
+set_types       = [('Int64', 'int64', 'int64_t'),
+                   ('Float64', 'float64', 'float64_t'),
+                   ('Int32', 'int32', 'int32_t'),
+                   ('Float32', 'float32', 'float32_t'),
+                   ('PyObject', 'pyobject', 'object'),
+                  ]
+}}
+
+
+{{for set_name, name, key_type in set_types}}
+
+
+cpdef {{set_name}}Set {{set_name}}Set_from_buffer({{key_type}}[:] buf, double size_hint=0.0):
+    cdef Py_ssize_t n = len(buf)
+    cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
+    res={{set_name}}Set(number_of_elements_hint=at_least_needed)
+    cdef Py_ssize_t i
+    for i in range(n):
+        res.add(buf[i])
+    return res
+    
+
+cpdef void isin_{{name}}({{key_type}}[:] query, {{set_name}}Set db, uint8_t[:] result) except *:
+    cdef size_t i
+    cdef size_t n=len(query)
+    if n!=len(result):
+        raise ValueError("Different sizes for query({n}) and result({m})".format(n=n, m=len(result)))
+    for i in range(n):
+        result[i]=db is not None and db.contains(query[i])
+
+cpdef bint all_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *:
+    if query is None:
+        return True
+    cdef size_t i
+    cdef size_t n=len(query)
+    if db is None:
+        return n==0
+    for i in range(n):
+        if not db.contains(query[i]):
+            return False
+    return True
+
+cpdef bint all_{{name}}_from_iter(object query, {{set_name}}Set db) except *:
+    if query is None:
+        return True
+    cdef {{key_type}} el
+    for el in query:
+        if db is None or not db.contains(el):
+            return False
+    return True
+
+cpdef bint none_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *:
+    if query is None or db is None:
+        return True
+    cdef size_t i
+    cdef size_t n=len(query)
+    for i in range(n):
+        if db.contains(query[i]):
+            return False
+    return True
+
+cpdef bint none_{{name}}_from_iter(object query, {{set_name}}Set db) except *:
+    if query is None or db is None:
+        return True
+    cdef {{key_type}} el
+    for el in query:
+        if db.contains(el):
+            return False
+    return True
+
+cpdef bint any_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *:
+    return not none_{{name}}(query, db)
+
+cpdef bint any_{{name}}_from_iter(object query, {{set_name}}Set db) except *:
+    return not none_{{name}}_from_iter(query, db)
+
+cpdef size_t count_if_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *:
+    if query is None or db is None:
+        return 0
+    cdef size_t i
+    cdef size_t n=len(query)
+    cdef size_t res=0
+    for i in range(n):
+        if db.contains(query[i]):
+            res+=1
+    return res
+
+cpdef size_t count_if_{{name}}_from_iter(object query, {{set_name}}Set db) except *:
+    if query is None or db is None:
+        return 0
+    cdef {{key_type}} el
+    cdef size_t res=0
+    for el in query:
+        if db.contains(el):
+            res+=1
+    return res
+
+cpdef bint aredisjoint_{{name}}({{set_name}}Set a, {{set_name}}Set b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef {{set_name}}SetIterator it
+    cdef {{set_name}}Set s
+    cdef {{key_type}} el
+    if a.size()<b.size():
+        it=a.get_iter()
+        s =b
+    else:
+        it=b.get_iter()
+        s =a
+    while it.has_next():
+        el = it.next()
+        if s.contains(el):
+            return False
+    return True
+
+cpdef {{set_name}}Set intersect_{{name}}({{set_name}}Set a, {{set_name}}Set b):
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef {{set_name}}Set result = {{set_name}}Set()
+    cdef {{set_name}}SetIterator it
+    cdef {{set_name}}Set s
+    cdef {{key_type}} el
+    if a.size()<b.size():
+        it=a.get_iter()
+        s =b
+    else:
+        it=b.get_iter()
+        s =a
+    while it.has_next():
+        el = it.next()
+        if s.contains(el):
+            result.add(el)
+    return result
+
+cpdef bint issubset_{{name}}({{set_name}}Set s, {{set_name}}Set sub) except *:
+    if s is None or sub is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    if s.size() < sub.size():
+        return False
+
+    cdef {{set_name}}SetIterator it=sub.get_iter()
+    cdef {{key_type}} el
+    while it.has_next():
+        el = it.next()
+        if not s.contains(el):
+            return False
+    return True
+
+cpdef {{set_name}}Set copy_{{name}}({{set_name}}Set s):
+    if s is None:
+        return None
+    cdef {{set_name}}Set result = {{set_name}}Set(number_of_elements_hint=s.size())
+    cdef {{set_name}}SetIterator it=s.get_iter()
+    cdef {{key_type}} el
+    while it.has_next():
+        el = it.next()
+        result.add(el)
+    return result
+
+cpdef void update_{{name}}({{set_name}}Set s, {{set_name}}Set other) except *:
+    if s is None or other is None:
+        raise TypeError("'NoneType' object is not iterable")
+    cdef {{set_name}}SetIterator it=other.get_iter()
+    cdef {{key_type}} el
+    while it.has_next():
+        el = it.next()
+        s.add(el)
+
+cpdef void swap_{{name}}({{set_name}}Set a, {{set_name}}Set b) except *:
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef kh_{{name}}set_t *tmp=a.table
+    a.table=b.table
+    b.table=tmp
+
+cpdef {{set_name}}Set difference_{{name}}({{set_name}}Set a, {{set_name}}Set b):
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef {{key_type}} el
+    cdef {{set_name}}Set result = {{set_name}}Set()
+    cdef {{set_name}}SetIterator it = a.get_iter()
+    while it.has_next():
+        el = it.next()
+        if not b.contains(el):
+            result.add(el)
+    return result
+
+
+cpdef {{set_name}}Set symmetric_difference_{{name}}({{set_name}}Set a, {{set_name}}Set b):
+    if a is None or b is None:
+        raise TypeError("'NoneType' object is not iterable")
+
+    cdef {{key_type}} el
+    cdef {{set_name}}Set result = {{set_name}}Set()
+    cdef {{set_name}}SetIterator it = a.get_iter()
+    while it.has_next():
+          el = it.next()
+          if not b.contains(el):
+                result.add(el)
+    it = b.get_iter()
+    while it.has_next():
+        el = it.next()
+        if not a.contains(el):
+            result.add(el)
+    return result
+
+
+{{endfor}}

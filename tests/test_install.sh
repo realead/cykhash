@@ -25,6 +25,7 @@ fi;
 # needed for testing:
 pip install numpy
 pip install cython
+pip install pytest
 pip install https://github.com/realead/uttemplate/zipball/master
 
 pip freeze

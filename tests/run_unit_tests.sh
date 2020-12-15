@@ -1,4 +1,4 @@
 
 
-(cd unit_tests && python -m unittest discover -s . -v)
+(cd unit_tests && pytest)
 

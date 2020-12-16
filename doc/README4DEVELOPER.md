@@ -11,7 +11,7 @@ Additional dependencies for testing:
 
   * `sh`
   * `virtualenv`
-  * `uttemplate`>=0.2.0 (https://github.com/realead/uttemplate)
+  * `pytest`
   * `numpy`, `pandas`, `perfplot` for performance tests
   * `asv` for asv_bench testing (performance tests)
 
@@ -42,4 +42,8 @@ For comparing performance of the HEAD with upstream/master:
     sh run_asv_bench.sh
 
 you might want to reduce the number of tests - see examples in `run_asv_bench.sh`
+
+For running doc-tests:
+
+    sh run_doctests.sh
 

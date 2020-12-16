@@ -1,15 +1,21 @@
-import unittest
-import uttemplate
+import pytest
+from unittestmock import UnitTestMock
+
 
 from cykhash import Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map, PyObjectMap
 from cykhash import Int64toFloat64Map, Int32toFloat32Map, Float64toFloat64Map, Float32toFloat32Map
 
-@uttemplate.from_templates([Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map,
-                            Int64toFloat64Map, Int32toFloat32Map, Float64toFloat64Map, Float32toFloat32Map,
-                            PyObjectMap])
-class MapIteratorTester(unittest.TestCase): 
+@pytest.mark.parametrize(
+    "map_type",
+    [
+       Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map,
+       Int64toFloat64Map, Int32toFloat32Map, Float64toFloat64Map, Float32toFloat32Map,
+       PyObjectMap]
+)
 
-    def template_iterate(self, map_type):
+class TestMapIterator(UnitTestMock): 
+
+    def test_iterate(self, map_type):
         cy_map = map_type()
         py_map = dict()
         for i in range(10):
@@ -20,16 +26,16 @@ class MapIteratorTester(unittest.TestCase):
          clone[x[0]] = x[1] 
         self.assertEqual(py_map, clone)
 
-    def template_iterate_after_clear(self, map_type):
+    def test_iterate_after_clear(self, map_type):
         cy_map = map_type(zip(range(1000), range(1000)))
         it = iter(cy_map.items())
         for x in range(1000):
             next(it)
         cy_map.clear()
-        with self.assertRaises(StopIteration):
+        with pytest.raises(StopIteration):
             next(it)
 
-    def template_iterate_after_growing(self, map_type):
+    def test_iterate_after_growing(self, map_type):
         cy_map = map_type()
         it = iter(cy_map.keys())
         #change bucket size
@@ -37,12 +43,12 @@ class MapIteratorTester(unittest.TestCase):
             cy_map[i]=i
         #make sure new size is used
         lst = []
-        with self.assertRaises(StopIteration):
+        with pytest.raises(StopIteration):
             for x in range(1001):
                 lst.append(next(it))
         self.assertEqual(set(lst), set(range(1000)))
 
-    def template_iterate_after_growing2(self, map_type):
+    def test_iterate_after_growing2(self, map_type):
         cy_map = map_type()
         cy_map[42]=42
         it = iter(cy_map.keys())

@@ -1,19 +1,10 @@
 import pytest
+from unittestmock import UnitTestMock
+
 import struct
 
 from cykhash import Int64toInt64Map, Int32toInt32Map, Float64toInt64Map, Float32toInt32Map, PyObjectMap
 from cykhash import Int64toFloat64Map, Int32toFloat32Map, Float64toFloat64Map, Float32toFloat32Map
-
-
-class UnitTestMock:
-    def assertEqual(self, a, b):
-        assert a == b
-
-    def assertFalse(self, a):
-        assert not a
-
-    def assertTrue(self, a):
-        assert a
 
 
 @pytest.mark.parametrize(

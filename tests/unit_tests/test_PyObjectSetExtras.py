@@ -1,9 +1,10 @@
 import sys
-import unittest
+
+from unittestmock import UnitTestMock
 
 from cykhash import PyObjectSet
 
-class RefCounterTester(unittest.TestCase): 
+class TestRefCounter(UnitTestMock): 
 
    def test_set_add_discard_right_refcnts(self):
       a=4200

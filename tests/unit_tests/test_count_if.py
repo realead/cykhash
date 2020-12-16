@@ -1,5 +1,6 @@
-import unittest
-import uttemplate
+import pytest
+from unittestmock import UnitTestMock
+
 import numpy as np
 
 from cykhash import count_if_int64, count_if_int64_from_iter, Int64Set_from, Int64Set_from_buffer
@@ -15,77 +16,80 @@ BUFFER_SIZE = {'int32': 'i', 'int64': 'q', 'float64' : 'd', 'float32' : 'f'}
 
 
 import array
-@uttemplate.from_templates(['int64', 'int32', 'float64', 'float32'])
-class CountIfTester(unittest.TestCase): 
-    def template_count_if_all(self, value_type):
+@pytest.mark.parametrize(
+    "value_type",
+    ['int64', 'int32', 'float64', 'float32']
+)
+class TestCountIf(UnitTestMock): 
+    def test_count_if_all(self, value_type):
         s=FROM_SET[value_type]([2,4,6])
         a=array.array(BUFFER_SIZE[value_type], [2,4,6]*6)
         result=COUNT_IF[value_type](a,s)
         self.assertEqual(result, 18)
 
-    def template_count_if_all_from_iter(self, value_type):
+    def test_count_if_all_from_iter(self, value_type):
         s=FROM_SET[value_type]([2,4,6])
         a=[2,4,6]*6
         result=COUNT_IF_FROM_ITER[value_type](a,s)
         self.assertEqual(result, 18)
 
-    def template_count_if_but_last(self, value_type):
+    def test_count_if_but_last(self, value_type):
         s=FROM_SET[value_type]([2,4,6])
         a=array.array(BUFFER_SIZE[value_type], [2]*6+[1])
         result=COUNT_IF[value_type](a,s)
         self.assertEqual(result, 6)
 
-    def template_count_if_but_last_from_iter(self, value_type):
+    def test_count_if_but_last_from_iter(self, value_type):
         s=FROM_SET[value_type]([2,4,6])
         a=[2]*6+[1]
         result=COUNT_IF_FROM_ITER[value_type](a,s)
         self.assertEqual(result, 6)
 
-    def template_count_if_empty(self, value_type):
+    def test_count_if_empty(self, value_type):
         s=FROM_SET[value_type]([])
         a=array.array(BUFFER_SIZE[value_type],[])
         result=COUNT_IF[value_type](a,s)
         self.assertEqual(result, 0)
 
-    def template_count_if_empty_from_iter(self, value_type):
+    def test_count_if_empty_from_iter(self, value_type):
         s=FROM_SET[value_type]([])
         a=[]
         result=COUNT_IF_FROM_ITER[value_type](a,s)
         self.assertEqual(result, 0)
 
-    def template_count_if_empty_set(self, value_type):
+    def test_count_if_empty_set(self, value_type):
         s=FROM_SET[value_type]([])
         a=array.array(BUFFER_SIZE[value_type],[1])
         result=COUNT_IF[value_type](a,s)
         self.assertEqual(result, 0)
 
-    def template_count_if_empty_set_from_iter(self, value_type):
+    def test_count_if_empty_set_from_iter(self, value_type):
         s=FROM_SET[value_type]([])
         a=[1]
         result=COUNT_IF_FROM_ITER[value_type](a,s)
         self.assertEqual(result, 0)
 
-    def template_noniter_from_iter(self, value_type):
+    def test_noniter_from_iter(self, value_type):
         s=FROM_SET[value_type]([])
         a=1
-        with self.assertRaises(TypeError) as context:
+        with pytest.raises(TypeError) as context:
             COUNT_IF_FROM_ITER[value_type](a,s)
-        self.assertTrue("object is not iterable" in context.exception.args[0])
+        self.assertTrue("object is not iterable" in str(context.value))
 
-    def template_memview_none(self, value_type):
+    def test_memview_none(self, value_type):
         s=FROM_SET[value_type]([])
         self.assertEqual(COUNT_IF[value_type](None,s), 0)
 
-    def template_dbnone(self, value_type):
+    def test_dbnone(self, value_type):
         a=array.array(BUFFER_SIZE[value_type],[1])
         self.assertEqual(COUNT_IF[value_type](a,None), 0)
 
-    def template_dbnone_from_iter(self, value_type):
+    def test_dbnone_from_iter(self, value_type):
         a=1
         self.assertEqual(COUNT_IF_FROM_ITER[value_type](a,None), 0)
 
 
-class CountIfTesterPyObject(unittest.TestCase): 
+class TestCountIfPyObject(UnitTestMock): 
     def test_count_if_all(self):
         s=PyObjectSet_from([2,4,666])
         a=np.array([2,4,666]*6, dtype=np.object)
@@ -137,9 +141,9 @@ class CountIfTesterPyObject(unittest.TestCase):
     def test_noniter_from_iter(self):
         s=PyObjectSet_from([])
         a=1
-        with self.assertRaises(TypeError) as context:
+        with pytest.raises(TypeError) as context:
             count_if_pyobject_from_iter(a,s)
-        self.assertTrue("object is not iterable" in context.exception.args[0])
+        self.assertTrue("object is not iterable" in str(context.value))
 
     def test_memview_none(self):
         s=PyObjectSet_from([])

@@ -1,12 +1,15 @@
-import unittest
-import uttemplate
+from unittestmock import UnitTestMock
+import pytest
 
 from cykhash import Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet
 
-@uttemplate.from_templates([Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet])
-class SetIteratorTester(unittest.TestCase): 
+@pytest.mark.parametrize(
+    "set_type",
+    [Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet]
+)
+class TestSetIterator(UnitTestMock): 
 
-    def template_iterate(self, set_type):
+    def test_iterate(self, set_type):
         cy_set = set_type()
         py_set = set()
         for i in range(10):
@@ -17,16 +20,16 @@ class SetIteratorTester(unittest.TestCase):
          clone.add(x)
         self.assertEqual(py_set, clone)
 
-    def template_iterate_after_clear(self, set_type):
+    def test_iterate_after_clear(self, set_type):
         cy_set = set_type(range(1000))
         it = iter(cy_set)
         for x in range(1000):
             next(it)
         cy_set.clear()
-        with self.assertRaises(StopIteration):
+        with pytest.raises(StopIteration):
             next(it)
 
-    def template_iterate_after_growing(self, set_type):
+    def test_iterate_after_growing(self, set_type):
         cy_set = set_type()
         it = iter(cy_set)
         #change bucket size
@@ -34,12 +37,12 @@ class SetIteratorTester(unittest.TestCase):
             cy_set.add(i)
         #make sure new size is used
         lst = []
-        with self.assertRaises(StopIteration):
+        with pytest.raises(StopIteration):
             for x in range(1001):
                 lst.append(next(it))
         self.assertEqual(set(lst), set(range(1000)))
 
-    def template_iterate_after_growing2(self, set_type):
+    def test_iterate_after_growing2(self, set_type):
         cy_set = set_type()
         cy_set.add(42)
         it = iter(cy_set)

@@ -1,7 +1,7 @@
-import unittest
+from unittestmock import UnitTestMock
 
 
-class DocTester(unittest.TestCase): 
+class TestDoc(UnitTestMock): 
 
     def test_create_set_from_buffer(self):
         import numpy as np

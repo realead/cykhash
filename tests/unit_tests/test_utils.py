@@ -1,10 +1,9 @@
-import unittest
-import uttemplate
+from unittestmock import UnitTestMock
 
 from cykhash.khashsets import float64_hash, float32_hash, int64_hash, int32_hash
 
 
-class UtilsTester(unittest.TestCase): 
+class TestUtils(UnitTestMock): 
     def test_hash_float64_neg_zero(self):
         self.assertEqual(float64_hash(0.0), float64_hash(-0.0))
 

@@ -1,5 +1,6 @@
-import unittest
-import uttemplate
+from unittestmock import UnitTestMock
+import pytest
+
 import array
 
 from cykhash import Int64toInt64Map_from_buffers, Int64toFloat64Map_from_buffers
@@ -37,13 +38,15 @@ VAL_FORMAT = {'int64_int64':   'q',
              }
 
 
-@uttemplate.from_templates(['int64_int64', 'int64_float64',
-                            'int32_int32', 'int32_float32',
-                            'float64_int64', 'float64_float64',
-                            'float32_int32', 'float32_float32',
-                           ])
-class Map_from_buffer_Tester(unittest.TestCase):
-    def template_create_from(self, fun_type):
+@pytest.mark.parametrize(
+    "fun_type",
+    ['int64_int64', 'int64_float64',
+    'int32_int32', 'int32_float32',
+    'float64_int64', 'float64_float64',
+    'float32_int32', 'float32_float32',
+   ])
+class TestMap_from_buffer(UnitTestMock):
+    def test_create_from(self, fun_type):
         keys=array.array(KEY_FORMAT[fun_type], [1,2,3])
         vals=array.array(VAL_FORMAT[fun_type], [4,5,6])
         m=FUNCTION[fun_type](keys, vals, 2.0)
@@ -52,7 +55,7 @@ class Map_from_buffer_Tester(unittest.TestCase):
             self.assertTrue(x in m)
             self.assertEqual(m[x], y)
 
-    def template_create_diff_vals_longer(self, fun_type):
+    def test_create_diff_vals_longer(self, fun_type):
         keys=array.array(KEY_FORMAT[fun_type], [1,2,3])
         vals=array.array(VAL_FORMAT[fun_type], [4,5,6,7])
         m=FUNCTION[fun_type](keys, vals, 2.0)
@@ -61,7 +64,7 @@ class Map_from_buffer_Tester(unittest.TestCase):
             self.assertTrue(x in m)
             self.assertEqual(m[x], y)
 
-    def template_create_diff_keys_longer(self, fun_type):
+    def test_create_diff_keys_longer(self, fun_type):
         keys=array.array(KEY_FORMAT[fun_type], [1,2,3,42])
         vals=array.array(VAL_FORMAT[fun_type], [4,5,6])
         m=FUNCTION[fun_type](keys, vals, 2.0)
@@ -71,7 +74,7 @@ class Map_from_buffer_Tester(unittest.TestCase):
             self.assertEqual(m[x], y)
 
 
-class BufferTesterPyObject(unittest.TestCase): 
+class TestPyObject_from_buffers(UnitTestMock): 
     def test_pyobject_create_from(self):
         try:
             import numpy as np

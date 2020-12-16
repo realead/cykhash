@@ -1,5 +1,5 @@
-import unittest
-import uttemplate
+import pytest
+from unittestmock import UnitTestMock
 
 import numpy as np
 
@@ -15,9 +15,13 @@ BUFFER_SIZE = {'int32': 'i', 'int64': 'q', 'float64' : 'd', 'float32' : 'f'}
 FROM_BUFFER_SET={'int32': Int32Set_from_buffer, 'int64': Int64Set_from_buffer, 'float64' : Float64Set_from_buffer, 'float32' : Float32Set_from_buffer, 'pyobject' : PyObjectSet_from_buffer}
 
 
-@uttemplate.from_templates(['int64', 'int32', 'float64', 'float32', 'pyobject'])
-class Int64Set_from_Tester(unittest.TestCase):
-    def template_create(self, value_type):
+
+@pytest.mark.parametrize(
+    "value_type",
+    ['int64', 'int32', 'float64', 'float32', 'pyobject']
+)
+class TestInt64Set_from(UnitTestMock):
+    def test_create(self, value_type):
         lst=[6,7,8]
         s=FROM_SET[value_type](list(lst))
         self.assertEqual(len(s), len(lst))
@@ -26,9 +30,12 @@ class Int64Set_from_Tester(unittest.TestCase):
 
 
 import array
-@uttemplate.from_templates(['int64', 'int32', 'float64', 'float32'])
-class BufferTester(unittest.TestCase): 
-    def template_isin(self, value_type):
+@pytest.mark.parametrize(
+    "value_type",
+    ['int64', 'int32', 'float64', 'float32']
+)
+class TestBuffer(UnitTestMock): 
+    def test_isin(self, value_type):
         s=FROM_SET[value_type]([2,4,6])
         a=array.array(BUFFER_SIZE[value_type], range(0,7))
         result=array.array('B', [False]*7)
@@ -36,35 +43,35 @@ class BufferTester(unittest.TestCase):
         expected=array.array('B', [False, False, True, False, True, False, True])
         self.assertTrue(expected==result)
 
-    def template_isin_result_shorter(self, value_type):
+    def test_isin_result_shorter(self, value_type):
         s=FROM_SET[value_type]([2,4,6])
         a=array.array(BUFFER_SIZE[value_type], range(0,7))
         result=array.array('B', [False]*6)
-        with self.assertRaises(ValueError) as context:
+        with pytest.raises(ValueError) as context:
             ISIN[value_type](a,s,result)
-        self.assertEqual("Different sizes for query(7) and result(6)", context.exception.args[0])
+        self.assertEqual("Different sizes for query(7) and result(6)", context.value.args[0])
 
-    def template_isin_result_longer(self, value_type):
+    def test_isin_result_longer(self, value_type):
         s=FROM_SET[value_type]([2,4,6])
         a=array.array(BUFFER_SIZE[value_type], range(0,7))
         result=array.array('B', [False]*8)
-        with self.assertRaises(ValueError) as context:
+        with pytest.raises(ValueError) as context:
             ISIN[value_type](a,s,result)
-        self.assertEqual("Different sizes for query(7) and result(8)", context.exception.args[0])
+        self.assertEqual("Different sizes for query(7) and result(8)", context.value.args[0])
 
-    def template_isin_db_none(self, value_type):
+    def test_isin_db_none(self, value_type):
         a=array.array(BUFFER_SIZE[value_type], range(0,7))
         result=array.array('B', [True]*7)
         ISIN[value_type](a,None,result)
         expected=array.array('B', [False, False, False, False, False, False, False])
         self.assertTrue(expected==result)
 
-    def template_isin_nones(self, value_type):
+    def test_isin_nones(self, value_type):
         s=FROM_SET[value_type]([2,4,6])
         ISIN[value_type](None,s,None)
         self.assertTrue(True)
 
-    def template_from_buffer(self, value_type):
+    def test_from_buffer(self, value_type):
         a=array.array(BUFFER_SIZE[value_type], [6,7,8])
         s=FROM_BUFFER_SET[value_type](a)
         self.assertEqual(len(s), len(a))
@@ -72,7 +79,7 @@ class BufferTester(unittest.TestCase):
             self.assertTrue(x in s)
 
 
-class BufferTesterPyObject(unittest.TestCase): 
+class TestBufferPyObject(UnitTestMock): 
     def test_pyobject_isin(self):
         s=PyObjectSet_from([2,4,6])
         a=np.array(range(0,7), dtype=np.object)
@@ -92,17 +99,17 @@ class BufferTesterPyObject(unittest.TestCase):
         s=PyObjectSet_from([2,4,6])
         a=np.array(range(0,7), dtype=np.object)
         result=array.array('B', [False]*6)
-        with self.assertRaises(ValueError) as context:
+        with pytest.raises(ValueError) as context:
             isin_pyobject(a,s,result)
-        self.assertEqual("Different sizes for query(7) and result(6)", context.exception.args[0])
+        self.assertEqual("Different sizes for query(7) and result(6)", context.value.args[0])
 
     def test_isin_result_longer(self):
         s=PyObjectSet_from([2,4,6])
         a=np.array(range(0,7), dtype=np.object)
         result=array.array('B', [False]*8)
-        with self.assertRaises(ValueError) as context:
+        with pytest.raises(ValueError) as context:
             isin_pyobject(a,s,result)
-        self.assertEqual("Different sizes for query(7) and result(8)", context.exception.args[0])
+        self.assertEqual("Different sizes for query(7) and result(8)", context.value.args[0])
 
     def test_isin_db_none(self):
         a=np.array(range(0,7), dtype=np.object)

@@ -1,9 +1,9 @@
-import unittest
+from unittestmock import UnitTestMock
 
 import cykhash
 
 
-class VersionTester(unittest.TestCase): 
+class TestVersion(UnitTestMock): 
 
    def test_major(self):
       self.assertEqual(cykhash.__version__[0], 1)

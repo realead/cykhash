@@ -1,5 +1,6 @@
-import unittest
-import uttemplate
+import pytest
+from unittestmock import UnitTestMock
+
 import numpy as np
 
 from cykhash import any_int64, any_int64_from_iter, Int64Set_from, Int64Set_from_buffer
@@ -15,77 +16,81 @@ BUFFER_SIZE = {'int32': 'i', 'int64': 'q', 'float64' : 'd', 'float32' : 'f'}
 
 
 import array
-@uttemplate.from_templates(['int64', 'int32', 'float64', 'float32'])
-class ANYTester(unittest.TestCase): 
-    def template_any_no(self, value_type):
+
+@pytest.mark.parametrize(
+    "value_type",
+    ['int64', 'int32', 'float64', 'float32']
+)
+class TestAny(UnitTestMock): 
+    def test_any_no(self, value_type):
         s=FROM_SET[value_type]([2,4,6])
         a=array.array(BUFFER_SIZE[value_type], [1,3,5]*6)
         result=ANY[value_type](a,s)
         self.assertEqual(result, False)
 
-    def template_any_no_from_iter(self, value_type):
+    def test_any_no_from_iter(self, value_type):
         s=FROM_SET[value_type]([2,4,6])
         a=[1,3,5]*6
         result=ANY_FROM_ITER[value_type](a,s)
         self.assertEqual(result, False)
 
-    def template_any_last_yes(self, value_type):
+    def test_any_last_yes(self, value_type):
         s=FROM_SET[value_type]([2,4,6])
         a=array.array(BUFFER_SIZE[value_type], [1]*6+[2])
         result=ANY[value_type](a,s)
         self.assertEqual(result, True)
 
-    def template_any_last_yes_from_iter(self, value_type):
+    def test_any_last_yes_from_iter(self, value_type):
         s=FROM_SET[value_type]([2,4,6])
         a=[1]*6+[2]
         result=ANY_FROM_ITER[value_type](a,s)
         self.assertEqual(result, True)
 
-    def template_any_empty(self, value_type):
+    def test_any_empty(self, value_type):
         s=FROM_SET[value_type]([])
         a=array.array(BUFFER_SIZE[value_type],[])
         result=ANY[value_type](a,s)
         self.assertEqual(result, False)
 
-    def template_any_empty_from_iter(self, value_type):
+    def test_any_empty_from_iter(self, value_type):
         s=FROM_SET[value_type]([])
         a=[]
         result=ANY_FROM_ITER[value_type](a,s)
         self.assertEqual(result, False)
 
-    def template_any_empty_set(self, value_type):
+    def test_any_empty_set(self, value_type):
         s=FROM_SET[value_type]([])
         a=array.array(BUFFER_SIZE[value_type],[1])
         result=ANY[value_type](a,s)
         self.assertEqual(result, False)
 
-    def template_any_empty_set_from_iter(self, value_type):
+    def test_any_empty_set_from_iter(self, value_type):
         s=FROM_SET[value_type]([])
         a=[1]
         result=ANY_FROM_ITER[value_type](a,s)
         self.assertEqual(result, False)
 
-    def template_noniter_from_iter(self, value_type):
+    def test_noniter_from_iter(self, value_type):
         s=FROM_SET[value_type]([])
         a=1
-        with self.assertRaises(TypeError) as context:
+        with pytest.raises(TypeError) as context:
             ANY_FROM_ITER[value_type](a,s)
-        self.assertTrue("object is not iterable" in context.exception.args[0])
+        self.assertTrue("object is not iterable" in str(context.value))
 
-    def template_memview_none(self, value_type):
+    def test_memview_none(self, value_type):
         s=FROM_SET[value_type]([])
         self.assertEqual(ANY[value_type](None,s), False)
 
-    def template_dbnone(self, value_type):
+    def test_dbnone(self, value_type):
         a=array.array(BUFFER_SIZE[value_type],[1])
         self.assertEqual(ANY[value_type](a,None), False)
 
-    def template_dbnone_from_iter(self, value_type):
+    def test_dbnone_from_iter(self, value_type):
         a=1
         self.assertEqual(ANY_FROM_ITER[value_type](a,None), False)
 
 
-class AnyTesterPyObject(unittest.TestCase): 
+class TestAnyPyObject(UnitTestMock): 
     def test_any_no(self):
         s=PyObjectSet_from([2,4,666])
         a=np.array([1,3,333]*6, dtype=np.object)
@@ -137,9 +142,9 @@ class AnyTesterPyObject(unittest.TestCase):
     def test_noniter_from_iter(self):
         s=PyObjectSet_from([])
         a=1
-        with self.assertRaises(TypeError) as context:
+        with pytest.raises(TypeError) as context:
             any_pyobject_from_iter(a,s)
-        self.assertTrue("object is not iterable" in context.exception.args[0])
+        self.assertTrue("object is not iterable" in str(context.value))
 
     def test_memview_none(self):
         s=PyObjectSet_from([])

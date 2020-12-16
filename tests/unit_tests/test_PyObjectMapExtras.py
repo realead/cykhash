@@ -1,9 +1,9 @@
 import sys
-import unittest
+from unittestmock import UnitTestMock
 
 from cykhash import PyObjectMap
 
-class PyObjectMapMiscTester(unittest.TestCase): 
+class TestPyObjectMapMisc(UnitTestMock): 
 
    def test_from_keys_works(self):
       s=PyObjectMap.fromkeys(["a", "b", "c"], "kkk")
@@ -11,7 +11,7 @@ class PyObjectMapMiscTester(unittest.TestCase):
       self.assertEqual(s["a"],"kkk") 
 
 
-class RefCounterTester(unittest.TestCase): 
+class TestRefCounterPyObjectMap(UnitTestMock): 
 
    def test_map_put_discard_right_refcnts(self):
       a=4200

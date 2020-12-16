@@ -2,14 +2,14 @@ import pyximport;
 pyximport.install(setup_args = {"script_args" : ["--force"]},
                   language_level=3)
 
-import unittest
+from unittestmock import UnitTestMock
 import cyinterfacetester as cyt
 from cykhash import Int64Set, Int32Set, Float64Set, Float32Set, PyObjectSet
 
 
 #just making sure the interface can be accessed:
 
-class CyIntegerfaceTester(unittest.TestCase): 
+class TestCyIntegerface(UnitTestMock): 
 
    def test_cimport_works_i64(self):
       received=cyt.py_isin_int64([1,2,3,4], [2,4])

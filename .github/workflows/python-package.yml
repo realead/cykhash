@@ -30,7 +30,10 @@ jobs:
         pip install pytest
         pip install numpy
         pip install cython
-        pip install https://github.com/realead/uttemplate/zipball/master
     - name: Test with pytest
       run: |
         (cd tests/unit_tests && pytest)
+        
+    - name: Run doctests
+      run: |
+        pytest --ignore=tests --doctest-glob=*.md --doctest-glob=*.pyx --doctest-glob=*.pxi -vv  --doctest-continue-on-failure

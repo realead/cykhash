@@ -202,6 +202,17 @@ cdef class {{set_name}}Set:
         return self.get_iter()
 
     def get_state_info(self):
+        """
+        returns information about state of the set
+
+        >>> from cykhash import {{set_name}}Set
+        >>> info = {{set_name}}Set([1]).get_state_info()
+        >>> info["n_buckets"]
+        4
+        >>> info["n_occupied"]
+        1
+
+        """
         return {"n_buckets" : self.table.n_buckets, 
                 "n_occupied" : self.table.n_occupied, 
                 "upper_bound" : self.table.upper_bound}

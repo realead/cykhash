@@ -1,7 +1,7 @@
 # cykhash API:
 
 
-## Unique
+## Isin
 
   * `isin_int64`, `isin_int32`, `isin_float64`, `isin_float32`
   * the signature is `def isin_int64(int64_t[:] query, Int64Set db, uint8_t[:] result)`. `query` and `result` must have the same size, otherwise an exception is raised.

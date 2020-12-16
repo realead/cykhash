@@ -28,9 +28,29 @@ include "sets/set_impl.pxi"
 
 # some utils useful for investigations
 def float64_hash(double val):
+    """
+    returns hash used for float64-values by cykhash sets/maps
+
+    >>> from cykhash.khashsets import float64_hash
+    >>> float64_hash(0.0)
+    0
+    >>> float64_hash(-0.0)
+    0
+
+    """
     return kh_float64_hash_func(val)
 
 def float32_hash(float val):
+    """
+    returns hash used for float32-values by cykhash sets/maps
+
+    >>> from cykhash.khashsets import float32_hash
+    >>> float32_hash(0.0)
+    0
+    >>> float32_hash(-0.0)
+    0
+
+    """
     return kh_float32_hash_func(val)
 
 def int64_hash(int64_t val):

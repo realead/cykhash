@@ -37,17 +37,17 @@ See (https://github.com/realead/cykhash/blob/master/doc/README4DEVELOPER.md) for
 Creating a hashset and using it in `isin`:
 
     # prepare data:
-    import numpy as np 
-    a = np.arange(42, dtype=np.int64)
-    b = np.arange(84, dtype=np.int64)
-    result = np.empty(b.size, dtype=np.bool)
+    >>> import numpy as np 
+    >>> a = np.arange(42, dtype=np.int64)
+    >>> b = np.arange(84, dtype=np.int64)
+    >>> result = np.empty(b.size, dtype=np.bool)
 
     # actually usage
-    from cykhash import Int64Set_from_buffer, isin_int64
+    >>> from cykhash import Int64Set_from_buffer, isin_int64
 
-    lookup = Int64Set_from_buffer(a) # create a hashset
-    isin_int64(b, lookup, result)    # running time O(b.size)
-    isin_int64(b, lookup, result)    # lookup is reused and not recreated
+    >>> lookup = Int64Set_from_buffer(a) # create a hashset
+    >>> isin_int64(b, lookup, result)    # running time O(b.size)
+    >>> isin_int64(b, lookup, result)    # lookup is reused and not recreated
 
 
 ### `unique`
@@ -55,25 +55,28 @@ Creating a hashset and using it in `isin`:
 Finding `unique` in `O(n)` (compared to numpy's  `np.unique` - `O(n*logn)`) and smaller memory-footprint than pandas' `pd.unique`:
 
     # prepare input
-    import numpy as np
-    a = np.array([1,2,3,3,2,1], dtype=np.int64)
+    >>> import numpy as np
+    >>> a = np.array([1,2,3,3,2,1], dtype=np.int64)
     
     # actual usage:
-    from cykhash import unique_int64
-    unique_buffer = unique_int64(a) # unique element are exposed via buffer-protocol
+    >>> from cykhash import unique_int64
+    >>> unique_buffer = unique_int64(a) # unique element are exposed via buffer-protocol
 
     # can be converted to a numpy-array without copying via
-    unique_array = np.ctypeslib.as_array(unique_buffer)
+    >>> unique_array = np.ctypeslib.as_array(unique_buffer)
+    >>> unique_array.shape
+    (3,)
 
 
 ### Hash map
 
 Maps and sets handle `nan`-correctly (try it out with Python's dict/set):
 
-    from cykhash import Float64toInt64Map
-    my_map = Float64toInt64Map() # values are 64bit integers
-    my_map[float("nan")] = 1
-    assert my_map[float("nan")] == 1
+    >>> from cykhash import Float64toInt64Map
+    >>> my_map = Float64toInt64Map() # values are 64bit integers
+    >>> my_map[float("nan")] = 1
+    >>> my_map[float("nan")]
+    1
 
 
 
@@ -145,17 +148,20 @@ The above holds also for `PyObjectSet` (this behavior is not the same as fro Pyt
 
 Python: Creates a set from a numpy-array and looks up whether an element is in the resulting set:
 
-    import numpy as np
-    from cykhash import Int64Set_from_buffer
-    a =  np.arange(42, dtype=np.int64)
-    my_set = Int64Set_from_buffer(a) # no reallocation will be needed
-    assert 41 in my_set and 42 not in my_set
+    >>> import numpy as np
+    >>> from cykhash import Int64Set_from_buffer
+    >>> a =  np.arange(42, dtype=np.int64)
+    >>> my_set = Int64Set_from_buffer(a) # no reallocation will be needed
+    >>> 41 in my_set 
+    True
+    >>> 42 not in my_set
+    True
 
 Python: Create a set from an iterable and looks up whether an element is in the resulting set:
 
-    from cykhash import Int64Set_from
-    my_set = Int64Set_from(range(42)) # no reallocation will be needed
-    assert 41 in my_set and 42 not in my_set
+    >>> from cykhash import Int64Set_from
+    >>> my_set = Int64Set_from(range(42)) # no reallocation will be needed
+    >>> assert 41 in my_set and 42 not in my_set
 
 Cython: Create a set and put some values into it:
 
@@ -170,57 +176,57 @@ Cython: Create a set and put some values into it:
 
 Python: Creating `int64->float64` map using `Int64toFloat64Map_from_buffers`:
 
-    import numpy as np
-    from cykhash import Int64toFloat64Map_from_buffers
-    keys = np.array([1, 2, 3, 4], dtype=np.int64)
-    vals = np.array([5, 6, 7, 8], dtype=np.float64)
-    my_map = Int64toFloat64Map_from_buffers(keys, vals) # there will be no reallocation
-    assert my_map[4] == 8.0
+    >>> import numpy as np
+    >>> from cykhash import Int64toFloat64Map_from_buffers
+    >>> keys = np.array([1, 2, 3, 4], dtype=np.int64)
+    >>> vals = np.array([5, 6, 7, 8], dtype=np.float64)
+    >>> my_map = Int64toFloat64Map_from_buffers(keys, vals) # there will be no reallocation
+    >>> assert my_map[4] == 8.0
 
 Python: Creating `int64->int64` map from scratch:
 
-    import numpy as np
-    from cykhash import Int64toInt64Map
+    >>> import numpy as np
+    >>> from cykhash import Int64toInt64Map
+
     # my_map will not need reallocation for at least 12 elements
-    my_map = Int64toInt64Map(number_of_elements_hint=12)
-    for i in range(12):
-        my_map[i] = i+1
-    assert my_map[5] == 6
+    >>> my_map = Int64toInt64Map(number_of_elements_hint=12)
+    >>> for i in range(12):  my_map[i] = i+1
+    >>> assert my_map[5] == 6
 
 
 #### isin
 
 Python: Creating look-up data structure from a numpy-array, performing `isin`-query
 
-    import numpy as np
-    from cykhash import Int64Set_from_buffer, isin_int64
-    a = np.arange(42, dtype=np.int64)
-    lookup = Int64Set_from_buffer(a)
+    >>> import numpy as np
+    >>> from cykhash import Int64Set_from_buffer, isin_int64
+    >>> a = np.arange(42, dtype=np.int64)
+    >>> lookup = Int64Set_from_buffer(a)
 
-    b = np.arange(84, dtype=np.int64)
-    result = np.empty(b.size, dtype=np.bool)
+    >>> b = np.arange(84, dtype=np.int64)
+    >>> result = np.empty(b.size, dtype=np.bool)
 
-    isin_int64(b, lookup, result)    # running time O(b.size)
-    assert np.sum(result.astype(np.int))==42
+    >>> isin_int64(b, lookup, result)    # running time O(b.size)
+    >>> assert np.sum(result.astype(np.int)) == 42
 
 
 #### unique
 
 Python: using `unique_int64`:
 
-    import numpy as np
-    from cykhash import unique_int64
-    a = np.array([1,2,3,3,2,1], dtype=np.int64)
-    u = np.ctypeslib.as_array(unique_int64(a)) # there will be no reallocation
-    print(u) # [1,2,3] or any permutation of it
+    >>> import numpy as np
+    >>> from cykhash import unique_int64
+    >>> a = np.array([1,2,3,3,2,1], dtype=np.int64)
+    >>> u = np.ctypeslib.as_array(unique_int64(a)) # there will be no reallocation
+    >>> assert set(u) == {1,2,3}
 
 Python: using `unique_stable_int64`: 
 
-    import numpy as np
-    from cykhash import unique_stable_int64
-    a = np.array([3,2,1,1,2,3], dtype=np.int64)
-    u = np.ctypeslib.as_array(unique_stable_int64(a)) # there will be no reallocation
-    print(u) # [3,2,1] 
+    >>> import numpy as np
+    >>> from cykhash import unique_stable_int64
+    >>> a = np.array([3,2,1,1,2,3], dtype=np.int64)
+    >>> u = np.ctypeslib.as_array(unique_stable_int64(a)) # there will be no reallocation
+    >>> assert list(u) == [3,2,1] 
 
 
 

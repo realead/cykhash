@@ -1,5 +1,5 @@
-import unittest
-import uttemplate
+import pytest
+from unittestmock import UnitTestMock
 
 import pyximport; 
 pyximport.install(setup_args = {"script_args" : ["--force"]},
@@ -39,9 +39,13 @@ BUFFER_SIZE = {'int32': 'i', 'int64': 'q', 'float64' : 'd', 'float32' : 'f'}
 
 
 import array
-@uttemplate.from_templates(['int64', 'int32', 'float64', 'float32'])
-class UniqueTester(unittest.TestCase): 
-    def template_unique(self, value_type):
+
+@pytest.mark.parametrize(
+    "value_type",
+    ['int64', 'int32', 'float64', 'float32']
+)
+class TestUniqueTester(UnitTestMock): 
+    def test_unique(self, value_type):
         a = array.array(BUFFER_SIZE[value_type], [1,1,1,1,1,2,3,4,5])
         result = UNIQUE[value_type](a)
         as_set = set(memoryview(result))
@@ -49,14 +53,14 @@ class UniqueTester(unittest.TestCase):
         self.assertTrue(expected==as_set, msg = "received: "+str(as_set))
 
 
-    def template_unique_stable(self, value_type):
+    def test_unique_stable(self, value_type):
         a = array.array(BUFFER_SIZE[value_type], [2,1,4,1,3,1,2,3,4,5])
         result = list(memoryview(STABLE[value_type](a)))
         expected = list([2,1,4,3,5])
         self.assertTrue(expected==result, msg = "received: "+str(result))
 
 
-    def template_unique2(self, value_type):
+    def test_unique2(self, value_type):
         a = array.array(BUFFER_SIZE[value_type], list(range(100))+list(range(200))+list(range(100)))
         result = UNIQUE[value_type](a)
         as_set = set(memoryview(result))
@@ -64,7 +68,7 @@ class UniqueTester(unittest.TestCase):
         self.assertTrue(expected==as_set, msg = "received: "+str(as_set))
 
 
-    def template_cyunique(self, value_type):
+    def test_cyunique(self, value_type):
         a = array.array(BUFFER_SIZE[value_type], list(range(100))+list(range(200))+list(range(100)))
         result = CY_UNIQUE[value_type](a)
         as_set = set(memoryview(result))
@@ -72,14 +76,14 @@ class UniqueTester(unittest.TestCase):
         self.assertTrue(expected==as_set, msg = "received: "+str(as_set))
 
 
-    def template_cyunique_stable(self, value_type):
+    def test_cyunique_stable(self, value_type):
         a = array.array(BUFFER_SIZE[value_type], [2,1,4,1,3,1,2,3,4,5])
         result = list(memoryview(CY_STABLE[value_type](a)))
         expected = list([2,1,4,3,5])
         self.assertTrue(expected==result, msg = "received: "+str(result))
 
 
-    def template_ctypeslib_as_array(self, value_type):
+    def test_ctypeslib_as_array(self, value_type):
         try:
             import numpy as np
         except:
@@ -91,7 +95,7 @@ class UniqueTester(unittest.TestCase):
         self.assertTrue(expected==as_set, msg = "received: "+str(as_set))
 
 
-    def template_frombuffer(self, value_type):
+    def test_frombuffer(self, value_type):
         try:
             import numpy as np
         except:

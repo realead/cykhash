@@ -1,5 +1,4 @@
 from cpython cimport buffer
-from libc.stdlib cimport malloc, realloc, free
 
 
 from .khashsets cimport khint_t, element_n_from_size_hint
@@ -9,6 +8,7 @@ from .khashsets cimport Float64Set, Float64Set_from_buffer, kh_exist_float64set
 from .khashsets cimport Float32Set, Float32Set_from_buffer, kh_exist_float32set
 
 
+include "memory.pxi"
 
 cdef char *empty_buf=""
 
@@ -31,7 +31,7 @@ cdef class MemoryNanny:
         self.format = None 
 
     def __dealloc__(self):      
-        free(self.ptr)
+        cykhash_traced_free(self.ptr)
         self.ptr=NULL 
 
     def __getbuffer__(self, buffer.Py_buffer *view, int flags):
@@ -115,7 +115,7 @@ cpdef unique_int64(int64_t[:] vals, double size_hint=0.0):
     s.table.keys = NULL
     
     # shrink to fit:
-    mem = <int64_t*> realloc(mem, sizeof(int64_t)*current);
+    mem = <int64_t*> cykhash_traced_realloc(mem, sizeof(int64_t)*current);
     return MemoryNanny.create_memory_nanny(mem, current, sizeof(int64_t), b"q")
 
 
@@ -124,7 +124,7 @@ cpdef unique_stable_int64(int64_t[:] vals, double size_hint=0.0):
     cdef Py_ssize_t n = len(vals)
     cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
     res=Int64Set(number_of_elements_hint=at_least_needed)
-    cdef int64_t* mem = <int64_t*> malloc(sizeof(int64_t)*n);
+    cdef int64_t* mem = <int64_t*> cykhash_traced_malloc(sizeof(int64_t)*n);
     
     # insert
     cdef khint_t current = 0
@@ -138,7 +138,7 @@ cpdef unique_stable_int64(int64_t[:] vals, double size_hint=0.0):
             current += 1
     
     # shrink to fit:
-    mem = <int64_t*> realloc(mem, sizeof(int64_t)*current);
+    mem = <int64_t*> cykhash_traced_realloc(mem, sizeof(int64_t)*current);
     return MemoryNanny.create_memory_nanny(mem, current, sizeof(int64_t), b"q")
 
 
@@ -159,7 +159,7 @@ cpdef unique_int32(int32_t[:] vals, double size_hint=0.0):
     s.table.keys = NULL
     
     # shrink to fit:
-    mem = <int32_t*> realloc(mem, sizeof(int32_t)*current);
+    mem = <int32_t*> cykhash_traced_realloc(mem, sizeof(int32_t)*current);
     return MemoryNanny.create_memory_nanny(mem, current, sizeof(int32_t), b"i")
 
 
@@ -168,7 +168,7 @@ cpdef unique_stable_int32(int32_t[:] vals, double size_hint=0.0):
     cdef Py_ssize_t n = len(vals)
     cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
     res=Int32Set(number_of_elements_hint=at_least_needed)
-    cdef int32_t* mem = <int32_t*> malloc(sizeof(int32_t)*n);
+    cdef int32_t* mem = <int32_t*> cykhash_traced_malloc(sizeof(int32_t)*n);
     
     # insert
     cdef khint_t current = 0
@@ -182,7 +182,7 @@ cpdef unique_stable_int32(int32_t[:] vals, double size_hint=0.0):
             current += 1
     
     # shrink to fit:
-    mem = <int32_t*> realloc(mem, sizeof(int32_t)*current);
+    mem = <int32_t*> cykhash_traced_realloc(mem, sizeof(int32_t)*current);
     return MemoryNanny.create_memory_nanny(mem, current, sizeof(int32_t), b"i")
 
 
@@ -203,7 +203,7 @@ cpdef unique_float64(float64_t[:] vals, double size_hint=0.0):
     s.table.keys = NULL
     
     # shrink to fit:
-    mem = <float64_t*> realloc(mem, sizeof(float64_t)*current);
+    mem = <float64_t*> cykhash_traced_realloc(mem, sizeof(float64_t)*current);
     return MemoryNanny.create_memory_nanny(mem, current, sizeof(float64_t), b"d")
 
 
@@ -212,7 +212,7 @@ cpdef unique_stable_float64(float64_t[:] vals, double size_hint=0.0):
     cdef Py_ssize_t n = len(vals)
     cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
     res=Float64Set(number_of_elements_hint=at_least_needed)
-    cdef float64_t* mem = <float64_t*> malloc(sizeof(float64_t)*n);
+    cdef float64_t* mem = <float64_t*> cykhash_traced_malloc(sizeof(float64_t)*n);
     
     # insert
     cdef khint_t current = 0
@@ -226,7 +226,7 @@ cpdef unique_stable_float64(float64_t[:] vals, double size_hint=0.0):
             current += 1
     
     # shrink to fit:
-    mem = <float64_t*> realloc(mem, sizeof(float64_t)*current);
+    mem = <float64_t*> cykhash_traced_realloc(mem, sizeof(float64_t)*current);
     return MemoryNanny.create_memory_nanny(mem, current, sizeof(float64_t), b"d")
 
 
@@ -246,7 +246,7 @@ cpdef unique_float32(float32_t[:] vals, double size_hint=0.0):
     s.table.keys = NULL
     
     # shrink to fit:
-    mem = <float32_t*> realloc(mem, sizeof(float32_t)*current);
+    mem = <float32_t*> cykhash_traced_realloc(mem, sizeof(float32_t)*current);
     return MemoryNanny.create_memory_nanny(mem, current, sizeof(float32_t), b"f")
 
 
@@ -255,7 +255,7 @@ cpdef unique_stable_float32(float32_t[:] vals, double size_hint=0.0):
     cdef Py_ssize_t n = len(vals)
     cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
     res=Float32Set(number_of_elements_hint=at_least_needed)
-    cdef float32_t* mem = <float32_t*> malloc(sizeof(float32_t)*n);
+    cdef float32_t* mem = <float32_t*> cykhash_traced_malloc(sizeof(float32_t)*n);
     
     # insert
     cdef khint_t current = 0
@@ -269,6 +269,6 @@ cpdef unique_stable_float32(float32_t[:] vals, double size_hint=0.0):
             current += 1
     
     # shrink to fit:
-    mem = <float32_t*> realloc(mem, sizeof(float32_t)*current);
+    mem = <float32_t*> cykhash_traced_realloc(mem, sizeof(float32_t)*current);
     return MemoryNanny.create_memory_nanny(mem, current, sizeof(float32_t), b"f")
 

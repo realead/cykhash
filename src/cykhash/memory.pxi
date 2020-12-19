@@ -1,7 +1,9 @@
 
 
 cdef extern from *:
-    """
+    """ 
+        #ifndef CYKHASH_MEMORY_PXI
+        #define CYKHASH_MEMORY_PXI
         #include <Python.h>
 
         // cykhash should report usage to tracemalloc
@@ -57,6 +59,8 @@ cdef extern from *:
         #define CYKHASH_REALLOC cykhash_traced_realloc
         #define CYKHASH_CALLOC cykhash_traced_calloc
         #define CYKHASH_FREE cykhash_traced_free
+      
+        #endif
     """
     const int CYKHASH_TRACE_DOMAIN
     void *cykhash_traced_malloc(size_t size)

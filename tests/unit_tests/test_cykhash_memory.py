@@ -7,6 +7,9 @@ import pytest
 import cykhash as cyk
 from cykhash.utils import get_cykhash_trace_domain
 
+import sys
+at_least_python36 = pytest.mark.skipif(sys.version_info < (3, 6),
+                                  reason="requires Python3.6+")
 
 @contextmanager
 def activated_tracemalloc():
@@ -29,7 +32,7 @@ def test_trace_domain():
     assert 414141 == get_cykhash_trace_domain()
 
 
-
+@at_least_python36
 @pytest.mark.parametrize(
     "set_type, dtype",
     [
@@ -54,6 +57,7 @@ def test_tracemalloc_works_sets(set_type, dtype):
         assert get_allocated_cykhash_memory() == 0
 
 
+@at_least_python36
 @pytest.mark.parametrize(
     "map_type, dtype",
     [
@@ -78,6 +82,7 @@ def test_tracemalloc_works_maps(map_type, dtype):
         assert get_allocated_cykhash_memory() == 0
 
 
+@at_least_python36
 @pytest.mark.parametrize(
     "unique_version, dtype",
     [
@@ -96,6 +101,8 @@ def test_unique_memory_consumption(unique_version, dtype):
         del result_buffer
         assert get_allocated_cykhash_memory() == 0
 
+
+@at_least_python36
 @pytest.mark.parametrize(
     "unique_stable_version, dtype",
     [

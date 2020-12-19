@@ -4,7 +4,7 @@ cdef extern from *:
     """
     /* The MIT License
        Copyright (c) 2008, 2009, 2011 by Attractive Chaos <attractor@live.co.uk>
-       Permission is hereby granted, free of charge, to any person obtaining
+       Permission is hereby granted, CYKHASH_FREE of charge, to any person obtaining
        a copy of this software and associated documentation files (the
        "Software"), to deal in the Software without restriction, including
        without limitation the rights to use, copy, modify, merge, publish,
@@ -148,17 +148,17 @@ cdef extern from *:
     #define kroundup32(x) (--(x), (x)|=(x)>>1, (x)|=(x)>>2, (x)|=(x)>>4, (x)|=(x)>>8, (x)|=(x)>>16, ++(x))
     #endif
 
-    #ifndef kcalloc
-    #define kcalloc(N,Z) calloc(N,Z)
+    #ifndef kCYKHASH_CALLOC
+    #define kCYKHASH_CALLOC(N,Z) CYKHASH_CALLOC(N,Z)
     #endif
-    #ifndef kmalloc
-    #define kmalloc(Z) malloc(Z)
+    #ifndef kCYKHASH_MALLOC
+    #define kCYKHASH_MALLOC(Z) CYKHASH_MALLOC(Z)
     #endif
-    #ifndef krealloc
-    #define krealloc(P,Z) realloc(P,Z)
+    #ifndef kCYKHASH_REALLOC
+    #define kCYKHASH_REALLOC(P,Z) CYKHASH_REALLOC(P,Z)
     #endif
-    #ifndef kfree
-    #define kfree(P) free(P)
+    #ifndef kCYKHASH_FREE
+    #define kCYKHASH_FREE(P) CYKHASH_FREE(P)
     #endif
 
     static const double __ac_HASH_UPPER = 0.77;
@@ -182,14 +182,14 @@ cdef extern from *:
 
     #define __KHASH_IMPL(name, SCOPE, khkey_t, khval_t, kh_is_map, __hash_func, __hash_equal) \
 	    SCOPE kh_##name##_t *kh_init_##name(void) {							\
-		    return (kh_##name##_t*)kcalloc(1, sizeof(kh_##name##_t));		\
+		    return (kh_##name##_t*)kCYKHASH_CALLOC(1, sizeof(kh_##name##_t));		\
 	    }																	\
 	    SCOPE void kh_destroy_##name(kh_##name##_t *h)						\
 	    {																	\
 		    if (h) {														\
-			    kfree((void *)h->keys); kfree(h->flags);					\
-			    kfree((void *)h->vals);										\
-			    kfree(h);													\
+			    kCYKHASH_FREE((void *)h->keys); kCYKHASH_FREE(h->flags);					\
+			    kCYKHASH_FREE((void *)h->vals);										\
+			    kCYKHASH_FREE(h);													\
 		    }																\
 	    }																	\
 	    SCOPE void kh_clear_##name(kh_##name##_t *h)						\
@@ -222,16 +222,16 @@ cdef extern from *:
 			    if (new_n_buckets < 4) new_n_buckets = 4;					\
 			    if (h->size >= (khint_t)(new_n_buckets * __ac_HASH_UPPER + 0.5)) j = 0;	/* requested size is too small */ \
 			    else { /* hash table size to be changed (shrink or expand); rehash */ \
-				    new_flags = (khint32_t*)kmalloc(__ac_fsize(new_n_buckets) * sizeof(khint32_t));	\
+				    new_flags = (khint32_t*)kCYKHASH_MALLOC(__ac_fsize(new_n_buckets) * sizeof(khint32_t));	\
 				    if (!new_flags) return -1;								\
 				    memset(new_flags, 0xaa, __ac_fsize(new_n_buckets) * sizeof(khint32_t)); \
 				    if (h->n_buckets < new_n_buckets) {	/* expand */		\
-					    khkey_t *new_keys = (khkey_t*)krealloc((void *)h->keys, new_n_buckets * sizeof(khkey_t)); \
-					    if (!new_keys) { kfree(new_flags); return -1; }		\
+					    khkey_t *new_keys = (khkey_t*)kCYKHASH_REALLOC((void *)h->keys, new_n_buckets * sizeof(khkey_t)); \
+					    if (!new_keys) { kCYKHASH_FREE(new_flags); return -1; }		\
 					    h->keys = new_keys;									\
 					    if (kh_is_map) {									\
-						    khval_t *new_vals = (khval_t*)krealloc((void *)h->vals, new_n_buckets * sizeof(khval_t)); \
-						    if (!new_vals) { kfree(new_flags); return -1; }	\
+						    khval_t *new_vals = (khval_t*)kCYKHASH_REALLOC((void *)h->vals, new_n_buckets * sizeof(khval_t)); \
+						    if (!new_vals) { kCYKHASH_FREE(new_flags); return -1; }	\
 						    h->vals = new_vals;								\
 					    }													\
 				    } /* otherwise shrink */								\
@@ -265,10 +265,10 @@ cdef extern from *:
 				    }														\
 			    }															\
 			    if (h->n_buckets > new_n_buckets) { /* shrink the hash table */ \
-				    h->keys = (khkey_t*)krealloc((void *)h->keys, new_n_buckets * sizeof(khkey_t)); \
-				    if (kh_is_map) h->vals = (khval_t*)krealloc((void *)h->vals, new_n_buckets * sizeof(khval_t)); \
+				    h->keys = (khkey_t*)kCYKHASH_REALLOC((void *)h->keys, new_n_buckets * sizeof(khkey_t)); \
+				    if (kh_is_map) h->vals = (khval_t*)kCYKHASH_REALLOC((void *)h->vals, new_n_buckets * sizeof(khval_t)); \
 			    }															\
-			    kfree(h->flags); /* free the working space */				\
+			    kCYKHASH_FREE(h->flags); /* CYKHASH_FREE the working space */				\
 			    h->flags = new_flags;										\
 			    h->n_buckets = new_n_buckets;								\
 			    h->n_occupied = h->size;									\

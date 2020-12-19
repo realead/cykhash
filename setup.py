@@ -22,6 +22,10 @@ extensions = [Extension(
                          name='cykhash.unique',
                          sources = ["src/cykhash/unique.pyx"],
                         ),
+              Extension(
+                         name='cykhash.utils',
+                         sources = ["src/cykhash/utils.pyx"],
+                        ),
              ]
 
 

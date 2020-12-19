@@ -260,6 +260,7 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
   * Hash-Maps are now (almost) drop-in replacements of Python's dicts. Differences: insertion order isn't preserved, thus there is also no `reversed()`-method, `setdefault(key, default)` isn't possible without `default` because `None` cannot be inserted in the map
   * Better hash-functions for float64, float32, int64 and int32 (gh-issue #4).
   * Breaking change: different names/signatures for maps
+  * supports tracemalloc for Py3.6+
 
 #### Release 1.0.2 (30.05.2020):
 

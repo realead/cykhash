@@ -41,7 +41,7 @@ cdef extern from *:
     #define ZERO_HASH 0
     #define NAN_HASH  0
 
-    inline khuint32_t kh_float64_hash_func(float64_t val){
+    inline uint32_t kh_float64_hash_func(float64_t val){
           if(val==0.0){
             return ZERO_HASH;
           }
@@ -60,7 +60,7 @@ cdef extern from *:
     typedef float32_t khfloat32_t;
 
 
-    inline khuint32_t kh_float32_hash_func(float32_t val){ 
+    inline uint32_t kh_float32_hash_func(float32_t val){ 
           if(val==0.0){
             return ZERO_HASH;
           }

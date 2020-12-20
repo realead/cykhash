@@ -1,6 +1,6 @@
 from unittestmock import UnitTestMock
 
-from cykhash.khashsets import float64_hash, float32_hash, int64_hash, int32_hash
+from cykhash.utils import float64_hash, float32_hash, int64_hash, int32_hash
 
 
 class TestUtils(UnitTestMock): 

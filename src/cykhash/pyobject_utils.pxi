@@ -22,9 +22,9 @@ cdef extern from *:
 	    return result;
     }
 
-    inline khint32_t pyobject_hash(PyObject* key){
-        khint64_t hash = PyObject_Hash(key);
-        return (khint32_t) ((hash)>>33^(hash)^(hash)<<11);
+    inline khuint32_t pyobject_hash(PyObject* key){
+        khuint64_t hash = PyObject_Hash(key);
+        return (khuint32_t) ((hash)>>33^(hash)^(hash)<<11);
     }
 
     // For PyObject_Hash holds:

@@ -104,15 +104,15 @@ cdef extern from *:
     /* compiler specific configuration */
 
     #if UINT_MAX == 0xffffffffu
-    typedef unsigned int khint32_t;
+    typedef unsigned int khuint32_t;
     #elif ULONG_MAX == 0xffffffffu
-    typedef unsigned long khint32_t;
+    typedef unsigned long khuint32_t;
     #endif
 
     #if ULONG_MAX == ULLONG_MAX
-    typedef unsigned long khint64_t;
+    typedef unsigned long khuint64_t;
     #else
-    typedef unsigned long long khint64_t;
+    typedef unsigned long long khuint64_t;
     #endif
 
     #ifndef kh_inline
@@ -131,7 +131,7 @@ cdef extern from *:
     #endif
     #endif /* klib_unused */
 
-    typedef khint32_t khint_t;
+    typedef khuint32_t khint_t;
     typedef khint_t khiter_t;
 
     #define __ac_isempty(flag, i) ((flag[i>>4]>>((i&0xfU)<<1))&2)
@@ -166,7 +166,7 @@ cdef extern from *:
     #define __KHASH_TYPE(name, khkey_t, khval_t) \
 	    typedef struct kh_##name##_s { \
 		    khint_t n_buckets, size, n_occupied, upper_bound; \
-		    khint32_t *flags; \
+		    khuint32_t *flags; \
 		    khkey_t *keys; \
 		    khval_t *vals; \
 	    } kh_##name##_t;
@@ -195,7 +195,7 @@ cdef extern from *:
 	    SCOPE void kh_clear_##name(kh_##name##_t *h)						\
 	    {																	\
 		    if (h && h->flags) {											\
-			    memset(h->flags, 0xaa, __ac_fsize(h->n_buckets) * sizeof(khint32_t)); \
+			    memset(h->flags, 0xaa, __ac_fsize(h->n_buckets) * sizeof(khuint32_t)); \
 			    h->size = h->n_occupied = 0;								\
 		    }																\
 	    }																	\
@@ -215,16 +215,16 @@ cdef extern from *:
 	    }																	\
 	    SCOPE int kh_resize_##name(kh_##name##_t *h, khint_t new_n_buckets) \
 	    { /* This function uses 0.25*n_buckets bytes of working space instead of [sizeof(key_t+val_t)+.25]*n_buckets. */ \
-		    khint32_t *new_flags = 0;										\
+		    khuint32_t *new_flags = 0;										\
 		    khint_t j = 1;													\
 		    {																\
 			    kroundup32(new_n_buckets); 									\
 			    if (new_n_buckets < 4) new_n_buckets = 4;					\
 			    if (h->size >= (khint_t)(new_n_buckets * __ac_HASH_UPPER + 0.5)) j = 0;	/* requested size is too small */ \
 			    else { /* hash table size to be changed (shrink or expand); rehash */ \
-				    new_flags = (khint32_t*)kCYKHASH_MALLOC(__ac_fsize(new_n_buckets) * sizeof(khint32_t));	\
+				    new_flags = (khuint32_t*)kCYKHASH_MALLOC(__ac_fsize(new_n_buckets) * sizeof(khuint32_t));	\
 				    if (!new_flags) return -1;								\
-				    memset(new_flags, 0xaa, __ac_fsize(new_n_buckets) * sizeof(khint32_t)); \
+				    memset(new_flags, 0xaa, __ac_fsize(new_n_buckets) * sizeof(khuint32_t)); \
 				    if (h->n_buckets < new_n_buckets) {	/* expand */		\
 					    khkey_t *new_keys = (khkey_t*)kCYKHASH_REALLOC((void *)h->keys, new_n_buckets * sizeof(khkey_t)); \
 					    if (!new_keys) { kCYKHASH_FREE(new_flags); return -1; }		\
@@ -341,10 +341,10 @@ cdef extern from *:
 
     /*! @function
       @abstract     Integer hash function
-      @param  key   The integer [khint32_t]
+      @param  key   The integer [khuint32_t]
       @return       The hash value [khint_t]
      */
-    #define kh_int_hash_func(key) (khint32_t)(key)
+    #define kh_int_hash_func(key) (khuint32_t)(key)
     /*! @function
       @abstract     Integer comparison function
      */
@@ -352,10 +352,10 @@ cdef extern from *:
     #define kh_int32_hash_equal kh_int_hash_equal
     /*! @function
       @abstract     64-bit integer hash function
-      @param  key   The integer [khint64_t]
+      @param  key   The integer [khuint64_t]
       @return       The hash value [khint_t]
      */
-    #define kh_int64_hash_func(key) (khint32_t)(((khint64_t)(key))>>33^((khint64_t)(key))^((khint64_t)(key))<<11)
+    #define kh_int64_hash_func(key) (khuint32_t)(((khuint64_t)(key))>>33^((khuint64_t)(key))^((khuint64_t)(key))<<11)
     /*! @function
       @abstract     64-bit integer comparison function
      */
@@ -556,7 +556,7 @@ cdef extern from *:
       @param  name  Name of the hash table [symbol]
      */
     #define KHASH_SET_INIT_INT(name)										\
-	    KHASH_INIT(name, khint32_t, char, 0, kh_int_hash_func, kh_int_hash_equal)
+	    KHASH_INIT(name, khuint32_t, char, 0, kh_int_hash_func, kh_int_hash_equal)
 
     /*! @function
       @abstract     Instantiate a hash map containing integer keys
@@ -564,14 +564,14 @@ cdef extern from *:
       @param  khval_t  Type of values [type]
      */
     #define KHASH_MAP_INIT_INT(name, khval_t)								\
-	    KHASH_INIT(name, khint32_t, khval_t, 1, kh_int_hash_func, kh_int_hash_equal)
+	    KHASH_INIT(name, khuint32_t, khval_t, 1, kh_int_hash_func, kh_int_hash_equal)
 
     /*! @function
       @abstract     Instantiate a hash map containing 64-bit integer keys
       @param  name  Name of the hash table [symbol]
      */
     #define KHASH_SET_INIT_INT64(name)										\
-	    KHASH_INIT(name, khint64_t, char, 0, kh_int64_hash_func, kh_int64_hash_equal)
+	    KHASH_INIT(name, khuint64_t, char, 0, kh_int64_hash_func, kh_int64_hash_equal)
 
     /*! @function
       @abstract     Instantiate a hash map containing 64-bit integer keys
@@ -579,7 +579,7 @@ cdef extern from *:
       @param  khval_t  Type of values [type]
      */
     #define KHASH_MAP_INIT_INT64(name, khval_t)								\
-	    KHASH_INIT(name, khint64_t, khval_t, 1, kh_int64_hash_func, kh_int64_hash_equal)
+	    KHASH_INIT(name, khuint64_t, khval_t, 1, kh_int64_hash_func, kh_int64_hash_equal)
 
     typedef const char *kh_cstr_t;
     /*! @function

@@ -5,14 +5,14 @@ cdef extern from *:
     """
     // from float_utils.pxi
     """  
-    int64_t   f64_to_i64(float64_t val)
-    float64_t i64_to_f64(int64_t   val)
-    int32_t   f32_to_i32(float32_t val)
-    float32_t i32_to_f32(int32_t   val)
+    uint64_t   f64_to_ui64(float64_t val)
+    float64_t ui64_to_f64(uint64_t   val)
+    uint32_t   f32_to_ui32(float32_t val)
+    float32_t ui32_to_f32(uint32_t   val)
     khint_t kh_float64_hash_func(double val)
     khint_t kh_float32_hash_func(float val)
-    khint_t murmur2_32to32(int32_t val)
-    khint_t murmur2_64to32(int64_t val)
+    khint_t murmur2_32to32(uint32_t val)
+    khint_t murmur2_64to32(uint64_t val)
 
 cdef extern from *:
     """

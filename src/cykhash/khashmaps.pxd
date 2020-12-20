@@ -1,4 +1,4 @@
-from libc.stdint cimport  uint32_t,  int64_t,  int32_t
+from libc.stdint cimport  uint64_t, uint32_t,  int64_t,  int32_t
 from cpython.object cimport PyObject
 
 from .floatdef cimport float64_t, float32_t

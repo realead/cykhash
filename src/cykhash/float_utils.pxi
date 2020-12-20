@@ -8,25 +8,25 @@ cdef extern from *:
 
     //don't pun and alias:
 
-    inline int64_t f64_to_i64(float64_t val){
-          int64_t res; 
+    inline uint64_t f64_to_ui64(float64_t val){
+          uint64_t res; 
           memcpy(&res, &val, sizeof(float64_t)); 
           return res;
     } 
 
-    inline float64_t i64_to_f64(int64_t val){
+    inline float64_t ui64_to_f64(uint64_t val){
           float64_t res; 
           memcpy(&res, &val, sizeof(float64_t)); 
           return res;
     }
 
-    inline int32_t f32_to_i32(float32_t val){
-          int32_t res; 
+    inline uint32_t f32_to_ui32(float32_t val){
+          uint32_t res; 
           memcpy(&res, &val, sizeof(float32_t)); 
           return res;
     } 
 
-    inline float32_t i32_to_f32(int32_t val){
+    inline float32_t ui32_to_f32(uint32_t val){
           float32_t res; 
           memcpy(&res, &val, sizeof(float32_t)); 
           return res;
@@ -41,14 +41,14 @@ cdef extern from *:
     #define ZERO_HASH 0
     #define NAN_HASH  0
 
-    inline khint32_t kh_float64_hash_func(float64_t val){
+    inline khuint32_t kh_float64_hash_func(float64_t val){
           if(val==0.0){
             return ZERO_HASH;
           }
           if(val!=val){
            return NAN_HASH;
           }
-          int64_t as_int = f64_to_i64(val);
+          int64_t as_int = f64_to_ui64(val);
           return murmur2_64to32(as_int);
     }
 
@@ -60,14 +60,14 @@ cdef extern from *:
     typedef float32_t khfloat32_t;
 
 
-    inline khint32_t kh_float32_hash_func(float32_t val){ 
+    inline khuint32_t kh_float32_hash_func(float32_t val){ 
           if(val==0.0){
             return ZERO_HASH;
           }
           if(val!=val){
            return NAN_HASH;
           }    
-          int32_t as_int = f32_to_i32(val);
+          int32_t as_int = f32_to_ui32(val);
           return murmur2_32to32(as_int);
     }
 

@@ -105,14 +105,18 @@ cdef extern from *:
 
     #if UINT_MAX == 0xffffffffu
     typedef unsigned int khuint32_t;
+    typedef int khint32_t;
     #elif ULONG_MAX == 0xffffffffu
     typedef unsigned long khuint32_t;
+    typedef long khint32_t;
     #endif
 
     #if ULONG_MAX == ULLONG_MAX
     typedef unsigned long khuint64_t;
+    typedef long khint64_t;
     #else
     typedef unsigned long long khuint64_t;
+    typedef long long khint64_t;
     #endif
 
     #ifndef kh_inline
@@ -548,54 +552,6 @@ cdef extern from *:
 		    (vvar) = kh_val(h,__i);								\
 		    code;												\
 	    } }
-
-    /* More conenient interfaces */
-
-    /*! @function
-      @abstract     Instantiate a hash set containing integer keys
-      @param  name  Name of the hash table [symbol]
-     */
-    #define KHASH_SET_INIT_INT(name)										\
-	    KHASH_INIT(name, khuint32_t, char, 0, kh_int_hash_func, kh_int_hash_equal)
-
-    /*! @function
-      @abstract     Instantiate a hash map containing integer keys
-      @param  name  Name of the hash table [symbol]
-      @param  khval_t  Type of values [type]
-     */
-    #define KHASH_MAP_INIT_INT(name, khval_t)								\
-	    KHASH_INIT(name, khuint32_t, khval_t, 1, kh_int_hash_func, kh_int_hash_equal)
-
-    /*! @function
-      @abstract     Instantiate a hash map containing 64-bit integer keys
-      @param  name  Name of the hash table [symbol]
-     */
-    #define KHASH_SET_INIT_INT64(name)										\
-	    KHASH_INIT(name, khuint64_t, char, 0, kh_int64_hash_func, kh_int64_hash_equal)
-
-    /*! @function
-      @abstract     Instantiate a hash map containing 64-bit integer keys
-      @param  name  Name of the hash table [symbol]
-      @param  khval_t  Type of values [type]
-     */
-    #define KHASH_MAP_INIT_INT64(name, khval_t)								\
-	    KHASH_INIT(name, khuint64_t, khval_t, 1, kh_int64_hash_func, kh_int64_hash_equal)
-
-    typedef const char *kh_cstr_t;
-    /*! @function
-      @abstract     Instantiate a hash map containing const char* keys
-      @param  name  Name of the hash table [symbol]
-     */
-    #define KHASH_SET_INIT_STR(name)										\
-	    KHASH_INIT(name, kh_cstr_t, char, 0, kh_str_hash_func, kh_str_hash_equal)
-
-    /*! @function
-      @abstract     Instantiate a hash map containing const char* keys
-      @param  name  Name of the hash table [symbol]
-      @param  khval_t  Type of values [type]
-     */
-    #define KHASH_MAP_INIT_STR(name, khval_t)								\
-	    KHASH_INIT(name, kh_cstr_t, khval_t, 1, kh_str_hash_func, kh_str_hash_equal)
 
     #endif /* __AC_KHASH_H */ 
     """

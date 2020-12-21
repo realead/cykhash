@@ -1,0 +1,66 @@
+
+"""
+Template for sets
+
+WARNING: DO NOT edit .pxi FILE directly, .pxi is generated from .pxi.in
+"""
+
+
+
+
+{{py:
+
+# set_name, name, key_type, format
+set_types       = [('Int64', 'int64', 'int64_t', '"q"'),
+                   ('Float64', 'float64', 'float64_t', '"d"'),
+                   ('Int32', 'int32', 'int32_t', '"i"'),
+                   ('Float32', 'float32', 'float32_t', '"f"'),
+                  ]
+}}
+
+
+{{for set_name, name, key_type, format in set_types}}
+
+cpdef unique_{{name}}({{key_type}}[:] vals, double size_hint=0.0):
+    cdef {{set_name}}Set s = {{set_name}}Set_from_buffer(vals, size_hint)
+    
+    # compress:
+    cdef {{key_type}}* mem = s.table.keys
+    cdef khint_t i
+    cdef khint_t current = 0
+    for i in range(s.table.n_buckets):
+        if kh_exist_{{name}}set(s.table, i):
+            mem[current] = mem[i]
+            current += 1
+
+    # take over the memory:
+    s.table.keys = NULL
+    
+    # shrink to fit:
+    mem = <{{key_type}}*> cykhash_traced_realloc(mem, sizeof({{key_type}})*current);
+    return MemoryNanny.create_memory_nanny(mem, current, sizeof({{key_type}}), b{{format}})
+
+
+cpdef unique_stable_{{name}}({{key_type}}[:] vals, double size_hint=0.0):
+    # prepare 
+    cdef Py_ssize_t n = len(vals)
+    cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
+    res={{set_name}}Set(number_of_elements_hint=at_least_needed)
+    cdef {{key_type}}* mem = <{{key_type}}*> cykhash_traced_malloc(sizeof({{key_type}})*n);
+    
+    # insert
+    cdef khint_t current = 0
+    cdef Py_ssize_t i
+    cdef {{key_type}} element
+    for i in range(n):
+        element = vals[i]
+        res.add(element)
+        if current != res.size():
+            mem[current] = element
+            current += 1
+    
+    # shrink to fit:
+    mem = <{{key_type}}*> cykhash_traced_realloc(mem, sizeof({{key_type}})*current);
+    return MemoryNanny.create_memory_nanny(mem, current, sizeof({{key_type}}), b{{format}})
+
+{{endfor}}

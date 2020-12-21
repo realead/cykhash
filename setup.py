@@ -35,6 +35,7 @@ template_files = ["src/cykhash/maps/map_impl.pxi.in",
                   "src/cykhash/sets/set_impl.pxi.in",
                   "src/cykhash/sets/set_header.pxi.in",
                   "src/cykhash/sets/set_init.pxi.in",
+                  "src/cykhash/unique/unique_impl.pxi.in",
 ]
 
 def render_templates(pxifiles):

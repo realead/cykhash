@@ -5,6 +5,7 @@ tests/asv_bench/env
 # created pxi from template
 src/cykhash/maps/*.pxi
 src/cykhash/sets/*.pxi
+src/cykhash/unique/*.pxi
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

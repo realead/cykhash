@@ -106,6 +106,46 @@ cdef extern from *:
 
 cdef extern from *:
     """
+        #ifndef CYKHASH_PYOBJECT_HASH_FUNS_PXI
+        #define CYKHASH_PYOBJECT_HASH_FUNS_PXI
+            //khash has nothing predefined for Pyobject
+            #include <Python.h>
+
+            typedef PyObject* pyobject_t;
+            typedef pyobject_t khpyobject_t;
+
+
+            inline int pyobject_cmp(PyObject* a, PyObject* b) {
+	            int result = PyObject_RichCompareBool(a, b, Py_EQ);
+	            if (result < 0) {
+		            PyErr_Clear();
+		            return 0;
+	            }
+                if (result == 0) {  // still could be two NaNs
+                    return PyFloat_CheckExact(a) &&
+                           PyFloat_CheckExact(b) &&
+                           Py_IS_NAN(PyFloat_AS_DOUBLE(a)) &&
+                           Py_IS_NAN(PyFloat_AS_DOUBLE(b));
+                }
+	            return result;
+            }
+
+            // For PyObject_Hash holds:
+            //    hash(0.0) == 0 == hash(-0.0)
+            //    hash(X) == 0 if X is a NaN-value
+            // so it is OK to use it directly
+            inline uint32_t pyobject_hash(PyObject* key){
+                uint64_t hash = PyObject_Hash(key);
+                return kh_int64_hash_func(hash);
+            }
+        #endif
+    """
+    pass
+
+
+
+cdef extern from *:
+    """
         #ifndef CYKHASH_DEFINE_HASH_FUNS_PXI
         #define CYKHASH_DEFINE_HASH_FUNS_PXI
 
@@ -117,6 +157,8 @@ cdef extern from *:
             #define cykh_float32_hash_func kh_float32_hash_func
             #define cykh_float64_hash_func kh_float64_hash_func
 
+            #define cykh_pyobject_hash_func pyobject_hash
+
             
             // used equality-functions
             #define cykh_int32_hash_equal kh_int32_hash_equal
@@ -124,6 +166,8 @@ cdef extern from *:
 
             #define cykh_float32_hash_equal kh_float32_hash_equal
             #define cykh_float64_hash_equal kh_float64_hash_equal
+
+            #define cykh_pyobject_hash_equal pyobject_cmp
 
         #endif
     """

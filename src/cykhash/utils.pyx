@@ -22,6 +22,7 @@ cdef extern from *:
     uint32_t cykh_float64_hash_func(double val)
     uint32_t cykh_int32_hash_func(uint32_t val)
     uint32_t cykh_int64_hash_func(uint64_t val)
+    uint32_t cykh_pyobject_hash_func(object ob)
 
 
 
@@ -52,6 +53,14 @@ def float32_hash(float val):
 
     """
     return cykh_float32_hash_func(val)
+
+
+
+def object_hash(val):
+    """
+    returns hash used for objects by cykhash sets/maps
+    """
+    return cykh_pyobject_hash_func(val)
 
 
 def int64_hash(int64_t val):

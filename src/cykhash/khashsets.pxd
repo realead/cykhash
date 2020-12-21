@@ -14,7 +14,6 @@ include "murmurhash.pxi"
 
 #utilities for int<->float
 include "hash_functions.pxi"
-include "pyobject_utils.pxi"
 
 # different implementations
 include "sets/set_header.pxi"

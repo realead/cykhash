@@ -1,6 +1,6 @@
 from unittestmock import UnitTestMock
 
-from cykhash.utils import float64_hash, float32_hash, int64_hash, int32_hash
+from cykhash.utils import float64_hash, float32_hash, int64_hash, int32_hash, object_hash
 
 
 class TestUtils(UnitTestMock): 
@@ -34,6 +34,14 @@ class TestUtils(UnitTestMock):
 
     def test_hash_int32_one(self):
         self.assertEqual(int32_hash(1), 1753268367)
+
+
+    def test_hash_object_zero(self):
+        self.assertEqual(object_hash(0), 0)
+
+
+    def test_hash_object_one(self):
+        self.assertEqual(object_hash(1), 2049)
 
 
 

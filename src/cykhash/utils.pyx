@@ -12,17 +12,16 @@ def get_cykhash_trace_domain():
     return CYKHASH_TRACE_DOMAIN
 
 
-include "murmurhash.pxi"
-include "float_utils.pxi"
+include "hash_functions.pxi"
 
 cdef extern from *:
     """
-    // from float_utils.pxi
-    """  
-    uint32_t kh_float64_hash_func(double val)
-    uint32_t kh_float32_hash_func(float val)
-    uint32_t murmur2_32to32(uint32_t val)
-    uint32_t murmur2_64to32(uint64_t val)
+    // from hash_functions.pxi
+    """
+    uint32_t cykh_float32_hash_func(float val)
+    uint32_t cykh_float64_hash_func(double val)
+    uint32_t cykh_int32_hash_func(uint32_t val)
+    uint32_t cykh_int64_hash_func(uint64_t val)
 
 
 
@@ -38,7 +37,7 @@ def float64_hash(double val):
     0
 
     """
-    return kh_float64_hash_func(val)
+    return cykh_float64_hash_func(val)
 
 
 def float32_hash(float val):
@@ -52,14 +51,14 @@ def float32_hash(float val):
     0
 
     """
-    return kh_float32_hash_func(val)
+    return cykh_float32_hash_func(val)
 
 
 def int64_hash(int64_t val):
     """
     returns hash used for int64-values by cykhash sets/maps
     """
-    return murmur2_64to32(val)
+    return cykh_int64_hash_func(val)
 
 
 def int32_hash(int32_t val):
@@ -67,5 +66,4 @@ def int32_hash(int32_t val):
     returns hash used for int32-values by cykhash sets/maps
 
     """
-    return murmur2_32to32(val)
-
+    return cykh_int32_hash_func(val)

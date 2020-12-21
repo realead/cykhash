@@ -341,65 +341,6 @@ cdef extern from *:
     #define KHASH_INIT(name, khkey_t, khval_t, kh_is_map, __hash_func, __hash_equal) \
 	    KHASH_INIT2(name, static kh_inline klib_unused, khkey_t, khval_t, kh_is_map, __hash_func, __hash_equal)
 
-    /* --- BEGIN OF HASH FUNCTIONS --- */
-
-    /*! @function
-      @abstract     Integer hash function
-      @param  key   The integer [khuint32_t]
-      @return       The hash value [khint_t]
-     */
-    #define kh_int_hash_func(key) (khuint32_t)(key)
-    /*! @function
-      @abstract     Integer comparison function
-     */
-    #define kh_int_hash_equal(a, b) ((a) == (b))
-    #define kh_int32_hash_equal kh_int_hash_equal
-    /*! @function
-      @abstract     64-bit integer hash function
-      @param  key   The integer [khuint64_t]
-      @return       The hash value [khint_t]
-     */
-    #define kh_int64_hash_func(key) (khuint32_t)(((khuint64_t)(key))>>33^((khuint64_t)(key))^((khuint64_t)(key))<<11)
-    /*! @function
-      @abstract     64-bit integer comparison function
-     */
-    #define kh_int64_hash_equal(a, b) ((a) == (b))
-    /*! @function
-      @abstract     const char* hash function
-      @param  s     Pointer to a null terminated string
-      @return       The hash value
-     */
-    static kh_inline khint_t __ac_X31_hash_string(const char *s)
-    {
-	    khint_t h = (khint_t)*s;
-	    if (h) for (++s ; *s; ++s) h = (h << 5) - h + (khint_t)*s;
-	    return h;
-    }
-    /*! @function
-      @abstract     Another interface to const char* hash function
-      @param  key   Pointer to a null terminated string [const char*]
-      @return       The hash value [khint_t]
-     */
-    #define kh_str_hash_func(key) __ac_X31_hash_string(key)
-    /*! @function
-      @abstract     Const char* comparison function
-     */
-    #define kh_str_hash_equal(a, b) (strcmp(a, b) == 0)
-
-    static kh_inline khint_t __ac_Wang_hash(khint_t key)
-    {
-        key += ~(key << 15);
-        key ^=  (key >> 10);
-        key +=  (key << 3);
-        key ^=  (key >> 6);
-        key += ~(key << 11);
-        key ^=  (key >> 16);
-        return key;
-    }
-    #define kh_int_hash_func2(key) __ac_Wang_hash((khint_t)key)
-
-    /* --- END OF HASH FUNCTIONS --- */
-
     /* Other convenient macros... */
 
     /*!

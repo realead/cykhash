@@ -11,8 +11,9 @@ include "memory.pxi"
 include "khash.pxi"
 include "murmurhash.pxi"
 
+
 #utilities for int<->float
-include "float_utils.pxi"
+include "hash_functions.pxi"
 include "pyobject_utils.pxi"
 
 # different implementations

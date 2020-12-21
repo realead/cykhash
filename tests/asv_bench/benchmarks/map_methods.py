@@ -1,24 +1,20 @@
 import numpy as np
 
-from cykhash import Int64toInt64Map_to_int64, Int64toInt64Map_to_float64, Int64toInt64Map_from_int64_buffer, Int64toInt64Map_from_float64_buffer
-from cykhash import Float64toInt64Map_to_int64, Float64toInt64Map_to_float64, Float64toInt64Map_from_int64_buffer, Float64toInt64Map_from_float64_buffer
-from cykhash import Int32toInt32Map_to_int32, Int32toInt32Map_to_float32, Int32toInt32Map_from_int32_buffer, Int32toInt32Map_from_float32_buffer
-from cykhash import Float32toInt32Map_to_int32, Float32toInt32Map_to_float32, Float32toInt32Map_from_int32_buffer, Float32toInt32Map_from_float32_buffer
-from cykhash import PyObjectMap_to_object, PyObjectMap_from_object_buffer
+import cykhash as cyk
 
 
-MAP_TO_INT            = {np.int32: Int32toInt32Map_to_int32,
-                         np.int64: Int64toInt64Map_to_int64,
-                         np.float64 : Float64toInt64Map_to_int64,
-                         np.float32 : Float32toInt32Map_to_int32,
-                         np.object : PyObjectMap_to_object,
+MAP_TO_INT            = {np.int32: cyk.Int32toInt32Map_to,
+                         np.int64: cyk.Int64toInt64Map_to,
+                         np.float64 : cyk.Float64toInt64Map_to,
+                         np.float32 : cyk.Float32toInt32Map_to,
+                         np.object : cyk.PyObjectMap_to,
 }
 
-CREATOR_FROM_INT      = {np.int32: Int32toInt32Map_from_int32_buffer,
-                         np.int64: Int64toInt64Map_from_int64_buffer,
-                         np.float64 : Float64toInt64Map_from_int64_buffer,
-                         np.float32 : Float32toInt32Map_from_int32_buffer,
-                         np.object : PyObjectMap_from_object_buffer,
+CREATOR_FROM_INT      = {np.int32: cyk.Int32toInt32Map_from_buffers,
+                         np.int64: cyk.Int64toInt64Map_from_buffers,
+                         np.float64 : cyk.Float64toInt64Map_from_buffers,
+                         np.float32 : cyk.Float32toInt32Map_from_buffers,
+                         np.object : cyk.PyObjectMap_from_buffers,
 }
 
 

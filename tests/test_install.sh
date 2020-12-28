@@ -30,6 +30,7 @@ pip install pytest
 pip freeze
 
 sh run_unit_tests.sh
+sh run_doctests.sh
 
 
 

@@ -34,6 +34,10 @@ jobs:
       run: |
         (cd tests/unit_tests && pytest)
         
-    - name: Run doctests
+    - name: Run doctests repository
       run: |
         pytest --ignore=tests --doctest-glob=*.md --doctest-glob=*.pyx --doctest-glob=*.pxi -vv  --doctest-continue-on-failure
+        
+    - name: Run doctests installation
+      run: |
+        (cd tests && python run_installed_doctests.py)

@@ -47,3 +47,10 @@ For running doc-tests:
 
     sh run_doctests.sh
 
+## Uploading to PyPi:
+
+Follow procedure in `distribute/upload_to_pypi.sh`, i.e.
+
+    cd distribute
+    sh upload_to_pypi.sh
+

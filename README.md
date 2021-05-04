@@ -252,7 +252,7 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
 
 ## History:
 
-#### Release 1.1.0 (??.??.2020):
+#### Release 1.1.0 (10.05.2021):
 
   * Implementation of `any`, `all`, `none` and `count_if`
   * Hash-sets are now (almost) drop-in replacements of Python's sets
@@ -264,7 +264,7 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
 
 #### Release 1.0.2 (30.05.2020):
 
-  * can be install via conda-forge to all operating systems
+  * can be installed via conda-forge to all operating systems
   * can be installed via pip in a clean environment (Cython>=0.28 is now fetched automatically)
 
 #### Release 1.0.1 (27.05.2020):

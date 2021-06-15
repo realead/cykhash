@@ -78,5 +78,62 @@ class TestRefCounter(UnitTestMock):
       self.assertEqual(sys.getrefcount(a), old_ref_cnt_a)
       self.assertEqual(sys.getrefcount(b), old_ref_cnt_b+1)
 
-      
+
+def test_nan_float():
+    nan1 = float("nan")
+    nan2 = float("nan")
+    assert nan1 is not nan2
+    s = PyObjectSet()
+    s.add(nan1)
+    assert nan2 in s
+
+
+def test_nan_complex():
+    nan1 = complex(0, float("nan"))
+    nan2 = complex(0, float("nan"))
+    assert nan1 is not nan2
+    s = PyObjectSet()
+    s.add(nan1)
+    assert nan2 in s
+
+
+def test_nan_in_tuple():
+    nan1 = (float("nan"),)
+    nan2 = (float("nan"),)
+    assert nan1[0] is not nan2[0]
+    s = PyObjectSet()
+    s.add(nan1)
+    assert nan2 in s
+
+
+def test_nan_in_nested_tuple():
+    nan1 = (1, (2, (float("nan"),)))
+    nan2 = (1, (2, (float("nan"),)))
+    other = (1, 2)
+    s = PyObjectSet()
+    s.add(nan1)
+    assert nan2 in s
+    assert other not in s
+
+
+def test_unique_for_nan_objects_floats():
+    s = PyObjectSet([float("nan") for i in range(50)])
+    assert len(s) == 1
+
+
+def test_unique_for_nan_objects_complex():
+    s = PyObjectSet([complex(float("nan"), 1.0) for i in range(50)])
+    assert len(s) == 1
+
+
+def test_unique_for_nan_objects_tuple():
+    s = PyObjectSet([(1.0, (float("nan"), 1.0)) for i in range(50)])
+    assert len(s) == 1
+
+
+def test_float_complex_int_are_equal_as_objects():
+    s = PyObjectSet(range(129))
+    assert 5 in s
+    assert 5.0 in s
+    assert 5.0+0j in s     
 

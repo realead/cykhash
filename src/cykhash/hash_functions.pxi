@@ -115,28 +115,199 @@ cdef extern from *:
             typedef pyobject_t khpyobject_t;
 
 
-            inline int pyobject_cmp(PyObject* a, PyObject* b) {
+            inline int floatobject_cmp(PyFloatObject* a, PyFloatObject* b){
+                return (
+                         Py_IS_NAN(PyFloat_AS_DOUBLE(a)) &&
+                         Py_IS_NAN(PyFloat_AS_DOUBLE(b))
+                       )
+                       ||
+                       ( PyFloat_AS_DOUBLE(a) == PyFloat_AS_DOUBLE(b) );
+            }
+
+
+            inline int complexobject_cmp(PyComplexObject* a, PyComplexObject* b){
+                return (
+                            Py_IS_NAN(a->cval.real) &&
+                            Py_IS_NAN(b->cval.real) &&
+                            Py_IS_NAN(a->cval.imag) &&
+                            Py_IS_NAN(b->cval.imag)
+                       )
+                       ||
+                       (
+                            Py_IS_NAN(a->cval.real) &&
+                            Py_IS_NAN(b->cval.real) &&
+                            a->cval.imag == b->cval.imag
+                       )
+                       ||
+                       (
+                            a->cval.real == b->cval.real &&
+                            Py_IS_NAN(a->cval.imag) &&
+                            Py_IS_NAN(b->cval.imag)
+                       )
+                       ||
+                       (
+                            a->cval.real == b->cval.real &&
+                            a->cval.imag == b->cval.imag
+                       );
+            }
+
+            static inline int pyobject_cmp(PyObject* a, PyObject* b);
+
+
+            static inline int tupleobject_cmp(PyTupleObject* a, PyTupleObject* b){
+                Py_ssize_t i;
+
+                if (Py_SIZE(a) != Py_SIZE(b)) {
+                    return 0;
+                }
+
+                for (i = 0; i < Py_SIZE(a); ++i) {
+                    if (!pyobject_cmp(PyTuple_GET_ITEM(a, i), PyTuple_GET_ITEM(b, i))) {
+                        return 0;
+                    }
+                }
+                return 1;
+            }
+
+
+            static inline int pyobject_cmp(PyObject* a, PyObject* b) {
+                if (Py_TYPE(a) == Py_TYPE(b)) {
+                    // special handling for some built-in types which could have NaNs:
+                    if (PyFloat_CheckExact(a)) {
+                        return floatobject_cmp((PyFloatObject*)a, (PyFloatObject*)b);
+                    }
+                    if (PyComplex_CheckExact(a)) {
+                        return complexobject_cmp((PyComplexObject*)a, (PyComplexObject*)b);
+                    }
+                    if (PyTuple_CheckExact(a)) {
+                        return tupleobject_cmp((PyTupleObject*)a, (PyTupleObject*)b);
+                    }
+                    // frozenset isn't yet supported
+                }
+
 	            int result = PyObject_RichCompareBool(a, b, Py_EQ);
 	            if (result < 0) {
 		            PyErr_Clear();
 		            return 0;
 	            }
-                if (result == 0) {  // still could be two NaNs
-                    return PyFloat_CheckExact(a) &&
-                           PyFloat_CheckExact(b) &&
-                           Py_IS_NAN(PyFloat_AS_DOUBLE(a)) &&
-                           Py_IS_NAN(PyFloat_AS_DOUBLE(b));
-                }
 	            return result;
             }
 
-            // For PyObject_Hash holds:
-            //    hash(0.0) == 0 == hash(-0.0)
-            //    hash(X) == 0 if X is a NaN-value
-            // so it is OK to use it directly
-            inline uint32_t pyobject_hash(PyObject* key){
-                uint64_t hash = PyObject_Hash(key);
-                return kh_int64_hash_func(hash);
+
+            ///hashes:
+
+            static inline Py_hash_t _Cykhash_HashDouble(double val) {
+                //Since Python3.10, nan is no longer has hash 0
+                if (Py_IS_NAN(val)) {
+                    return 0;
+                }
+            #if PY_VERSION_HEX < 0x030A0000
+                return _Py_HashDouble(val);
+            #else
+                return _Py_HashDouble(NULL, val);
+            #endif
+            }
+
+
+            static inline Py_hash_t floatobject_hash(PyFloatObject* key) {
+                return _Cykhash_HashDouble(PyFloat_AS_DOUBLE(key));
+            }
+
+
+            // replaces _Py_HashDouble with _Cykhash_HashDouble
+            static inline Py_hash_t complexobject_hash(PyComplexObject* key) {
+                Py_uhash_t realhash = (Py_uhash_t)_Cykhash_HashDouble(key->cval.real);
+                Py_uhash_t imaghash = (Py_uhash_t)_Cykhash_HashDouble(key->cval.imag);
+                if (realhash == (Py_uhash_t)-1 || imaghash == (Py_uhash_t)-1) {
+                    return -1;
+                }
+                Py_uhash_t combined = realhash + _PyHASH_IMAG * imaghash;
+                if (combined == (Py_uhash_t)-1) {
+                    return -2;
+                }
+                return (Py_hash_t)combined;
+            }
+
+
+            static inline uint32_t pyobject_hash(PyObject* key);
+
+            //we could use any hashing algorithm, this is the original CPython's for tuples
+
+            #if SIZEOF_PY_UHASH_T > 4
+            #define _CykhashHASH_XXPRIME_1 ((Py_uhash_t)11400714785074694791ULL)
+            #define _CykhashHASH_XXPRIME_2 ((Py_uhash_t)14029467366897019727ULL)
+            #define _CykhashHASH_XXPRIME_5 ((Py_uhash_t)2870177450012600261ULL)
+            #define _CykhashHASH_XXROTATE(x) ((x << 31) | (x >> 33))  /* Rotate left 31 bits */
+            #else
+            #define _CykhashHASH_XXPRIME_1 ((Py_uhash_t)2654435761UL)
+            #define _CykhashHASH_XXPRIME_2 ((Py_uhash_t)2246822519UL)
+            #define _CykhashHASH_XXPRIME_5 ((Py_uhash_t)374761393UL)
+            #define _CykhashHASH_XXROTATE(x) ((x << 13) | (x >> 19))  /* Rotate left 13 bits */
+            #endif
+
+            static inline Py_hash_t tupleobject_hash(PyTupleObject* key) {
+                Py_ssize_t i, len = Py_SIZE(key);
+                PyObject **item = key->ob_item;
+
+                Py_uhash_t acc = _CykhashHASH_XXPRIME_5;
+                for (i = 0; i < len; i++) {
+                    Py_uhash_t lane = pyobject_hash(item[i]);
+                    if (lane == (Py_uhash_t)-1) {
+                        return -1;
+                    }
+                    acc += lane * _CykhashHASH_XXPRIME_2;
+                    acc = _CykhashHASH_XXROTATE(acc);
+                    acc *= _CykhashHASH_XXPRIME_1;
+                }
+
+                /* Add input length, mangled to keep the historical value of hash(()). */
+                acc += len ^ (_CykhashHASH_XXPRIME_5 ^ 3527539UL);
+
+                if (acc == (Py_uhash_t)-1) {
+                    return 1546275796;
+                }
+                return acc;
+            }
+
+
+            static inline uint32_t pyobject_hash(PyObject* key) {
+                Py_hash_t hash;
+                // For PyObject_Hash holds:
+                //    hash(0.0) == 0 == hash(-0.0)
+                //    yet for different nan-objects different hash-values
+                //    are possible
+                if (PyFloat_CheckExact(key)) {
+                    // we cannot use kh_float64_hash_func
+                    // becase float(k) == k holds for any int-object k
+                    // and kh_float64_hash_func doesn't respect it
+                    hash = floatobject_hash((PyFloatObject*)key);
+                }
+                else if (PyComplex_CheckExact(key)) {
+                    // we cannot use kh_complex128_hash_func
+                    // becase complex(k,0) == k holds for any int-object k
+                    // and kh_complex128_hash_func doesn't respect it
+                    hash = complexobject_hash((PyComplexObject*)key);
+                }
+                else if (PyTuple_CheckExact(key)) {
+                    hash = tupleobject_hash((PyTupleObject*)key);
+                }
+                else {
+                    hash = PyObject_Hash(key);
+                }
+
+	            if (hash == -1) {
+		            PyErr_Clear();
+		            return 0;
+	            }
+                #if SIZEOF_PY_HASH_T == 4
+                    // it is already 32bit value
+                    return (uint32_t)hash;
+                #else
+                    // for 64bit builds,
+                    // we need information of the upper 32bits as well
+                    // uints avoid undefined behavior of signed ints
+                    return kh_int64_hash_func((uint64_t) hash);
+                #endif
             }
         #endif
     """

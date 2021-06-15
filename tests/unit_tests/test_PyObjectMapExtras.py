@@ -103,5 +103,82 @@ class TestRefCounterPyObjectMap(UnitTestMock):
       self.assertEqual(sys.getrefcount(a), old_ref_cnt_a)
       self.assertEqual(sys.getrefcount(b), old_ref_cnt_b)
 
+
+   def test_rewrite_works(self):
+      a,b =float("nan"), float("nan")
+      self.assertTrue(a is not b) #prerequisite
+      old_ref_cnt_a = sys.getrefcount(a)
+      old_ref_cnt_b = sys.getrefcount(b)
+      s=PyObjectMap()
+      s[a] = a
+      self.assertEqual(sys.getrefcount(a), old_ref_cnt_a+2)
+      self.assertEqual(sys.getrefcount(b), old_ref_cnt_b)
       
+      s[b] = b    
+      self.assertEqual(sys.getrefcount(a), old_ref_cnt_a+1)
+      self.assertEqual(sys.getrefcount(b), old_ref_cnt_b+1)
+
+      del s
+      self.assertEqual(sys.getrefcount(a), old_ref_cnt_a)
+      self.assertEqual(sys.getrefcount(b), old_ref_cnt_b)
+
+
+def test_nan_float():
+    nan1 = float("nan")
+    nan2 = float("nan")
+    assert nan1 is not nan2
+    table = PyObjectMap()
+    table[nan1] =  42
+    assert table[nan2] == 42
+
+
+def test_nan_complex():
+    nan1 = complex(0, float("nan"))
+    nan2 = complex(0, float("nan"))
+    assert nan1 is not nan2
+    table = PyObjectMap()
+    table[nan1] =  42
+    assert table[nan2] == 42
+
+
+def test_nan_in_tuple():
+    nan1 = (float("nan"),)
+    nan2 = (float("nan"),)
+    assert nan1[0] is not nan2[0]
+    table = PyObjectMap()
+    table[nan1] =  42
+    assert table[nan2] == 42
+
+
+def test_nan_in_nested_tuple():
+    nan1 = (1, (2, (float("nan"),)))
+    nan2 = (1, (2, (float("nan"),)))
+    other = (1, 2)
+    table = PyObjectMap()
+    table[nan1] =  42
+    assert table[nan2] == 42
+    assert other not in table
+
+
+def test_unique_for_nan_objects_floats():
+    table = PyObjectMap(zip([float("nan") for i in range(50)], range(50)))
+    assert len(table) == 1
+
+
+def test_unique_for_nan_objects_complex():
+    table = PyObjectMap(zip([complex(float("nan"), 1.0) for i in range(50)], range(50)))
+    assert len(table) == 1
+
+
+def test_unique_for_nan_objects_tuple():
+    table = PyObjectMap(zip([(1.0, (float("nan"), 1.0)) for i in range(50)], range(50)))
+    assert len(table) == 1
+
+
+def test_float_complex_int_are_equal_as_objects():
+    table = PyObjectMap(zip(range(129), range(129)))
+    assert table[5] == 5
+    assert table[5.0] == 5
+    assert table[5.0+0j] == 5
+
 

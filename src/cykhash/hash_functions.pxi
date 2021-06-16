@@ -7,13 +7,13 @@ cdef extern from *:
     """
         #ifndef CYKHASH_INTEGRAL_HASH_FUNS_PXI
         #define CYKHASH_INTEGRAL_HASH_FUNS_PXI
-            inline uint32_t kh_int32_hash_func(uint32_t key){return key;}
-            inline int      kh_int32_hash_equal(uint32_t a, uint32_t b) {return a==b;}
+            CYKHASH_INLINE uint32_t kh_int32_hash_func(uint32_t key){return key;}
+            CYKHASH_INLINE int      kh_int32_hash_equal(uint32_t a, uint32_t b) {return a==b;}
 
-            inline uint32_t kh_int64_hash_func(uint64_t key){
+            CYKHASH_INLINE uint32_t kh_int64_hash_func(uint64_t key){
                     return (uint32_t)((key)>>33^(key)^(key)<<11);
             }
-            inline int      kh_int64_hash_equal(uint64_t a, uint64_t b) {return a==b;}
+            CYKHASH_INLINE int      kh_int64_hash_equal(uint64_t a, uint64_t b) {return a==b;}
         #endif
     """
     pass
@@ -33,25 +33,25 @@ cdef extern from *:
 
             //don't pun and alias:
 
-            inline uint64_t f64_to_ui64(float64_t val){
+            CYKHASH_INLINE uint64_t f64_to_ui64(float64_t val){
                   uint64_t res; 
                   memcpy(&res, &val, sizeof(float64_t)); 
                   return res;
             } 
 
-            inline float64_t ui64_to_f64(uint64_t val){
+            CYKHASH_INLINE float64_t ui64_to_f64(uint64_t val){
                   float64_t res; 
                   memcpy(&res, &val, sizeof(float64_t)); 
                   return res;
             }
 
-            inline uint32_t f32_to_ui32(float32_t val){
+            CYKHASH_INLINE uint32_t f32_to_ui32(float32_t val){
                   uint32_t res; 
                   memcpy(&res, &val, sizeof(float32_t)); 
                   return res;
             } 
 
-            inline float32_t ui32_to_f32(uint32_t val){
+            CYKHASH_INLINE float32_t ui32_to_f32(uint32_t val){
                   float32_t res; 
                   memcpy(&res, &val, sizeof(float32_t)); 
                   return res;
@@ -66,7 +66,7 @@ cdef extern from *:
             #define ZERO_HASH 0
             #define NAN_HASH  0
 
-            inline uint32_t kh_float64_hash_func(float64_t val){
+            CYKHASH_INLINE uint32_t kh_float64_hash_func(float64_t val){
                   if(val==0.0){
                     return ZERO_HASH;
                   }
@@ -85,7 +85,7 @@ cdef extern from *:
             typedef float32_t khfloat32_t;
 
 
-            inline uint32_t kh_float32_hash_func(float32_t val){ 
+            CYKHASH_INLINE uint32_t kh_float32_hash_func(float32_t val){ 
                   if(val==0.0){
                     return ZERO_HASH;
                   }
@@ -115,7 +115,7 @@ cdef extern from *:
             typedef pyobject_t khpyobject_t;
 
 
-            inline int floatobject_cmp(PyFloatObject* a, PyFloatObject* b){
+            CYKHASH_INLINE int floatobject_cmp(PyFloatObject* a, PyFloatObject* b){
                 return (
                          Py_IS_NAN(PyFloat_AS_DOUBLE(a)) &&
                          Py_IS_NAN(PyFloat_AS_DOUBLE(b))
@@ -125,7 +125,7 @@ cdef extern from *:
             }
 
 
-            inline int complexobject_cmp(PyComplexObject* a, PyComplexObject* b){
+            CYKHASH_INLINE int complexobject_cmp(PyComplexObject* a, PyComplexObject* b){
                 return (
                             Py_IS_NAN(a->cval.real) &&
                             Py_IS_NAN(b->cval.real) &&
@@ -151,10 +151,10 @@ cdef extern from *:
                        );
             }
 
-            static inline int pyobject_cmp(PyObject* a, PyObject* b);
+            CYKHASH_INLINE int pyobject_cmp(PyObject* a, PyObject* b);
 
 
-            static inline int tupleobject_cmp(PyTupleObject* a, PyTupleObject* b){
+            CYKHASH_INLINE int tupleobject_cmp(PyTupleObject* a, PyTupleObject* b){
                 Py_ssize_t i;
 
                 if (Py_SIZE(a) != Py_SIZE(b)) {
@@ -170,7 +170,7 @@ cdef extern from *:
             }
 
 
-            static inline int pyobject_cmp(PyObject* a, PyObject* b) {
+            CYKHASH_INLINE int pyobject_cmp(PyObject* a, PyObject* b) {
                 if (Py_TYPE(a) == Py_TYPE(b)) {
                     // special handling for some built-in types which could have NaNs:
                     if (PyFloat_CheckExact(a)) {
@@ -196,7 +196,7 @@ cdef extern from *:
 
             ///hashes:
 
-            static inline Py_hash_t _Cykhash_HashDouble(double val) {
+            CYKHASH_INLINE Py_hash_t _Cykhash_HashDouble(double val) {
                 //Since Python3.10, nan is no longer has hash 0
                 if (Py_IS_NAN(val)) {
                     return 0;
@@ -209,13 +209,13 @@ cdef extern from *:
             }
 
 
-            static inline Py_hash_t floatobject_hash(PyFloatObject* key) {
+            CYKHASH_INLINE Py_hash_t floatobject_hash(PyFloatObject* key) {
                 return _Cykhash_HashDouble(PyFloat_AS_DOUBLE(key));
             }
 
 
             // replaces _Py_HashDouble with _Cykhash_HashDouble
-            static inline Py_hash_t complexobject_hash(PyComplexObject* key) {
+            CYKHASH_INLINE Py_hash_t complexobject_hash(PyComplexObject* key) {
                 Py_uhash_t realhash = (Py_uhash_t)_Cykhash_HashDouble(key->cval.real);
                 Py_uhash_t imaghash = (Py_uhash_t)_Cykhash_HashDouble(key->cval.imag);
                 if (realhash == (Py_uhash_t)-1 || imaghash == (Py_uhash_t)-1) {
@@ -229,7 +229,7 @@ cdef extern from *:
             }
 
 
-            static inline uint32_t pyobject_hash(PyObject* key);
+            CYKHASH_INLINE uint32_t pyobject_hash(PyObject* key);
 
             //we could use any hashing algorithm, this is the original CPython's for tuples
 
@@ -245,7 +245,7 @@ cdef extern from *:
             #define _CykhashHASH_XXROTATE(x) ((x << 13) | (x >> 19))  /* Rotate left 13 bits */
             #endif
 
-            static inline Py_hash_t tupleobject_hash(PyTupleObject* key) {
+            CYKHASH_INLINE Py_hash_t tupleobject_hash(PyTupleObject* key) {
                 Py_ssize_t i, len = Py_SIZE(key);
                 PyObject **item = key->ob_item;
 
@@ -270,7 +270,7 @@ cdef extern from *:
             }
 
 
-            static inline uint32_t pyobject_hash(PyObject* key) {
+            CYKHASH_INLINE uint32_t pyobject_hash(PyObject* key) {
                 Py_hash_t hash;
                 // For PyObject_Hash holds:
                 //    hash(0.0) == 0 == hash(-0.0)

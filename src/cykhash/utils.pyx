@@ -1,7 +1,7 @@
 from libc.stdint cimport  uint64_t, uint32_t,  int64_t,  int32_t
 from .floatdef cimport float64_t, float32_t
 
-
+include "common.pxi"
 include "memory.pxi"
 
 def get_cykhash_trace_domain():

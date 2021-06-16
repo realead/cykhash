@@ -8,6 +8,7 @@ from .khashsets cimport Float64Set, Float64Set_from_buffer, kh_exist_float64set
 from .khashsets cimport Float32Set, Float32Set_from_buffer, kh_exist_float32set
 
 
+include "common.pxi"
 include "memory.pxi"
 
 cdef char *empty_buf=""

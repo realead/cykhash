@@ -6,6 +6,7 @@ from .floatdef cimport float64_t, float32_t
 ### Common definitions:
 ctypedef PyObject* pyobject_t
 
+include "common.pxi"
 include "memory.pxi"
 include "khash.pxi"
 include "murmurhash.pxi"

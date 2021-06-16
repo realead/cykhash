@@ -20,7 +20,7 @@ cdef extern from *:
 
 
         static const int CYKHASH_TRACE_DOMAIN = 414141;
-        void *cykhash_traced_malloc(size_t size){
+        CYKHASH_INLINE void *cykhash_traced_malloc(size_t size){
             void * ptr = malloc(size);
             if(ptr!=NULL){
                 PyTraceMalloc_Track(CYKHASH_TRACE_DOMAIN, (uintptr_t)ptr, size);
@@ -28,7 +28,7 @@ cdef extern from *:
             return ptr;
         }
 
-        void *cykhash_traced_calloc(size_t num, size_t size){
+        CYKHASH_INLINE void *cykhash_traced_calloc(size_t num, size_t size){
             void * ptr = calloc(num, size);
             if(ptr!=NULL){
                 PyTraceMalloc_Track(CYKHASH_TRACE_DOMAIN, (uintptr_t)ptr, num*size);
@@ -36,7 +36,7 @@ cdef extern from *:
             return ptr;
         }
 
-        void *cykhash_traced_realloc(void* old_ptr, size_t size){
+        CYKHASH_INLINE void *cykhash_traced_realloc(void* old_ptr, size_t size){
             void * ptr = realloc(old_ptr, size);
             if(ptr!=NULL){
                 if(old_ptr != ptr){
@@ -47,7 +47,7 @@ cdef extern from *:
             return ptr;
         }
 
-        void cykhash_traced_free(void* ptr){
+        CYKHASH_INLINE void cykhash_traced_free(void* ptr){
             if(ptr!=NULL){
                 PyTraceMalloc_Untrack(CYKHASH_TRACE_DOMAIN, (uintptr_t)ptr);
             }

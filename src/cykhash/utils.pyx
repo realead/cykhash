@@ -23,10 +23,18 @@ cdef extern from *:
     uint32_t cykh_int32_hash_func(uint32_t val)
     uint32_t cykh_int64_hash_func(uint64_t val)
     uint32_t cykh_pyobject_hash_func(object ob)
+    bint pyobject_cmp(object a, object b) 
 
 
 
 # some utils useful for investigations
+def objects_are_equal(a, b):
+    """
+    returns true if both objects are considered equal for khash-set/map
+    """
+    return pyobject_cmp(a, b)
+
+
 def float64_hash(double val):
     """
     returns hash used for float64-values by cykhash sets/maps
@@ -53,7 +61,6 @@ def float32_hash(float val):
 
     """
     return cykh_float32_hash_func(val)
-
 
 
 def object_hash(val):

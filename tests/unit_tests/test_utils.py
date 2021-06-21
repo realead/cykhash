@@ -1,6 +1,6 @@
 from unittestmock import UnitTestMock
 
-from cykhash.utils import float64_hash, float32_hash, int64_hash, int32_hash, object_hash
+from cykhash.utils import float64_hash, float32_hash, int64_hash, int32_hash, object_hash, objects_are_equal
 
 
 class TestUtils(UnitTestMock): 
@@ -44,6 +44,9 @@ class TestUtils(UnitTestMock):
         self.assertEqual(object_hash(1), 2049)
 
 
-
-
+    def test_equal_tupples_with_nan(self):
+        t1 = (1, (float("nan"), 2), (4, (float("nan"),)))
+        t2 = (1, (float("nan"), 2), (4, (float("nan"),)))
+        assert t1 != t2
+        assert objects_are_equal(t1, t2)
  

@@ -34,6 +34,17 @@ class CountIfObject:
         count_if_pyobject(self.query, self.set)
 
 
+class CountIfSameLongTuple:
+
+    def setup(self):
+        t = tuple(range(1000))
+        self.set = PyObjectSet_from([t])
+        self.query = np.array(["a"] + [t]*1000)
+
+    def time_countif(self):
+        count_if_pyobject(self.query, self.set)
+
+
 class CountIfArange:
     params = [ 
         [np.float64, np.float32, np.int64, np.int32],

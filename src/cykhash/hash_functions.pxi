@@ -171,6 +171,9 @@ cdef extern from *:
 
 
             CYKHASH_INLINE int pyobject_cmp(PyObject* a, PyObject* b) {
+                if (a == b) {
+                    return 1;
+                }
                 if (Py_TYPE(a) == Py_TYPE(b)) {
                     // special handling for some built-in types which could have NaNs:
                     if (PyFloat_CheckExact(a)) {

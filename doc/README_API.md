@@ -1,5 +1,6 @@
 # cykhash API:
 
+Note: This is an incomplete list of functionality.
 
 ## Isin
 

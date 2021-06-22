@@ -62,18 +62,9 @@ Compared to pandas' `isin`, which has a linear running time in number of element
 
 There are no advantages (others that nans are handled correctly, more about it later) to use khash-version for normal Python-objects.
 
-One caveau: `PyObject_Hash` doesn't yield a good hash-function (for example for integer `k` it is `k` and using it leads to quite bad results (running `python tests/perf_tests/pyobjectset_vs_set.py`):
+A big issue, is that `PyObject_Hash` works well with Python's dict/set implementation, but less so with khash.
 
-![1](imgs/set_vs_pyobjectset.png)
-
-as one can see, it is about 50 times slower then Python-set, and seems to have worse than linear behavior.
-
-The problem is the "discard"  part, as the insertions alone aren't problematic:
-
-
-![1](imgs/set_vs_pyobjectset_only_insert.png)
-
-Fixing it, leads to somewhat better discard behavior:
+By running `python tests/perf_tests/pyobjectset_vs_set.py` we get the following results:
 
 
 ![2](imgs/set_vs_pyobjectset_fixed_hash.png)

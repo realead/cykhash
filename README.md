@@ -84,20 +84,24 @@ Maps and sets handle `nan`-correctly (try it out with Python's dict/set):
 
 ### Hash sets
 
-`Int64Set`, `Int32Set`, `Float64Set`, `Float32Set`, and `PyObjectSet` are implemented. They are more or less drop-in replacements for Python's `set`. Furthermore, given the Cython-interface, efficient extensions of functionality are easily done.
+`Int64Set`, `Int32Set`, `Float64Set`, `Float32Set` ( and `PyObjectSet`) are implemented. They are more or less drop-in replacements for Python's `set`. Furthermore, given the Cython-interface, efficient extensions of functionality are easily done.
 
 
-The biggest advantage of these sets is that they need about 4-8 times less memory than the usual Python-sets and are somewhat faster for integers or floats.
+The biggest advantage of these sets is that they need about 4-8 times less memory than the usual Python-sets and are somewhat faster for integers or floats. 
+
+As `PyObjectSet` is somewhat slower than the usual `set` and needs about the same amount of memory, it should be used only if all `nan`s should be treated as equivalent.
 
 The most efficient way to create such sets is to use `XXXXSet_from_buffer(...)`, e.g. `Int64Set_from_buffer`, if the data container at hand supports buffer protocol (e.g. numpy-arrays, `array.array` or `ctypes`-arrays). Or `XXXXSet_from(...)` for any iterator.
 
 
 ### Hash maps
 
-`Int64toInt64Map`, `Int32toInt32Map`, `Float64toInt64Map`, `Float32toInt32Map`, and `PyObjectMap` are implemented. They are more or less drop-in replacements for Python's `dict` (however, not every piece of `dict`'s functionality makes sense, for example `setdefault(x, default)` without `default`-argument, because `None` cannot be inserted, also the khash-maps don't preserve the insertion order, so there is also no `reversed`). Furthermore, given the Cython-interface, efficient extensions of functionality are easily done.
+`Int64toInt64Map`, `Int32toInt32Map`, `Float64toInt64Map`, `Float32toInt32Map` ( and `PyObjectMap`) are implemented. They are more or less drop-in replacements for Python's `dict` (however, not every piece of `dict`'s functionality makes sense, for example `setdefault(x, default)` without `default`-argument, because `None` cannot be inserted, also the khash-maps don't preserve the insertion order, so there is also no `reversed`). Furthermore, given the Cython-interface, efficient extensions of functionality are easily done.
 
 Biggest advantage of these sets is that they need about 4-8 times less memory than the usual Python-dictionaries and are somewhat faster for integers or floats.
 
+
+As `PyObjectMap` is somewhat slower than the usual `dict` and needs about the same amount of memory, it should be used only if all `nan`s should be treated as equivalent.
 
 ### isin
 

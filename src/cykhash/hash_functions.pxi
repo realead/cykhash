@@ -218,13 +218,14 @@ cdef extern from *:
 
 
             // replaces _Py_HashDouble with _Cykhash_HashDouble
+            #define _CykhashHASH_IMAG 1000003UL
             CYKHASH_INLINE Py_hash_t complexobject_hash(PyComplexObject* key) {
                 Py_uhash_t realhash = (Py_uhash_t)_Cykhash_HashDouble(key->cval.real);
                 Py_uhash_t imaghash = (Py_uhash_t)_Cykhash_HashDouble(key->cval.imag);
                 if (realhash == (Py_uhash_t)-1 || imaghash == (Py_uhash_t)-1) {
                     return -1;
                 }
-                Py_uhash_t combined = realhash + _PyHASH_IMAG * imaghash;
+                Py_uhash_t combined = realhash + _CykhashHASH_IMAG * imaghash;
                 if (combined == (Py_uhash_t)-1) {
                     return -2;
                 }

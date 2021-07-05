@@ -2,6 +2,7 @@ from unittestmock import UnitTestMock
 
 from cykhash.utils import float64_hash, float32_hash, int64_hash, int32_hash, object_hash, objects_are_equal
 
+from cykhash.compat import assert_if_not_on_PYPY
 
 class TestUtils(UnitTestMock): 
     def test_hash_float64_neg_zero(self):
@@ -47,6 +48,6 @@ class TestUtils(UnitTestMock):
     def test_equal_tupples_with_nan(self):
         t1 = (1, (float("nan"), 2), (4, (float("nan"),)))
         t2 = (1, (float("nan"), 2), (4, (float("nan"),)))
-        assert t1 != t2
+        assert_if_not_on_PYPY(t1 != t2, "nan is a singleton on PyPy")
         assert objects_are_equal(t1, t2)
  

@@ -2,8 +2,13 @@ import sys
 
 from unittestmock import UnitTestMock
 
+from cykhash.compat import PYPY, assert_if_not_on_PYPY
+import pytest
+not_on_pypy = pytest.mark.skipif(PYPY, reason="pypy has no refcounting")
+
 from cykhash import PyObjectSet
 
+@not_on_pypy
 class TestRefCounter(UnitTestMock): 
 
    def test_set_add_discard_right_refcnts(self):
@@ -82,7 +87,7 @@ class TestRefCounter(UnitTestMock):
 def test_nan_float():
     nan1 = float("nan")
     nan2 = float("nan")
-    assert nan1 is not nan2
+    assert_if_not_on_PYPY(nan1 is not nan2, reason="nan is singelton in PyPy")
     s = PyObjectSet()
     s.add(nan1)
     assert nan2 in s
@@ -91,7 +96,7 @@ def test_nan_float():
 def test_nan_complex():
     nan1 = complex(0, float("nan"))
     nan2 = complex(0, float("nan"))
-    assert nan1 is not nan2
+    assert_if_not_on_PYPY(nan1 is not nan2, reason="nan is singelton in PyPy")
     s = PyObjectSet()
     s.add(nan1)
     assert nan2 in s
@@ -100,7 +105,7 @@ def test_nan_complex():
 def test_nan_in_tuple():
     nan1 = (float("nan"),)
     nan2 = (float("nan"),)
-    assert nan1[0] is not nan2[0]
+    assert_if_not_on_PYPY(nan1[0] is not nan2[0], reason="nan is singelton in PyPy")
     s = PyObjectSet()
     s.add(nan1)
     assert nan2 in s

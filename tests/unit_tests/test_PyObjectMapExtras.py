@@ -1,6 +1,10 @@
 import sys
 from unittestmock import UnitTestMock
 
+from cykhash.compat import PYPY, assert_if_not_on_PYPY
+import pytest
+not_on_pypy = pytest.mark.skipif(PYPY, reason="pypy has no refcounting")
+
 from cykhash import PyObjectMap
 
 class TestPyObjectMapMisc(UnitTestMock): 
@@ -11,6 +15,7 @@ class TestPyObjectMapMisc(UnitTestMock):
       self.assertEqual(s["a"],"kkk") 
 
 
+@not_on_pypy
 class TestRefCounterPyObjectMap(UnitTestMock): 
 
    def test_map_put_discard_right_refcnts(self):
@@ -126,7 +131,7 @@ class TestRefCounterPyObjectMap(UnitTestMock):
 def test_nan_float():
     nan1 = float("nan")
     nan2 = float("nan")
-    assert nan1 is not nan2
+    assert_if_not_on_PYPY(nan1 is not nan2, reason="nan is singelton in PyPy")
     table = PyObjectMap()
     table[nan1] =  42
     assert table[nan2] == 42
@@ -135,7 +140,7 @@ def test_nan_float():
 def test_nan_complex():
     nan1 = complex(0, float("nan"))
     nan2 = complex(0, float("nan"))
-    assert nan1 is not nan2
+    assert_if_not_on_PYPY(nan1 is not nan2, reason="nan is singelton in PyPy")
     table = PyObjectMap()
     table[nan1] =  42
     assert table[nan2] == 42
@@ -144,7 +149,7 @@ def test_nan_complex():
 def test_nan_in_tuple():
     nan1 = (float("nan"),)
     nan2 = (float("nan"),)
-    assert nan1[0] is not nan2[0]
+    assert_if_not_on_PYPY(nan1[0] is not nan2[0], reason="nan is singelton in PyPy")
     table = PyObjectMap()
     table[nan1] =  42
     assert table[nan2] == 42

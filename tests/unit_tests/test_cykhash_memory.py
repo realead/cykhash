@@ -10,9 +10,7 @@ import sys
 at_least_python36 = pytest.mark.skipif(sys.version_info < (3, 6),
                                   reason="requires Python3.6+")
 
-import platform
-
-PYPY = platform.python_implementation() == "PyPy"
+from cykhash.compat import PYPY
 not_on_pypy = pytest.mark.skipif(PYPY, reason="pypy doesn't support tracemalloc")
 if not PYPY:
     import tracemalloc

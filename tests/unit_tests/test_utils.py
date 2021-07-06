@@ -57,7 +57,6 @@ class TestUtils(UnitTestMock):
 
 
     def test_hash_object_one(self):
-        self.assertEqual(object_hash(1), 2049)
         assert_equal_32_or_64(
                      val=object_hash(1),
                      expected32=1,

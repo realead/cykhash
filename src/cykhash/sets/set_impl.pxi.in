@@ -392,12 +392,22 @@ cdef class {{set_name}}Set:
 ### Utils:
 
 def {{set_name}}Set_from(it):
+    """
+        creates {{set_name}}Set from an iterator. 
+        Use {{set_name}}Set_from_buffer for a faster version if iterator is buffer of correct type
+    """
     res={{set_name}}Set()
     for i in it:
         res.add(i)
     return res
 
 cpdef {{set_name}}Set {{set_name}}Set_from_buffer({{key_type}}[:] buf, double size_hint=0.0):
+    """
+        creates {{set_name}}Set from the given buffer buf. 
+        Use slower {{set_name}}Set_from if series is given as iterator without buffer protocol.
+        size_hint is an estimation of the ratio of unique elements. The default value of 0.0 means all elements in buf are expected to be unique
+        Giving a good estimate will avoid rehashing (if estimate is too low) and having too big table (if estimate is too high).
+    """
     cdef Py_ssize_t n = len(buf)
     cdef Py_ssize_t at_least_needed = element_n_from_size_hint(<khint_t>n, size_hint)
     res={{set_name}}Set(number_of_elements_hint=at_least_needed)
@@ -408,6 +418,10 @@ cpdef {{set_name}}Set {{set_name}}Set_from_buffer({{key_type}}[:] buf, double si
     
 
 cpdef void isin_{{name}}({{key_type}}[:] query, {{set_name}}Set db, uint8_t[:] result) except *:
+    """
+        given query, db writes for every element of query True/False into result depending on whether query-element is in db (=True) or not (=False). 
+        result should have the same length as query.
+    """
     cdef size_t i
     cdef size_t n=len(query)
     if n!=len(result):
@@ -416,6 +430,9 @@ cpdef void isin_{{name}}({{key_type}}[:] query, {{set_name}}Set db, uint8_t[:] r
         result[i]=db is not None and db.contains(query[i])
 
 cpdef bint all_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *:
+    """
+        True if all elements of query are in db, False otherwise.
+    """
     if query is None:
         return True
     cdef size_t i
@@ -428,6 +445,9 @@ cpdef bint all_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *:
     return True
 
 cpdef bint all_{{name}}_from_iter(object query, {{set_name}}Set db) except *:
+    """
+        True if all elements of query (as iterator) are in db, False otherwise.
+    """
     if query is None:
         return True
     cdef {{key_type}} el
@@ -437,6 +457,9 @@ cpdef bint all_{{name}}_from_iter(object query, {{set_name}}Set db) except *:
     return True
 
 cpdef bint none_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *:
+    """
+        True if none of elements in query is in db, False otherwise.
+    """
     if query is None or db is None:
         return True
     cdef size_t i
@@ -447,6 +470,9 @@ cpdef bint none_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *:
     return True
 
 cpdef bint none_{{name}}_from_iter(object query, {{set_name}}Set db) except *:
+    """
+        True if none of elements in query (as iterator) is in db, False otherwise.
+    """
     if query is None or db is None:
         return True
     cdef {{key_type}} el
@@ -456,12 +482,21 @@ cpdef bint none_{{name}}_from_iter(object query, {{set_name}}Set db) except *:
     return True
 
 cpdef bint any_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *:
+    """
+        True if one of elements in query is in db, False otherwise.
+    """
     return not none_{{name}}(query, db)
 
 cpdef bint any_{{name}}_from_iter(object query, {{set_name}}Set db) except *:
+    """
+        True if one of elements in query (as iterator) is in db, False otherwise.
+    """
     return not none_{{name}}_from_iter(query, db)
 
 cpdef size_t count_if_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except *:
+    """
+        returns the number of (non-unique) elements in query, which are also in db
+    """
     if query is None or db is None:
         return 0
     cdef size_t i
@@ -473,6 +508,9 @@ cpdef size_t count_if_{{name}}({{key_type}}[:] query, {{set_name}}Set db) except
     return res
 
 cpdef size_t count_if_{{name}}_from_iter(object query, {{set_name}}Set db) except *:
+    """
+        returns the number of (non-unique) elements in query (as iter), which are also in db
+    """
     if query is None or db is None:
         return 0
     cdef {{key_type}} el

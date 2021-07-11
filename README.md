@@ -256,7 +256,7 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
 
 ## History:
 
-#### Release 1.1.0 (??.??.2021):
+#### Release 2.0.0 (??.??.2021):
 
   * Implementation of `any`, `all`, `none` and `count_if`
   * Hash-sets are now (almost) drop-in replacements of Python's sets

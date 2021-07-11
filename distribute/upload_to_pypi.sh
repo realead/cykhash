@@ -1,5 +1,5 @@
 
-DISTRO="cykhash-1.1.0.tar.gz"
+DISTRO="cykhash-2.0.0.tar.gz"
 
 cd ..
 
@@ -32,12 +32,14 @@ twine upload --repository-url https://test.pypi.org/legacy/ dist/"$DISTRO"
 
 cd tests 
 sh test_install.sh from-test-pypi
+cd ..
+
 
 # upload to pypi
 twine upload dist/"$DISTRO"
 
 cd tests 
-sh test_install.sh from-test-pypi
+sh test_install.sh from-pypi
 
 
 

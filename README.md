@@ -256,7 +256,7 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
 
 ## History:
 
-#### Release 2.0.0 (??.??.2021):
+#### Release 2.0.0 (09.11.2021):
 
   * Implementation of `any`, `all`, `none` and `count_if`
   * Hash-sets are now (almost) drop-in replacements of Python's sets
@@ -265,6 +265,7 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
   * Better hash-functions for float64, float32, int64 and int32 (gh-issue #4).
   * Breaking change: different names/signatures for maps
   * supports tracemalloc for Py3.6+
+  * supports Python 3.10
 
 #### Release 1.0.2 (30.05.2020):
 

@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages, Extension
+from setuptools import setup, find_namespace_packages, Extension
 
 from Cython import Tempita
 from Cython.Build import cythonize
@@ -73,7 +73,7 @@ kwargs = {
       'long_description':long_description,
       'long_description_content_type':"text/markdown",
       'url':'https://github.com/realead/cykhash',
-      'packages':find_packages(where='src'),
+      'packages':find_namespace_packages(where='src'),
       'package_dir':{"": "src"},
       'license': 'MIT',
       'classifiers': [

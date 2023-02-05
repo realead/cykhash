@@ -92,7 +92,7 @@ class TestCountIf(UnitTestMock):
 class TestCountIfPyObject(UnitTestMock): 
     def test_count_if_all(self):
         s=PyObjectSet_from([2,4,666])
-        a=np.array([2,4,666]*6, dtype=np.object)
+        a=np.array([2,4,666]*6, dtype=np.object_)
         result=count_if_pyobject(a,s)
         self.assertEqual(result, 18)
 
@@ -104,7 +104,7 @@ class TestCountIfPyObject(UnitTestMock):
 
     def test_count_if_but_last(self):
         s=PyObjectSet_from([2,4,666])
-        a=np.array([2,4,666]*6+[2, 1], dtype=np.object)
+        a=np.array([2,4,666]*6+[2, 1], dtype=np.object_)
         result=count_if_pyobject(a,s)
         self.assertEqual(result, 19)
 
@@ -116,7 +116,7 @@ class TestCountIfPyObject(UnitTestMock):
 
     def test_count_if_empty(self):
         s=PyObjectSet_from([])
-        a=np.array([], dtype=np.object)
+        a=np.array([], dtype=np.object_)
         result=count_if_pyobject(a,s)
         self.assertEqual(result, 0)
 
@@ -128,7 +128,7 @@ class TestCountIfPyObject(UnitTestMock):
 
     def test_count_if_empty_set(self):
         s=PyObjectSet_from([])
-        a=np.array([1], dtype=np.object)
+        a=np.array([1], dtype=np.object_)
         result=count_if_pyobject(a,s)
         self.assertEqual(result, 0)
 
@@ -150,7 +150,7 @@ class TestCountIfPyObject(UnitTestMock):
         self.assertEqual(count_if_pyobject(None,s), 0)
 
     def test_dbnone(self):
-        a=np.array([1], dtype=np.object)
+        a=np.array([1], dtype=np.object_)
         self.assertEqual(count_if_pyobject(a,None), 0)
 
     def test_dbnone_from_iter(self):

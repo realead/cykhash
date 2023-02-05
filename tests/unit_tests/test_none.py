@@ -93,7 +93,7 @@ class TestNone(UnitTestMock):
 class TestNonePyObject(UnitTestMock): 
     def test_none_yes(self):
         s=PyObjectSet_from([2,4,666])
-        a=np.array([1,3,333]*6, dtype=np.object)
+        a=np.array([1,3,333]*6, dtype=np.object_)
         result=none_pyobject(a,s)
         self.assertEqual(result, True)
 
@@ -105,7 +105,7 @@ class TestNonePyObject(UnitTestMock):
 
     def test_none_last_no(self):
         s=PyObjectSet_from([2,4,666])
-        a=np.array([1,3,333]*6+[2], dtype=np.object)
+        a=np.array([1,3,333]*6+[2], dtype=np.object_)
         result=none_pyobject(a,s)
         self.assertEqual(result, False)
 
@@ -117,7 +117,7 @@ class TestNonePyObject(UnitTestMock):
 
     def test_none_empty(self):
         s=PyObjectSet_from([])
-        a=np.array([], dtype=np.object)
+        a=np.array([], dtype=np.object_)
         result=none_pyobject(a,s)
         self.assertEqual(result, True)
 
@@ -129,7 +129,7 @@ class TestNonePyObject(UnitTestMock):
 
     def test_none_empty_set(self):
         s=PyObjectSet_from([])
-        a=np.array([1], dtype=np.object)
+        a=np.array([1], dtype=np.object_)
         result=none_pyobject(a,s)
         self.assertEqual(result, True)
 
@@ -151,7 +151,7 @@ class TestNonePyObject(UnitTestMock):
         self.assertEqual(none_pyobject(None,s), True)
 
     def test_dbnone(self):
-        a=np.array([1], dtype=np.object)
+        a=np.array([1], dtype=np.object_)
         self.assertEqual(none_pyobject(a,None), True)
 
     def test_dbnone_from_iter(self):

@@ -80,8 +80,8 @@ class TestPyObject_from_buffers(UnitTestMock):
             import numpy as np
         except:
             return # well what should I do?
-        keys=np.array([1,2,3], dtype=np.object)
-        vals=np.array([4,5,6], dtype=np.object)
+        keys=np.array([1,2,3], dtype=np.object_)
+        vals=np.array([4,5,6], dtype=np.object_)
         m=PyObjectMap_from_buffers(keys, vals, 2.0)
         self.assertEqual(len(m), len(keys))
         for x,y in zip(keys, vals):
@@ -93,8 +93,8 @@ class TestPyObject_from_buffers(UnitTestMock):
             import numpy as np
         except:
             return # well what should I do?
-        keys=np.array([1,2,3], dtype=np.object)
-        vals=np.array([4,5,6,7], dtype=np.object)
+        keys=np.array([1,2,3], dtype=np.object_)
+        vals=np.array([4,5,6,7], dtype=np.object_)
         m=PyObjectMap_from_buffers(keys, vals, 2.0)
         self.assertEqual(len(m), len(keys))
         for x,y in zip(keys, vals):
@@ -107,8 +107,8 @@ class TestPyObject_from_buffers(UnitTestMock):
             import numpy as np
         except:
             return # well what should I do?
-        keys=np.array([1,2,3, 42], dtype=np.object)
-        vals=np.array([4,5,6], dtype=np.object)
+        keys=np.array([1,2,3, 42], dtype=np.object_)
+        vals=np.array([4,5,6], dtype=np.object_)
         m=PyObjectMap_from_buffers(keys, vals, 2.0)
         self.assertEqual(len(m), len(vals))
         for x,y in zip(keys, vals):

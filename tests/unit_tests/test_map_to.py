@@ -120,44 +120,44 @@ class TestMapTo(UnitTestMock):
 
 class TestMapToPyObject(UnitTestMock): 
     def test_None_map(self):
-        objs=np.array([]).astype(np.object)
+        objs=np.array([]).astype(np.object_)
         with pytest.raises(TypeError) as context:
            PyObjectMap_to(None,objs,objs)
         self.assertTrue("'NoneType' is not a map" in context.value.args[0])
 
     def test_different_lengths(self):
         N = 1000
-        keys=np.arange(N).astype(np.object)
+        keys=np.arange(N).astype(np.object_)
         mymap = PyObjectMap_from_buffers(keys, keys)
-        results=np.zeros(N+1).astype(np.object)
+        results=np.zeros(N+1).astype(np.object_)
         with pytest.raises(ValueError) as context:
             PyObjectMap_to(mymap, keys, results)
         self.assertTrue("Different lengths" in context.value.args[0])
 
     def test_map_to_simple(self):
         N = 1000
-        keys=np.arange(N).astype(np.object)
-        vals=np.array(range(0,2*N,2)).astype(np.object)
+        keys=np.arange(N).astype(np.object_)
+        vals=np.array(range(0,2*N,2)).astype(np.object_)
         mymap = PyObjectMap_from_buffers(keys, vals)
         result = np.zeros_like(vals)
         self.assertEqual(PyObjectMap_to(mymap, keys, result), N)
         self.assertTrue(np.array_equal(vals,result))
 
     def test_map_with_stop(self):
-        keys=np.arange(3).astype(np.object)
-        vals=np.array([5,6,7]).astype(np.object)
+        keys=np.arange(3).astype(np.object_)
+        vals=np.array([5,6,7]).astype(np.object_)
         mymap = PyObjectMap_from_buffers(keys, vals)
-        query = np.array([2,55,1]).astype(np.object)
+        query = np.array([2,55,1]).astype(np.object_)
         result = np.zeros_like(query)
         self.assertEqual(PyObjectMap_to(mymap, query, result), 1)
         self.assertEqual(result[0], vals[-1])
 
     def test_map_no_stop_float(self):
-        keys=np.arange(3).astype(np.object)
-        vals=np.array([5,6,7]).astype(np.object)
+        keys=np.arange(3).astype(np.object_)
+        vals=np.array([5,6,7]).astype(np.object_)
         mymap = PyObjectMap_from_buffers(keys, vals)
-        query = np.array([2,55,1,66,0]).astype(np.object)
+        query = np.array([2,55,1,66,0]).astype(np.object_)
         result = np.zeros_like(query)
-        expected = np.array([7,42,6,42,5]).astype(np.object)
+        expected = np.array([7,42,6,42,5]).astype(np.object_)
         self.assertEqual(PyObjectMap_to(mymap, query, result, False, 42), 3)
         self.assertTrue(np.array_equal(expected, result))

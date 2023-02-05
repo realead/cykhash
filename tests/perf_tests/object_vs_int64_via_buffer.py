@@ -35,7 +35,7 @@ def int32set_from_buffer(bufs):
 
 if True:  
     perfplot.show(
-        setup = lambda n : (np.arange(n, dtype = np.object), np.arange(n, dtype=np.int64), np.arange(n, dtype=np.int32)),
+        setup = lambda n : (np.arange(n, dtype = np.object_), np.arange(n, dtype=np.int64), np.arange(n, dtype=np.int32)),
         n_range=[2**k for k in range(18)],
         kernels=[
             pyobjectset_from_buffer,

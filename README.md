@@ -42,7 +42,7 @@ Creating a hashset and using it in `isin`:
     >>> import numpy as np 
     >>> a = np.arange(42, dtype=np.int64)
     >>> b = np.arange(84, dtype=np.int64)
-    >>> result = np.empty(b.size, dtype=np.bool)
+    >>> result = np.empty(b.size, dtype=np.bool_)
 
     # actually usage
     >>> from cykhash import Int64Set_from_buffer, isin_int64
@@ -210,10 +210,10 @@ Python: Creating look-up data structure from a numpy-array, performing `isin`-qu
     >>> lookup = Int64Set_from_buffer(a)
 
     >>> b = np.arange(84, dtype=np.int64)
-    >>> result = np.empty(b.size, dtype=np.bool)
+    >>> result = np.empty(b.size, dtype=np.bool_)
 
     >>> isin_int64(b, lookup, result)    # running time O(b.size)
-    >>> assert np.sum(result.astype(np.int)) == 42
+    >>> assert np.sum(result.astype(np.int_)) == 42
 
 
 #### unique
@@ -272,8 +272,9 @@ Ther rules are as follows:
 ## History:
 ### Release 2.0.1 (??.??.2022):
 
-  * Tests for Python3.11
-  * Drops support for Python3.6 and Python3.7
+  * Tests work for Python 3.11
+  * Tests work for numpy 1.24
+  * Drops support for Python 3.6 and Python 3.7
 
 #### Release 2.0.0 (09.11.2021):
 

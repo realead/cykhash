@@ -46,7 +46,7 @@ def test_trace_domain():
         (cyk.Int32Set, np.int32),
         (cyk.Float64Set, np.float64),
         (cyk.Float32Set, np.float32),
-        (cyk.PyObjectSet, np.object),
+        (cyk.PyObjectSet, np.object_),
     ],
 )
 def test_tracemalloc_works_sets(set_type, dtype):
@@ -71,7 +71,7 @@ def test_tracemalloc_works_sets(set_type, dtype):
         (cyk.Int32toInt32Map, np.int32),
         (cyk.Float64toFloat64Map, np.float64),
         (cyk.Float32toFloat32Map, np.float32),
-        (cyk.PyObjectMap, np.object),
+        (cyk.PyObjectMap, np.object_),
     ],
 )
 def test_tracemalloc_works_maps(map_type, dtype):

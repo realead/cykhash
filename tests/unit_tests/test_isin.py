@@ -82,14 +82,14 @@ class TestBuffer(UnitTestMock):
 class TestBufferPyObject(UnitTestMock): 
     def test_pyobject_isin(self):
         s=PyObjectSet_from([2,4,6])
-        a=np.array(range(0,7), dtype=np.object)
+        a=np.array(range(0,7), dtype=np.object_)
         result=array.array('B', [False]*7)
         isin_pyobject(a,s,result)
         expected=array.array('B', [False, False, True, False, True, False, True])
         self.assertTrue(expected==result)
 
     def test_pyobject_from_buffer(self):
-        a=np.array([6,7,8], dtype=np.object)
+        a=np.array([6,7,8], dtype=np.object_)
         s=PyObjectSet_from_buffer(a)
         self.assertEqual(len(s), len(a))
         for x in a:
@@ -97,7 +97,7 @@ class TestBufferPyObject(UnitTestMock):
 
     def test_isin_result_shorter(self):      
         s=PyObjectSet_from([2,4,6])
-        a=np.array(range(0,7), dtype=np.object)
+        a=np.array(range(0,7), dtype=np.object_)
         result=array.array('B', [False]*6)
         with pytest.raises(ValueError) as context:
             isin_pyobject(a,s,result)
@@ -105,14 +105,14 @@ class TestBufferPyObject(UnitTestMock):
 
     def test_isin_result_longer(self):
         s=PyObjectSet_from([2,4,6])
-        a=np.array(range(0,7), dtype=np.object)
+        a=np.array(range(0,7), dtype=np.object_)
         result=array.array('B', [False]*8)
         with pytest.raises(ValueError) as context:
             isin_pyobject(a,s,result)
         self.assertEqual("Different sizes for query(7) and result(8)", context.value.args[0])
 
     def test_isin_db_none(self):
-        a=np.array(range(0,7), dtype=np.object)
+        a=np.array(range(0,7), dtype=np.object_)
         result=array.array('B', [True]*7)
         isin_pyobject(a,None,result)
         expected=array.array('B', [False, False, False, False, False, False, False])

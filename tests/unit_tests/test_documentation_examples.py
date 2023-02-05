@@ -28,10 +28,10 @@ class TestDoc(UnitTestMock):
         lookup = Int64Set_from_buffer(a)
 
         b = np.arange(84, dtype=np.int64)
-        result = np.empty(b.size, dtype=np.bool)
+        result = np.empty(b.size, dtype=np.bool_)
 
         isin_int64(b, lookup, result)
-        assert np.sum(result.astype(np.int))==42
+        assert np.sum(result.astype(np.int_))==42
 
         self.assertTrue(True)
 
@@ -83,7 +83,7 @@ class TestDoc(UnitTestMock):
         import numpy as np 
         a = np.arange(42, dtype=np.int64)
         b = np.arange(84, dtype=np.int64)
-        result = np.empty(b.size, dtype=np.bool)
+        result = np.empty(b.size, dtype=np.bool_)
 
         # actually usage
         from cykhash import Int64Set_from_buffer, isin_int64

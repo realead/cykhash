@@ -28,7 +28,7 @@ class CountIfObject:
         N=100_000
         self.set = PyObjectSet_from(x<<32 for x in range(N))
         np.random.seed(42)
-        self.query = np.random.randint(0,N,N).astype(np.object)
+        self.query = np.random.randint(0,N,N).astype(np.object_)
 
     def time_countif(self):
         count_if_pyobject(self.query, self.set)

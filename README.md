@@ -270,7 +270,7 @@ Ther rules are as follows:
  * if cython's `cdef` interface is used, i.e. a cython-extension was build using pxi-files from cykhash, then versions are compartible only if the the minor versions are the same, e.g. `2.0.x` could be replaced by `2.0.y` in the installation, but when replacing with `2.1.z` the dependent cython-extension must be rebuilt.
 
 ## History:
-### Release 2.0.1 (??.??.2022):
+### Release 2.0.1 (05.02.2022):
 
   * Tests work for Python 3.11
   * Tests work for numpy 1.24

@@ -1,5 +1,5 @@
 
-DISTRO="cykhash-2.0.0.tar.gz"
+DISTRO="cykhash-2.0.1.tar.gz"
 
 cd ..
 

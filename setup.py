@@ -67,7 +67,7 @@ def my_cythonize(extensions):
 
 kwargs = {
       'name':'cykhash',
-      'version':'2.0.0',
+      'version':'2.0.1',
       'description':'cython wrapper for khash-sets/maps, efficient implementation of isin and unique',
       'author':'Egor Dranischnikow',
       'long_description':long_description,

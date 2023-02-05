@@ -254,7 +254,24 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
 
 * There is no dependency on `numpy`: this library uses buffer protocol, thus it works for `array.array`, `numpy.ndarray`, `ctypes`-arrays and anything else. However, some interfaces are somewhat cumbersome (which type should be created as answer?) and for convenient usage it might be a good idea to wrap the functionality so objects of right types are created.
 
+## Compatibility between cykhash-versionss:
+
+There are different levels of compatibility: 
+
+ * for code using only pure python interface
+ * for code using cython/cdef-interface and built against a particular cykash version
+
+Ther rules are as follows:
+ 
+ * there is no warranty for major versions mismatch: i.e. code written with cykhash `1.x.y` might not run with cykhash `2.z.w` and vice versa.
+ * if only pure python interface is used, code for the same major version will ran for version with higher minor version, i.e. code for cykhash `2.0.x` will run with cykhash `2.1.y` (but not the other way around: that means new functions could be added to pure python interface)
+ * if cython's `cdef` interface is used, i.e. a cython-extension was build using pxi-files from cykhash, then versions are compartible only if the the minor versions are the same, e.g. `2.0.x` could be replaced by `2.0.y` in the installation, but when replacing with `2.1.z` the dependent cython-extension must be rebuilt.
+
 ## History:
+### Release 2.0.1 (??.??.2022):
+
+  * Tests for Python3.11
+  * Drops support for Python3.6 and Python3.7
 
 #### Release 2.0.0 (09.11.2021):
 

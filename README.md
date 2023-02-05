@@ -24,6 +24,8 @@ To install the most recent version of the module:
 
     pip install https://github.com/realead/cykhash/zipball/master
 
+Attention: On Linux/Mac `python-dev` should be installed for that (see also https://stackoverflow.com/questions/21530577/fatal-error-python-h-no-such-file-or-directory) and MSVC on Windows.
+
 ## Dependencies:
 
 To build the library from source, Cython>=0.28 is required as well as a c-build tool chain.
@@ -254,7 +256,7 @@ See (https://github.com/realead/cykhash/blob/master/doc/README_PERFORMANCE.md) f
 
 * There is no dependency on `numpy`: this library uses buffer protocol, thus it works for `array.array`, `numpy.ndarray`, `ctypes`-arrays and anything else. However, some interfaces are somewhat cumbersome (which type should be created as answer?) and for convenient usage it might be a good idea to wrap the functionality so objects of right types are created.
 
-## Compatibility between cykhash-versionss:
+## Compatibility between cykhash-versions:
 
 There are different levels of compatibility: 
 

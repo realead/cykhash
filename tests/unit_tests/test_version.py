@@ -12,4 +12,4 @@ class TestVersion(UnitTestMock):
       self.assertEqual(cykhash.__version__[1], 0)
 
    def test_last(self):
-      self.assertEqual(cykhash.__version__[2], 0)
+      self.assertEqual(cykhash.__version__[2], 1)

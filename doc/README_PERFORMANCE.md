@@ -74,7 +74,7 @@ It is only 2 times slower than Python-set for inserting elements (but still some
 ![1](imgs/set_vs_pyobjectset_only_insert_fixed_hash.png)
 
 
-As conclusion:
+In conclusion:
 
    * `contains` are almost equally fast for `set`/`PyObjectSet`.
    * `insert` is slightly slower for `PyObjectSet`, preallocation should be used whenever possible.

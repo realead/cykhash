@@ -60,7 +60,7 @@ Compared to pandas' `isin`, which has a linear running time in number of element
 
 #### PyObjectSet:
 
-There are no advantages (others that nans are handled correctly, more about it later) to use khash-version for normal Python-objects.
+There are no advantages (other than that nans are handled correctly, more about this later) to use khash-version for normal Python-objects.
 
 A big issue, is that `PyObject_Hash` works well with Python's dict/set implementation, but less so with khash.
 
